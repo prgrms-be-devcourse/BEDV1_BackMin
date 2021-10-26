@@ -39,13 +39,12 @@ public class OrderMenu {
     private List<OrderMenuOption> orderMenuOptions = new ArrayList<>();
 
     public void changeMenu(Menu menu) {
-
-        if(Objects.nonNull(this.menu)) {
+        if (Objects.nonNull(this.menu)) {
             this.menu.getOrderMenus().remove(this);
         }
 
         this.menu = menu;
         menu.getOrderMenus().add(this);
-
     }
+
 }

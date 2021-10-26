@@ -22,14 +22,12 @@ public class OrderMenuOption {
     private OrderMenu orderMenu;
 
     public void changeMenuOption(MenuOption menuOption) {
-
-        if(Objects.nonNull(this.orderMenu)) {
+        if (Objects.nonNull(this.orderMenu)) {
             this.orderMenu.getOrderMenuOptions().remove(this);
         }
 
         this.menuOption = menuOption;
         menuOption.getOrderMenuOptions().add(this);
-
     }
 
 }

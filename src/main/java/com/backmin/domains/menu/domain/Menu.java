@@ -84,14 +84,12 @@ public class Menu extends BaseEntity {
     }
 
     public void changeMenuCategory(MenuCategory menuCategory) {
-
         if (Objects.nonNull(this.menuCategory)) {
             this.menuCategory.getMenus().remove(this);
         }
 
         this.menuCategory = menuCategory;
         menuCategory.getMenus().add(this);
-
     }
 
 }
