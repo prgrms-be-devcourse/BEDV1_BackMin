@@ -1,22 +1,32 @@
 package com.backmin.domains.order.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import com.backmin.domains.menu.domain.Menu;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class OrderMenu {
 
     @Id
-    private Long sequence;
+    private Long orderMenuId;
 
-    private Long menuId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menu_id")
+    private Menu menu;
 
-    private Long orderId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     private Long storeId;
 
     private int quantity;
 
     private int price;
+
+    @OneToMany(mappedBy = "orderMenu", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderMenuOption> orderMenuOptions = new ArrayList<>();
 
 }

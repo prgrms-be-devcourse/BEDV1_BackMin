@@ -1,5 +1,5 @@
 package com.backmin.domains.order.domain;
 
 public enum OrderStatus {
-    ACCEPT, READY, CANCEL
+    ACCEPTED, READY_TO_DELIVERY, CANCELED, DELIVERED
 }

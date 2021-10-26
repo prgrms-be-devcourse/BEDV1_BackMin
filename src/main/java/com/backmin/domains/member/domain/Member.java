@@ -1,17 +1,42 @@
 package com.backmin.domains.member.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.*;
+
+import javax.persistence.*;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "members")
 public class Member {
 
     @Id
+    @Column(name = "member_id", nullable = false)
     private Long id;
 
-    public void sssssss() {
+    @Column(name = "email", length = 30, nullable = false)
+    private String email;
 
+    @Column(name = "password", length = 20, nullable = false)
+    private String password;
+
+    @Column(name = "phone_number", length = 20, nullable = false)
+    private String phoneNumber;
+
+    @Column(name = "nick_name", length = 20, nullable = false)
+    private String nickName;
+
+    @Column(name = "address", length = 100, nullable = false)
+    private String address;
+
+    @Builder
+    public Member(Long id, String email, String password, String phoneNumber, String nickName, String address) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.nickName = nickName;
+        this.address = address;
     }
-
 
 }
