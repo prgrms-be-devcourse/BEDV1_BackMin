@@ -2,6 +2,7 @@ package com.backmin.domains.menu.domain;
 
 import com.backmin.domains.store.domain.Store;
 
+import java.util.Objects;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,4 +25,13 @@ public class MenuCategory {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
+
+    public void changeStore(Store store) {
+        if (Objects.nonNull(this.store)) {
+            this.store.getReviews().remove(this);
+        }
+        this.store = store;
+        store.getMenuCategories().add(this);
+    }
+
 }
