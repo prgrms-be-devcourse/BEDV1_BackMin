@@ -1,19 +1,24 @@
 package com.backmin.domains.member.domain;
 
+import com.backmin.domains.common.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "members")
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "member_id", nullable = false)
     private Long id;
 
+    @Email
     @Column(name = "email", length = 30, nullable = false)
     private String email;
 
@@ -37,6 +42,21 @@ public class Member {
         this.phoneNumber = phoneNumber;
         this.nickName = nickName;
         this.address = address;
+    }
+
+    public void changeNickName(String nickName) {
+        this.nickName = nickName;
+        setUpdatedAt(LocalDateTime.now());
+    }
+
+    public void changePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+        setUpdatedAt(LocalDateTime.now());
+    }
+
+    public void changeAddress(String address) {
+        this.address = address;
+        setUpdatedAt(LocalDateTime.now());
     }
 
 }
