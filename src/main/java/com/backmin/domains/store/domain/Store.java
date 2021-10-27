@@ -2,6 +2,9 @@ package com.backmin.domains.store.domain;
 
 import com.backmin.domains.menu.domain.MenuCategory;
 import com.backmin.domains.review.domain.Review;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -76,8 +79,8 @@ public class Store {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.minOrderPrice = minOrderPrice;
-        this.minDeliveryTime = minDeliveryTime;
-        this.maxDeliveryTime = maxDeliveryTime;
+        this.minDelivTime = minDelivTime;
+        this.maxDelivTime = maxDelivTime;
         this.storeIntro = storeIntro;
         this.isService = isService;
         this.mainIntro = mainIntro;

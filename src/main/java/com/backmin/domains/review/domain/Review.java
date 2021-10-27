@@ -3,6 +3,10 @@ package com.backmin.domains.review.domain;
 import com.backmin.domains.common.BaseEntity;
 import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.store.domain.Store;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 import javax.persistence.*;
@@ -16,10 +20,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "review")
+@Table(name = "reviews")
 public class Review extends BaseEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "review_id", nullable = false)
     private Long id;
 
@@ -27,7 +32,7 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "store_id")
     private Store store;
 
-    @Column(name = "score", nullable = false)
+    @Column(name = "score", nullable = true)
     @Min(1)
     @Max(5)
     private int score;
@@ -38,6 +43,25 @@ public class Review extends BaseEntity {
 
     @Column(name = "order_id", nullable = false)
     private Long orderId;
+
+    @Column(name = "content", nullable = false)
+    private String content;
+
+    @Builder
+    public Review(Long id, Store store, int score, Member member, Long orderId, String content) {
+        this.id = id;
+        this.store = store;
+        this.score = score;
+        this.member = member;
+        this.orderId = orderId;
+        this.content = content;
+        setCreatedAt(LocalDateTime.now());
+    }
+
+    public void changeContent(String content) {
+        this.content = content;
+        setUpdatedAt(LocalDateTime.now());
+    }
 
     public void changeStore(Store store) {
         if (Objects.nonNull(this.store)) {

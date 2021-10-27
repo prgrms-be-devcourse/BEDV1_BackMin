@@ -3,6 +3,7 @@ package com.backmin.domains.order.domain;
 import com.backmin.domains.common.BaseEntity;
 import com.backmin.domains.member.domain.Member;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -58,7 +59,7 @@ public class Order extends BaseEntity {
 
     @Builder
     public Order(Long id, String address, OrderStatus status, String requirement, LocalDateTime requestAt, LocalDateTime completeAt,
-            Payment payMent, int totalPrice, Member member, List<OrderMenu> orderMenu) {
+            Payment payMent, int totalPrice, Member member, List<OrderMenu> orderMenus) {
         this.id = id;
         this.address = address;
         this.status = status;
@@ -68,7 +69,7 @@ public class Order extends BaseEntity {
         this.payMent = payMent;
         this.totalPrice = totalPrice;
         this.member = member;
-        this.orderMenus = orderMenu;
+        this.orderMenus = orderMenus;
     }
 
     public void addOrderMenu(OrderMenu orderMenu) {
