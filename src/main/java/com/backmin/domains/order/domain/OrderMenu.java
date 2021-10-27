@@ -43,7 +43,7 @@ public class OrderMenu {
     private List<OrderMenuOption> orderMenuOptions = new ArrayList<>();
 
     @Builder
-    public OrderMenu(Long orderMenuId, Menu menu, Order order, int quantity, int price, List<OrderMenuOption> orderMenuOptions) {
+    public OrderMenu(Long orderMenuId, Menu menu, Order order, int quantity, int price) {
         this.orderMenuId = orderMenuId;
         this.menu = menu;
         this.order = order;
