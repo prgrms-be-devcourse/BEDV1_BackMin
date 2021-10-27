@@ -2,6 +2,9 @@ package com.backmin.domains.order.domain;
 
 import com.backmin.domains.common.BaseEntity;
 import com.backmin.domains.member.domain.Member;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

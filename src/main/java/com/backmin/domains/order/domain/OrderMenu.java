@@ -1,11 +1,15 @@
 package com.backmin.domains.order.domain;
 
 import com.backmin.domains.menu.domain.Menu;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,9 +44,18 @@ public class OrderMenu {
 
     @OneToMany(mappedBy = "orderMenu", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMenuOption> orderMenuOptions = new ArrayList<>();
-
+  
     public void addOrderMenuOption(OrderMenuOption orderMenuOption) {
         orderMenuOption.changeOrderMenu(this);
+    }
+
+    public void changeMenu(Menu menu) {
+        if (Objects.nonNull(this.menu)) {
+            this.menu.getOrderMenus().remove(this);
+        }
+
+        this.menu = menu;
+        menu.getOrderMenus().add(this);
     }
 
     public void changeOrder(Order order) {
