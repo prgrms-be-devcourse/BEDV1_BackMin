@@ -9,59 +9,72 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.constraints.Min;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "store")
 public class Store {
 
     @Id
     @GeneratedValue
-    @Column(name = "store_id")
+    @Column(name = "store_id", nullable = false)
     private Long id;
 
-    @Column(name = "store_name")
+    @Column(name = "store_name", length = 50, nullable = false)
     private String name;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", length = 20, nullable = false)
     private String phoneNumber;
 
     @Column(name = "min_oder_price")
+    @Min(0)
     private int minOrderPrice;
 
     @Column(name = "min_deliv_time")
-    private int minDelivTime;
+    @Min(0)
+    private int minDeliveryTime;
 
     @Column(name = "max_deliv_time")
-    private int maxDelivTime;
+    @Min(0)
+    private int maxDeliveryTime;
 
-    @Column(name = "store_intro")
+    @Column(name = "store_intro", length = 3000, nullable = false)
     private String storeIntro;
 
     @Column(name = "is_service")
     private boolean isService;
 
-    @Column(name = "main_intro")
+    @Column(name = "main_intro", length = 3000, nullable = false)
     private String mainIntro;
 
     @Column(name = "is_package")
     private boolean isPackage;
 
     @Column(name = "deliv_tip")
-    private int delivTip;
+    @Min(0)
+    private int deliveryTip;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MenuCategory> menuCategories = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category")
+    @JoinColumn(name = "category", nullable = false)
     private Category category;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
     @Builder
-    public Store(Long id, String name, String phoneNumber, int minOrderPrice, int minDelivTime, int maxDelivTime, String storeIntro, boolean isService, String mainIntro, boolean isPackage, int delivTip, List<MenuCategory> menuCategories, Category category, List<Review> reviews) {
+    public Store(Long id, String name, String phoneNumber, int minOrderPrice, int minDeliveryTime,
+            int maxDeliveryTime, String storeIntro, boolean isService, String mainIntro, boolean isPackage,
+            int deliveryTip, List<MenuCategory> menuCategories, Category category,
+            List<Review> reviews) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -72,9 +85,18 @@ public class Store {
         this.isService = isService;
         this.mainIntro = mainIntro;
         this.isPackage = isPackage;
-        this.delivTip = delivTip;
+        this.deliveryTip = deliveryTip;
         this.menuCategories = menuCategories;
         this.category = category;
         this.reviews = reviews;
     }
+
+    public void addMenuCategory(MenuCategory menuCategory) {
+        menuCategory.changeStore(this);
+    }
+
+    public void addReview(Review review) {
+        review.changeStore(this);
+    }
+
 }
