@@ -4,16 +4,13 @@ import com.backmin.domains.menu.domain.MenuCategory;
 import com.backmin.domains.review.domain.Review;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.Min;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -70,25 +67,31 @@ public class Store {
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
-    @Builder
-    public Store(Long id, String name, String phoneNumber, int minOrderPrice, int minDeliveryTime,
-            int maxDeliveryTime, String storeIntro, boolean isService, String mainIntro, boolean isPackage,
-            int deliveryTip, List<MenuCategory> menuCategories, Category category,
-            List<Review> reviews) {
+    public Store(Long id,
+                 String name,
+                 String phoneNumber,
+                 int minOrderPrice,
+                 int minDeliveryTime,
+                 int maxDeliveryTime,
+                 String storeIntro,
+                 boolean isService,
+                 String mainIntro,
+                 boolean isPackage,
+                 int deliveryTip,
+                 Category category
+    ) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.minOrderPrice = minOrderPrice;
-        this.minDelivTime = minDelivTime;
-        this.maxDelivTime = maxDelivTime;
+        this.minDeliveryTime = minDeliveryTime;
+        this.maxDeliveryTime = maxDeliveryTime;
         this.storeIntro = storeIntro;
         this.isService = isService;
         this.mainIntro = mainIntro;
         this.isPackage = isPackage;
         this.deliveryTip = deliveryTip;
-        this.menuCategories = menuCategories;
         this.category = category;
-        this.reviews = reviews;
     }
 
     public void addMenuCategory(MenuCategory menuCategory) {

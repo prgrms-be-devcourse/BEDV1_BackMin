@@ -59,8 +59,6 @@ public class Menu extends BaseEntity {
                 boolean isPopular,
                 int price,
                 String description,
-                List<OrderMenu> orderMenus,
-                List<MenuOption> menuOptions,
                 MenuCategory menuCategory
     ) {
         this.id = id;
@@ -70,8 +68,6 @@ public class Menu extends BaseEntity {
         this.isPopular = isPopular;
         this.price = price;
         this.description = description;
-        this.orderMenus = orderMenus;
-        this.menuOptions = menuOptions;
         this.menuCategory = menuCategory;
     }
 

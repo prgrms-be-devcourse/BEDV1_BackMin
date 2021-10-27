@@ -34,10 +34,9 @@ public class MenuCategory extends BaseEntity {
     private Store store;
 
     @Builder
-    public MenuCategory(Long id, String name, List<Menu> menus, Store store) {
+    public MenuCategory(Long id, String name, Store store) {
         this.id = id;
         this.name = name;
-        this.menus = menus;
         this.store = store;
     }
 

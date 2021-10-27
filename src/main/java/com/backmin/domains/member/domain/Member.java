@@ -22,7 +22,7 @@ public class Member extends BaseEntity {
     @Column(name = "email", length = 30, nullable = false)
     private String email;
 
-    @Column(name = "password", length = 20, nullable = false)
+    @Column(name = "password", length = 50, nullable = false)
     private String password;
 
     @Column(name = "phone_number", length = 20, nullable = false)
@@ -46,17 +46,14 @@ public class Member extends BaseEntity {
 
     public void changeNickName(String nickName) {
         this.nickName = nickName;
-        setUpdatedAt(LocalDateTime.now());
     }
 
     public void changePhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-        setUpdatedAt(LocalDateTime.now());
     }
 
     public void changeAddress(String address) {
         this.address = address;
-        setUpdatedAt(LocalDateTime.now());
     }
 
 }

@@ -4,7 +4,6 @@ import com.backmin.domains.menu.domain.MenuOption;
 
 import java.util.Objects;
 import javax.persistence.*;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

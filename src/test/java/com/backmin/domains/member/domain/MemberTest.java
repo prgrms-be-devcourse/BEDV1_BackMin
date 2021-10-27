@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 @DataJpaTest
-@Slf4j
 class MemberTest {
 
     @Autowired

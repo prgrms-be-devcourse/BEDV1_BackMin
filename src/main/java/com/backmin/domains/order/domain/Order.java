@@ -12,10 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -58,8 +54,16 @@ public class Order extends BaseEntity {
     private List<OrderMenu> orderMenus = new ArrayList<>();
 
     @Builder
-    public Order(Long id, String address, OrderStatus status, String requirement, LocalDateTime requestAt, LocalDateTime completeAt,
-            Payment payMent, int totalPrice, Member member, List<OrderMenu> orderMenus) {
+    public Order(Long id,
+                 String address,
+                 OrderStatus status,
+                 String requirement,
+                 LocalDateTime requestAt,
+                 LocalDateTime completeAt,
+                 Payment payMent,
+                 int totalPrice,
+                 Member member
+    ) {
         this.id = id;
         this.address = address;
         this.status = status;
@@ -69,7 +73,6 @@ public class Order extends BaseEntity {
         this.payMent = payMent;
         this.totalPrice = totalPrice;
         this.member = member;
-        this.orderMenus = orderMenus;
     }
 
     public void addOrderMenu(OrderMenu orderMenu) {

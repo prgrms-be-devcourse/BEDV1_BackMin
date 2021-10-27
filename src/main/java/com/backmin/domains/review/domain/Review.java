@@ -13,9 +13,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -55,12 +52,10 @@ public class Review extends BaseEntity {
         this.member = member;
         this.orderId = orderId;
         this.content = content;
-        setCreatedAt(LocalDateTime.now());
     }
 
     public void changeContent(String content) {
         this.content = content;
-        setUpdatedAt(LocalDateTime.now());
     }
 
     public void changeStore(Store store) {

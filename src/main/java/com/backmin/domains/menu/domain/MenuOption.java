@@ -3,6 +3,7 @@ package com.backmin.domains.menu.domain;
 import com.backmin.domains.common.BaseEntity;
 import com.backmin.domains.order.domain.OrderMenuOption;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "menu_option")
+@Table(name = "menu _option")
 public class MenuOption extends BaseEntity {
 
     @Id
@@ -28,12 +29,13 @@ public class MenuOption extends BaseEntity {
 
     private Long topOptionId;
 
-    private int maxOptionCount; // quantity??
+    private int maxOptionQuantity;
 
-    private int minOptionCount;
+    private int minOptionQuantity;
 
     private boolean isSoldOut;
 
+//    @Builder.Defaultx
     @OneToMany(mappedBy = "menuOption", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMenuOption> orderMenuOptions = new ArrayList<>();
 
@@ -45,19 +47,17 @@ public class MenuOption extends BaseEntity {
     public MenuOption(Long id,
                       String name,
                       Long topOptionId,
-                      int maxOptionCount,
-                      int minOptionCount,
+                      int maxOptionQuantity,
+                      int minOptionQuantity,
                       boolean isSoldOut,
-                      List<OrderMenuOption> orderMenuOptions,
                       Menu menu
     ) {
         this.id = id;
         this.name = name;
         this.topOptionId = topOptionId;
-        this.maxOptionCount = maxOptionCount;
-        this.minOptionCount = minOptionCount;
+        this.maxOptionQuantity = maxOptionQuantity;
+        this.minOptionQuantity = minOptionQuantity;
         this.isSoldOut = isSoldOut;
-        this.orderMenuOptions = orderMenuOptions;
         this.menu = menu;
     }
 
