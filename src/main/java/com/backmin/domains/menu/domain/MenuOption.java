@@ -35,7 +35,6 @@ public class MenuOption extends BaseEntity {
 
     private boolean isSoldOut;
 
-//    @Builder.Defaultx
     @OneToMany(mappedBy = "menuOption", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMenuOption> orderMenuOptions = new ArrayList<>();
 
