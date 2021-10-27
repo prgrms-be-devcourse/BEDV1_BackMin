@@ -24,7 +24,7 @@ public class MenuOption extends BaseEntity {
     @Column(name = "menu_option_id", nullable = false)
     private Long id;
 
-    @Column(name = "menu_option_name", nullable = false)
+    @Column(name = "name", length = 50, nullable = false)
     private String name;
 
     private Long topOptionId;
@@ -59,6 +59,7 @@ public class MenuOption extends BaseEntity {
         this.minOptionQuantity = minOptionQuantity;
         this.isSoldOut = isSoldOut;
         this.menu = menu;
+        this.orderMenuOptions = new ArrayList<>();
     }
 
     public void addOrderMenuOption(OrderMenuOption orderMenuOption) {

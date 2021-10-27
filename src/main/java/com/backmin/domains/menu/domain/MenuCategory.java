@@ -23,7 +23,7 @@ public class MenuCategory extends BaseEntity {
     @Column(name = "menu_category_id")
     private Long id;
 
-    @Column(name = "menu_category_name")
+    @Column(name = "name")
     private String name;
 
     @OneToMany(mappedBy = "menuCategory", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -38,6 +38,7 @@ public class MenuCategory extends BaseEntity {
         this.id = id;
         this.name = name;
         this.store = store;
+        this.menus = new ArrayList<>();
     }
 
     public void addMenu(Menu menu) {
