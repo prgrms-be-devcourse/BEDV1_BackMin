@@ -4,12 +4,19 @@ import com.backmin.domains.common.BaseEntity;
 import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.store.domain.Store;
 
+import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "review")
 public class Review extends BaseEntity {
 
     @Id
@@ -26,9 +33,19 @@ public class Review extends BaseEntity {
     private int score;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Column(name = "order_id", nullable = false)
     private Long orderId;
+
+    public void changeStore(Store store) {
+        if (Objects.nonNull(this.store)) {
+            this.store.getReviews().remove(this);
+        }
+
+        this.store = store;
+        store.getReviews().add(this);
+    }
+
 }
