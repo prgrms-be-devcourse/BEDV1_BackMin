@@ -5,6 +5,7 @@ import com.backmin.domains.menu.domain.MenuOption;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,6 +27,13 @@ public class OrderMenuOption {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_menu_id", nullable = false)
     private OrderMenu orderMenu;
+
+    @Builder
+    public OrderMenuOption(Long id, MenuOption menuOption, OrderMenu orderMenu) {
+        this.id = id;
+        this.menuOption = menuOption;
+        this.orderMenu = orderMenu;
+    }
 
     public void changeMenuOption(MenuOption menuOption) {
         if (Objects.nonNull(this.menuOption)) {

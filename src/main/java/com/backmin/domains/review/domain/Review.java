@@ -41,7 +41,7 @@ public class Review extends BaseEntity {
     @Column(name = "order_id", nullable = false)
     private Long orderId;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", length = 500)
     private String content;
 
     @Builder

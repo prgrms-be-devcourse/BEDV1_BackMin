@@ -23,21 +23,21 @@ public class Store {
     @Column(name = "store_id", nullable = false)
     private Long id;
 
-    @Column(name = "store_name", length = 50, nullable = false)
+    @Column(name = "name", length = 50, nullable = false)
     private String name;
 
     @Column(name = "phone_number", length = 20, nullable = false)
     private String phoneNumber;
 
-    @Column(name = "min_oder_price")
+    @Column(name = "min_order_price")
     @Min(0)
     private int minOrderPrice;
 
-    @Column(name = "min_deliv_time")
+    @Column(name = "min_delivery_time")
     @Min(0)
     private int minDeliveryTime;
 
-    @Column(name = "max_deliv_time")
+    @Column(name = "max_delivery_time")
     @Min(0)
     private int maxDeliveryTime;
 
@@ -53,7 +53,7 @@ public class Store {
     @Column(name = "is_package")
     private boolean isPackage;
 
-    @Column(name = "deliv_tip")
+    @Column(name = "delivery_tip")
     @Min(0)
     private int deliveryTip;
 
@@ -92,6 +92,7 @@ public class Store {
         this.isPackage = isPackage;
         this.deliveryTip = deliveryTip;
         this.category = category;
+        this.menuCategories = new ArrayList<>();
     }
 
     public void addMenuCategory(MenuCategory menuCategory) {

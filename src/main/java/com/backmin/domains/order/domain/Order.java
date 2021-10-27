@@ -28,7 +28,7 @@ public class Order extends BaseEntity {
     private String address;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", length = 20, nullable = false)
     private OrderStatus status;
 
     @Column(name = "requirement", length = 100)
@@ -37,6 +37,7 @@ public class Order extends BaseEntity {
     @Column(name = "request_at", nullable = false)
     private LocalDateTime requestAt;
 
+    @Column(name = "complete_at", nullable = false)
     private LocalDateTime completeAt;
 
     @Enumerated(EnumType.STRING)
@@ -73,6 +74,7 @@ public class Order extends BaseEntity {
         this.payMent = payMent;
         this.totalPrice = totalPrice;
         this.member = member;
+        this.orderMenus = new ArrayList<>();
     }
 
     public void addOrderMenu(OrderMenu orderMenu) {

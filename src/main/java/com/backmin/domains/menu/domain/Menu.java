@@ -69,6 +69,8 @@ public class Menu extends BaseEntity {
         this.price = price;
         this.description = description;
         this.menuCategory = menuCategory;
+        this.orderMenus = new ArrayList<>();
+        this.menuOptions = new ArrayList<>();
     }
 
     public void addMenuOption(MenuOption menuOption) {
