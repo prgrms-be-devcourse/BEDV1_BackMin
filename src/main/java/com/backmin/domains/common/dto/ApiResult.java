@@ -13,22 +13,19 @@ public class ApiResult<T> {
 
     private LocalDateTime serverDatetime;
 
-    private ApiError error;
-
     @Builder
-    public ApiResult(boolean success, T data, ApiError error) {
+    public ApiResult(boolean success, T data) {
         this.success = success;
         this.data = data;
         this.serverDatetime = LocalDateTime.now();
-        this.error = error;
     }
 
-    public static <T>ApiResult<T> ok(T response) {
-        return new ApiResult<>(true, response, null);
+    public static <T> ApiResult<T> ok(T response) {
+        return new ApiResult<>(true, response);
     }
 
-    public static ApiResult<?> error(String code, Object message) {
-        return new ApiResult<>(false, null, new ApiError(code, message));
+    public static ApiResult error(String code, Object message) {
+        return new ApiResult(false, new ApiError(code, message));
     }
 
 }
