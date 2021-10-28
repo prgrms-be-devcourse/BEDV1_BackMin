@@ -17,7 +17,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResult<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-
         log.error("{}", ex);
 
         Map<String, String> errors = new HashMap<>();
@@ -31,13 +30,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ApiResult<?> handleException(Exception ex){
-
         log.error("{}", ex);
-
         final ErrorInfo errorInfo = ErrorInfo.UNKNOWN;
-
         return ApiResult.error(errorInfo.getCode(), errorInfo.getMessage());
-
     }
 
 }
