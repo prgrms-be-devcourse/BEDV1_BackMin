@@ -21,17 +21,17 @@ public class GlobalExceptionHandler {
 
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors()
-            .forEach(c -> errors.put(((FieldError) c).getField(), c.getDefaultMessage()));
+            .forEach(error -> errors.put(((FieldError) error).getField(), error.getDefaultMessage()));
 
         return ApiResult.error("METHOD_ARG_NOT_VALID", errors);
     }
 
-
-
     @ExceptionHandler(Exception.class)
-    public ApiResult<?> handleException(Exception ex){
+    public ApiResult handleException(Exception ex) {
         log.error("{}", ex);
-        final ErrorInfo errorInfo = ErrorInfo.UNKNOWN;
+
+        ErrorInfo errorInfo = ErrorInfo.UNKNOWN;
+
         return ApiResult.error(errorInfo.getCode(), errorInfo.getMessage());
     }
 

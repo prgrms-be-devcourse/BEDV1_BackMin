@@ -10,7 +10,7 @@ public class PageDto<T> {
 
     private long totalCount;
 
-    private int pageNo;
+    private int pageNumber;
 
     private int pageSize;
 
@@ -20,7 +20,7 @@ public class PageDto<T> {
 
     public PageDto(Page<T> tPage) {
         this.totalCount = tPage.getTotalElements();
-        this.pageNo = tPage.getNumber();
+        this.pageNumber = tPage.getNumber();
         this.pageSize = tPage.getSize();
         this.list = tPage.getContent();
         this.hasNext = tPage.hasNext();
