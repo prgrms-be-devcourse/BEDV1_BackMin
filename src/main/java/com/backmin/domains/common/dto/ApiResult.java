@@ -1,25 +1,24 @@
 package com.backmin.domains.common.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
+@Getter @Setter
 public class ApiResult<T> {
 
     private boolean success;
 
-    private T payload;
+    private T data;
 
     private LocalDateTime serverDatetime;
 
     private ApiError error;
 
-    public ApiResult(boolean success, T payload, ApiError error) {
+    @Builder
+    public ApiResult(boolean success, T data, ApiError error) {
         this.success = success;
-        this.payload = payload;
+        this.data = data;
         this.serverDatetime = LocalDateTime.now();
         this.error = error;
     }

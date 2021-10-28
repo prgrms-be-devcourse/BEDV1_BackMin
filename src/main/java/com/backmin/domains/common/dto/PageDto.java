@@ -1,11 +1,12 @@
 package com.backmin.domains.common.dto;
 
-import lombok.Data;
-import org.springframework.data.domain.Page;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter @Setter
 public class PageDto<T> {
 
     private long totalCount;
@@ -18,12 +19,13 @@ public class PageDto<T> {
 
     private boolean hasNext;
 
-    public PageDto(Page<T> tPage) {
-        this.totalCount = tPage.getTotalElements();
-        this.pageNumber = tPage.getNumber();
-        this.pageSize = tPage.getSize();
-        this.list = tPage.getContent();
-        this.hasNext = tPage.hasNext();
+    @Builder
+    public PageDto(long totalCount, int pageNumber, int pageSize, List<T> list, boolean hasNext) {
+        this.totalCount = totalCount;
+        this.pageNumber = pageNumber;
+        this.pageSize = pageSize;
+        this.list = list;
+        this.hasNext = hasNext;
     }
 
 }
