@@ -16,7 +16,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "menu _option")
+@Table(name = "menu_option")
 public class MenuOption extends BaseEntity {
 
     @Id

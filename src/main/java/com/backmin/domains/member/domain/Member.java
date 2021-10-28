@@ -4,12 +4,16 @@ import com.backmin.domains.common.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "members")
+@Table(
+        name = "members",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "UK_member_id", columnNames = "member_id"),
+                @UniqueConstraint(name = "UK_member_email", columnNames = "email")
+        })
 public class Member extends BaseEntity {
 
     @Id
@@ -17,8 +21,7 @@ public class Member extends BaseEntity {
     @Column(name = "member_id", nullable = false)
     private Long id;
 
-    @Email
-    @Column(name = "email", length = 30, nullable = false)
+    @Column(name = "email", length = 50, nullable = false)
     private String email;
 
     @Column(name = "password", length = 50, nullable = false)

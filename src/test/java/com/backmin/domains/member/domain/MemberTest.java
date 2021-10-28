@@ -7,9 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.List;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
+
 import java.util.Optional;
 
+@Slf4j
 @DataJpaTest
 class MemberTest {
 
@@ -27,7 +30,7 @@ class MemberTest {
                 .build();
 
         memberRepository.save(member);
-        System.out.println("Member Id : "+ member.getId() + "Member Email : "+ member.getEmail() + "Member Creadted At : " + member.getCreatedAt());
+        //log.info("생성된 Member Info \nMember Id : "+ member.getId() + "Member Email : "+ member.getEmail() + "Member Creadted At : " + member.getCreatedAt());
     }
 
     @Test
@@ -35,7 +38,7 @@ class MemberTest {
     public void read_member() {
         Optional<Member> member = memberRepository.findById(1L);
         if(!member.isEmpty()) {
-            System.out.println("Member Nickname : " + member.get().getNickName());
+            assertThat(member.get().getNickName(), is(equalTo("이구역개발왕")));
         }
     }
 
@@ -43,9 +46,10 @@ class MemberTest {
     @DisplayName("멤버를 수정한다")
     public void update_member() {
         Optional<Member> member = memberRepository.findById(1L);
+        String beforeNickname = member.get().getNickName();
         member.get().changeNickName("개발왕은나야");
 
-        System.out.println("Changed Member Nickname : " + member.get().getNickName());
+        assertThat(member.get().getNickName(), is(equalTo(beforeNickname)));
     }
 
     @Test
@@ -54,7 +58,7 @@ class MemberTest {
         memberRepository.deleteAll();
         //List<Member> members = memberRepository.findAll();
 
-        System.out.println(memberRepository.count());
+        assertThat(memberRepository.count(), is(equalTo(0)));
     }
 
 }
