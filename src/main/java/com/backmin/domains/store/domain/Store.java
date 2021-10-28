@@ -67,6 +67,7 @@ public class Store {
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
+    @Builder
     public Store(Long id,
                  String name,
                  String phoneNumber,
