@@ -106,13 +106,13 @@ public class Store {
     static public Store of(
             String name,
             String phoneNumber,
+            String storeIntro,
             int minOrderPrice,
             int minDeliveryTime,
             int maxDeliveryTime,
-            String storeIntro,
+            int deliveryTip,
             boolean isService,
             boolean isPackage,
-            int deliveryTip,
             Category category
     ) {
         Store store = Store.builder()
@@ -134,13 +134,13 @@ public class Store {
     static public Store of(
             String name,
             String phoneNumber,
+            String storeIntro,
             int minOrderPrice,
             int minDeliveryTime,
             int maxDeliveryTime,
-            String storeIntro,
+            int deliveryTip,
             boolean isService,
             boolean isPackage,
-            int deliveryTip,
             Category category,
             List<Menu> menus
     ) {
