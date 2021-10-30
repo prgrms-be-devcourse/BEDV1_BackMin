@@ -1,14 +1,14 @@
 package com.backmin.domains.store.service;
 
+import com.backmin.domains.store.converter.CategoryConverter;
 import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.CategoryRepository;
-import com.backmin.domains.store.dto.CategoryDto;
+import com.backmin.domains.store.dto.CategoryInfoAtList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,14 +17,14 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public List<CategoryDto> readAllCategories() {
+    private final CategoryConverter categoryConverter;
+
+    public List<CategoryInfoAtList> readAllCategories() {
         final List<Category> categories = categoryRepository.findAll();
 
         return categories.stream()
-                .map(category -> CategoryDto.builder()
-                        .id(category.getId())
-                        .name(category.getName())
-                        .build()).collect(Collectors.toList());
+                .map(categoryConverter::convertCategoryToCategoryInfoAtList)
+                .collect(Collectors.toList());
     }
 
 }

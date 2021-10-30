@@ -1,18 +1,19 @@
 package com.backmin.domains.store.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
-@AllArgsConstructor
-@Builder
 public class ReadAllCategoriesResponse {
 
-    private List<CategoryDto> categoryDtos;
+    private List<CategoryInfoAtList> categories;
 
+    public static ReadAllCategoriesResponse of(List<CategoryInfoAtList> categorys) {
+        ReadAllCategoriesResponse readAllCategoriesResponse = new ReadAllCategoriesResponse();
+        readAllCategoriesResponse.setCategories(categorys);
+
+        return readAllCategoriesResponse;
+    }
 }

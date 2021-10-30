@@ -2,6 +2,7 @@ package com.backmin.domains.store.controller;
 
 import com.backmin.domains.common.dto.ApiResult;
 import com.backmin.domains.store.dto.CategoryDto;
+import com.backmin.domains.store.dto.CategoryInfoAtList;
 import com.backmin.domains.store.dto.ReadAllCategoriesResponse;
 import com.backmin.domains.store.service.CategoryService;
 import java.util.List;
@@ -20,11 +21,9 @@ public class CategoryController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult<ReadAllCategoriesResponse> list() {
-        List<CategoryDto> categoryDtos = categoryService.readAllCategories();
+        List<CategoryInfoAtList> categoryInfoAtLists = categoryService.readAllCategories();
 
-        ReadAllCategoriesResponse response = ReadAllCategoriesResponse.builder()
-                .categoryDtos(categoryDtos)
-                .build();
+        ReadAllCategoriesResponse response = ReadAllCategoriesResponse.of(categoryInfoAtLists);
 
         return ApiResult.ok(response);
     }
