@@ -1,5 +1,6 @@
 package com.backmin.domains.menu.dto;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,5 +19,9 @@ public class MenuDto {
     private boolean isPopular;
 
     private int price;
+
+    private int quantity = 1;
+
+    private List<MenuOptionDto> menuOptionDtos;
 
 }
