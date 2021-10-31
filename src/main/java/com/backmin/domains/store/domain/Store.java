@@ -1,6 +1,6 @@
 package com.backmin.domains.store.domain;
 
-import com.backmin.domains.menu.domain.MenuCategory;
+import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.review.domain.Review;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -57,8 +57,8 @@ public class Store {
     @Min(0)
     private int deliveryTip;
 
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MenuCategory> menuCategories = new ArrayList<>();
+    @OneToMany(mappedBy = "store", cascade = CascadeType.MERGE, orphanRemoval = true)
+    private List<Menu> menus = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category", nullable = false)
@@ -93,11 +93,11 @@ public class Store {
         this.isPackage = isPackage;
         this.deliveryTip = deliveryTip;
         this.category = category;
-        this.menuCategories = new ArrayList<>();
+        this.menus = new ArrayList<>();
     }
 
-    public void addMenuCategory(MenuCategory menuCategory) {
-        menuCategory.changeStore(this);
+    public void addMenu(Menu menu) {
+        menu.changeStore(this);
     }
 
     public void addReview(Review review) {

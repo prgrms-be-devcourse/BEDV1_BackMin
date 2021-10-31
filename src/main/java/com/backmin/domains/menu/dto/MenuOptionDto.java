@@ -11,12 +11,8 @@ public class MenuOptionDto {
 
     private String name;
 
-    private Long topOptionId;
+    private int price;
 
-    private int maxOptionQuantity;
-
-    private int minOptionQuantity;
-
-    private boolean isSoldOut;
+    private int quantity = 1;
 
 }

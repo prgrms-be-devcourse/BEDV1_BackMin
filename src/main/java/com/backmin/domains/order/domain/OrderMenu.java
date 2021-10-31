@@ -45,15 +45,24 @@ public class OrderMenu {
     @Builder
     public OrderMenu(Long orderMenuId, Menu menu, Order order, int quantity, int price) {
         this.orderMenuId = orderMenuId;
-        this.menu = menu;
+        changeMenu(menu);
         this.order = order;
         this.quantity = quantity;
         this.price = price;
         this.orderMenuOptions = new ArrayList<>();
     }
 
+    public static OrderMenu of(Menu menu, int quantity) {
+        return OrderMenu.builder()
+                .menu(menu)
+                .price(menu.getPrice())
+                .quantity(quantity)
+                .build();
+    }
+
     public void addOrderMenuOption(OrderMenuOption orderMenuOption) {
         orderMenuOption.changeOrderMenu(this);
+        this.price += orderMenuOption.getPrice() * quantity;
     }
 
     public void changeMenu(Menu menu) {

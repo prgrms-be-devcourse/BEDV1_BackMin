@@ -3,6 +3,7 @@ package com.backmin.domains.order.domain;
 import com.backmin.domains.common.BaseEntity;
 import com.backmin.domains.member.domain.Member;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import javax.validation.constraints.Min;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "orders")
+@AllArgsConstructor
 public class Order extends BaseEntity {
 
     @Id
@@ -37,7 +39,7 @@ public class Order extends BaseEntity {
     @Column(name = "request_at", nullable = false)
     private LocalDateTime requestAt;
 
-    @Column(name = "complete_at", nullable = false)
+    @Column(name = "complete_at")
     private LocalDateTime completeAt;
 
     @Enumerated(EnumType.STRING)
@@ -55,7 +57,7 @@ public class Order extends BaseEntity {
     private List<OrderMenu> orderMenus = new ArrayList<>();
 
     @Builder
-    public Order(Long id,
+    private Order(Long id,
                  String address,
                  OrderStatus status,
                  String requirement,
@@ -77,8 +79,21 @@ public class Order extends BaseEntity {
         this.orderMenus = new ArrayList<>();
     }
 
+    public static Order of(String address, String requirement, Payment payment, Member member, int deliveryTip) {
+        return Order.builder()
+                .address(address)
+                .requirement(requirement)
+                .payMent(payment)
+                .member(member)
+                .requestAt(LocalDateTime.now())
+                .status(OrderStatus.ACCEPTED)
+                .totalPrice(deliveryTip)
+                .build();
+    }
+
     public void addOrderMenu(OrderMenu orderMenu) {
         orderMenu.changeOrder(this);
+        this.totalPrice += orderMenu.getPrice() * orderMenu.getQuantity();
     }
 
 }
