@@ -140,13 +140,13 @@ class OrderControllerTest {
         MenuOptionReadRequest menuOptionDto = new MenuOptionReadRequest();
         menuOptionDto.setId(saveMenuOption.getId());
 
-        List<MenuOptionReadRequest> menuOptionDtos = new ArrayList<>();
-        menuOptionDtos.add(menuOptionDto);
+        List<Long> menuOptionDtos = new ArrayList<>();
+        menuOptionDtos.add(menuOptionDto.getId());
 
         MenuReadRequest menuReadRequest = new MenuReadRequest();
         menuReadRequest.setId(saveMenu.getId());
         menuReadRequest.setQuantity(2);
-        menuReadRequest.setMenuOptionReadRequests(menuOptionDtos);
+        menuReadRequest.setMenuOptionId(menuOptionDtos);
 
         List<MenuReadRequest> menuReadRequests = new ArrayList<>();
         menuReadRequests.add(menuReadRequest);

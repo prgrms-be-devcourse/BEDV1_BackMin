@@ -3,7 +3,6 @@ package com.backmin.domains.order.service;
 import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
-import com.backmin.domains.menu.dto.MenuOptionReadRequest;
 import com.backmin.domains.menu.dto.MenuReadRequest;
 import com.backmin.domains.order.domain.Order;
 import com.backmin.domains.order.domain.OrderMenu;
@@ -51,9 +50,9 @@ public class OrderService {
     }
 
     private void addOrderMenuOption(MenuReadRequest menuDto, Menu menu, OrderMenu orderMenu) {
-        for (MenuOptionReadRequest menuOptionReadRequest : menuDto.getMenuOptionReadRequests()) {
+        for (Long menuOptionId : menuDto.getMenuOptionId()) {
             for (MenuOption menuOption : menu.getMenuOptions()) {
-                if (menuOption.getId().equals(menuOptionReadRequest.getId())) {
+                if (menuOption.getId().equals(menuOptionId)) {
                     OrderMenuOption orderMenuOption = OrderMenuOption.of(menuOption, menuOption.getPrice());
                     orderMenu.addOrderMenuOption(orderMenuOption);
                 }

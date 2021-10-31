@@ -16,6 +16,6 @@ public class MenuReadRequest {
     @Max(10)
     private int quantity;
 
-    private List<MenuOptionReadRequest> menuOptionReadRequests;
+    private List<Long> menuOptionId;
 
 }
