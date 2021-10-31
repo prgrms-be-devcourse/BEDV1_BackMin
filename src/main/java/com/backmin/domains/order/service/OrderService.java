@@ -34,6 +34,10 @@ public class OrderService {
     public void saveOrder(OrderCreateRequest request, Member member, Store store) {
         Order order = Order.of(request.getAddress(), request.getRequirement(), request.getPayment(), member, store.getDeliveryTip());
         addOrderMenu(request, store, order);
+
+        if (order.getTotalPrice() < store.getMinOrderPrice()) {
+            throw new RuntimeException("최소 주문 금액을 넘어야합니다.");
+        }
         orderRepository.save(order);
     }
 
