@@ -2,14 +2,16 @@ package com.backmin.domains.store.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.notNullValue;
 
 import com.backmin.domains.common.dto.PageDto;
 import com.backmin.domains.menu.domain.Menu;
+import com.backmin.domains.menu.domain.MenuOption;
 import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
+import com.backmin.domains.store.dto.DetailStoreInfoReadResponse;
 import com.backmin.domains.store.dto.StoreInfoAtList;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +19,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +38,7 @@ class StoreServiceTest {
 
     @Test
     @DisplayName("카테고리별 가게목록 조회 테스트")
-    void readPagingStoresByCategoryId() {
+    void test_readPagingStoresByCategoryId() {
         // given
         final int PAGE_SIZE = 2;
 
@@ -117,4 +117,55 @@ class StoreServiceTest {
 
     }
 
+    @Test
+    @DisplayName("가게 상세조회 테스트")
+    void test_readDetailStoreInfo() {
+        // given
+        Category category1 = Category.builder()
+                .name("한식")
+                .build();
+        categoryRepository.save(category1);
+
+        MenuOption option1 = MenuOption.of("치즈추가", 500);
+        MenuOption option2 = MenuOption.of("사리추가", 600);
+        MenuOption option3 = MenuOption.of("감자추가", 700);
+        MenuOption option4 = MenuOption.of("고구마추가", 800);
+        List<MenuOption> menuOptions1 = List.of(option1, option2);
+        List<MenuOption> menuOptions2 = List.of(option3, option4);
+
+        Menu menu1 = Menu.of("엽기떡볶이", true, false, true, 17000, "겁나 맛있는 떡볶이입니다.", menuOptions1);
+        Menu menu2 = Menu.of("치즈떡볶이", true, false, true, 18000, "겁나 맛있는 치즈 떡볶이입니다.", menuOptions2);
+        List<Menu> menus = List.of(menu1, menu2);
+
+        Store store1 = Store.of(
+                "동대문 엽기 떡볶이",
+                "070364532746",
+                "엽떡집입니다.",
+                1000,
+                30,
+                60,
+                2000,
+                true,
+                true,
+                category1,
+                menus
+        );
+        storeRepository.save(store1);
+
+        // when
+        DetailStoreInfoReadResponse detailStoreInfoReadResponse = storeService.readDetailStore(store1.getId());
+
+        // then
+        assertThat(detailStoreInfoReadResponse.getStore(), notNullValue());
+        assertThat(detailStoreInfoReadResponse.getBestMenus(), notNullValue());
+        assertThat(detailStoreInfoReadResponse.getMenus(), notNullValue());
+
+        List<Long> bestMenuIdsBefore = menus.stream()
+                .filter(Menu::isBest)
+                .map(menu -> menu.getId())
+                .collect(Collectors.toList());
+        assertThat(detailStoreInfoReadResponse.getBestMenus().size(), is(bestMenuIdsBefore.size()));
+        assertThat(detailStoreInfoReadResponse.getMenus().size(), is(menus.size()));
+
+    }
 }
