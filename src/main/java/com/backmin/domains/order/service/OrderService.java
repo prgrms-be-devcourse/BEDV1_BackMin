@@ -3,8 +3,6 @@ package com.backmin.domains.order.service;
 import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
-import com.backmin.domains.menu.domain.MenuOptionRepository;
-import com.backmin.domains.menu.domain.MenuRepository;
 import com.backmin.domains.menu.dto.MenuOptionReadRequest;
 import com.backmin.domains.menu.dto.MenuReadRequest;
 import com.backmin.domains.order.domain.Order;
@@ -13,6 +11,8 @@ import com.backmin.domains.order.domain.OrderMenuOption;
 import com.backmin.domains.order.domain.OrderRepository;
 import com.backmin.domains.order.dto.OrderCreateRequest;
 import com.backmin.domains.store.domain.Store;
+import com.backmin.domains.store.domain.StoreRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,17 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-
-    /**
-     * 임시 의존
-     */
-    private final MenuRepository menuRepository;
-    private final MenuOptionRepository menuOptionRepository;
+    private final StoreRepository storeRepository;
 
     @Transactional
     public void saveOrder(OrderCreateRequest request, Member member, Store store) {
         Order order = Order.of(request.getAddress(), request.getRequirement(), request.getPayment(), member, store.getDeliveryTip());
-        addOrderMenu(request, order);
+        addOrderMenu(request, store, order);
 
         if (order.getTotalPrice() < store.getMinOrderPrice()) {
             throw new RuntimeException("최소 주문 금액을 넘어야합니다.");
@@ -41,47 +36,29 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    private void addOrderMenu(OrderCreateRequest request, Order order) {
+    private void addOrderMenu(OrderCreateRequest request, Store store, Order order) {
+        List<Menu> menus = store.getMenus();
+
         for (MenuReadRequest menuDto : request.getMenuReadRequests()) {
-            Menu menu = menuRepository.findById(menuDto.getId()).get();
-            OrderMenu orderMenu = OrderMenu.of(menu, menu.getPrice(), menuDto.getQuantity());
-            addOrderMenuOption(menuDto, orderMenu);
-            order.addOrderMenu(orderMenu);
+            for (Menu menu : menus) {
+                if (menu.getId().equals(menuDto.getId())) {
+                    OrderMenu orderMenu = OrderMenu.of(menu, menu.getPrice(), menuDto.getQuantity());
+                    addOrderMenuOption(menuDto, menu, orderMenu);
+                    order.addOrderMenu(orderMenu);
+                }
+            }
         }
-
-        /**
-         * store를 조회해올때 메뉴도 패치조인 필요
-         */
-//        for (MenuDto menuDto : request.getMenuDtos()) {
-//            for (Menu menu : store.getMenus()) {
-//                if (menu.equals(menuDto.getId())) {
-//                    OrderMenu orderMenu = OrderMenu.of(menu, menuDto.getQuantity());
-//                    addOrderMenuOption(menuDto, menu, orderMenu);
-//                    order.addOrderMenu(orderMenu);
-//                }
-//            }
-//        }
-
     }
 
-    private void addOrderMenuOption(MenuReadRequest menuDto, OrderMenu orderMenu) {
-        for (MenuOptionReadRequest menuOptionRequest : menuDto.getMenuOptionReadRequests()) {
-            MenuOption menuOption = menuOptionRepository.findById(menuOptionRequest.getId()).get();
-            OrderMenuOption orderMenuOption = OrderMenuOption.of(menuOption, menuOption.getPrice());
-            orderMenu.addOrderMenuOption(orderMenuOption);
+    private void addOrderMenuOption(MenuReadRequest menuDto, Menu menu, OrderMenu orderMenu) {
+        for (MenuOptionReadRequest menuOptionReadRequest : menuDto.getMenuOptionReadRequests()) {
+            for (MenuOption menuOption : menu.getMenuOptions()) {
+                if (menuOption.getId().equals(menuOptionReadRequest.getId())) {
+                    OrderMenuOption orderMenuOption = OrderMenuOption.of(menuOption, menuOption.getPrice());
+                    orderMenu.addOrderMenuOption(orderMenuOption);
+                }
+            }
         }
-
-        /**
-         * menuOption lazy로딩이 안됨
-         */
-//        for (MenuOptionDto menuOptionDto : menuDto.getMenuOptionDtos()) {
-//            for (MenuOption menuOption : menu.getMenuOptions()) {
-//                if (menuOption.equals(menuOptionDto.getId())) {
-//                    OrderMenuOption orderMenuOption = OrderMenuOption.of(menuOption, menuOptionDto.getQuantity());
-//                    orderMenu.addOrderMenuOption(orderMenuOption);
-//                }
-//            }
-//        }
     }
 
 }

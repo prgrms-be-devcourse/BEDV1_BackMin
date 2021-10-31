@@ -62,7 +62,7 @@ public class OrderMenu {
 
     public void addOrderMenuOption(OrderMenuOption orderMenuOption) {
         orderMenuOption.changeOrderMenu(this);
-        this.price += orderMenuOption.getPrice() * quantity;
+        this.price += orderMenuOption.getPrice();
     }
 
     public void changeMenu(Menu menu) {

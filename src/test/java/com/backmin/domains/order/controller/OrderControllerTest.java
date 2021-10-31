@@ -33,6 +33,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -64,6 +65,7 @@ class OrderControllerTest {
 
     @Test
     @DisplayName("주문 저장 API 테스트")
+    @Transactional
     void createOrder() throws Exception {
         Store store = Store.builder()
                 .name("동대문 엽기 떡볶이")
@@ -101,7 +103,7 @@ class OrderControllerTest {
         assertThat(order.getAddress()).isEqualTo(orderCreateRequest.getAddress());
         assertThat(order.getStatus()).isEqualTo(OrderStatus.ACCEPTED);
         assertThat(order.getPayMent()).isEqualTo(Payment.KAKAO_PAY);
-        assertThat(order.getTotalPrice()).isEqualTo(31000);
+        assertThat(order.getTotalPrice()).isEqualTo(29000);
     }
 
     private Member saveMember() {
