@@ -4,21 +4,24 @@ import com.backmin.domains.common.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "members")
+@Table(
+        name = "members",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "UK_member_id", columnNames = "member_id"),
+                @UniqueConstraint(name = "UK_member_email", columnNames = "email")
+        })
 public class Member extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue
     @Column(name = "member_id", nullable = false)
     private Long id;
 
-    @Email
-    @Column(name = "email", length = 30, nullable = false)
+    @Column(name = "email", length = 50, nullable = false)
     private String email;
 
     @Column(name = "password", length = 50, nullable = false)
@@ -34,13 +37,36 @@ public class Member extends BaseEntity {
     private String address;
 
     @Builder
-    public Member(Long id, String email, String password, String phoneNumber, String nickName, String address) {
+    public Member(Long id,
+            String email,
+            String password,
+            String phoneNumber,
+            String nickName,
+            String address
+    ) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.nickName = nickName;
         this.address = address;
+    }
+
+    public static Member of(Long id,
+            String email,
+            String password,
+            String phoneNumber,
+            String nickName,
+            String address
+    ) {
+        return Member.builder()
+                .id(id)
+                .email(email)
+                .password(password)
+                .phoneNumber(phoneNumber)
+                .nickName(nickName)
+                .address(address)
+                .build();
     }
 
     public void changeNickName(String nickName) {

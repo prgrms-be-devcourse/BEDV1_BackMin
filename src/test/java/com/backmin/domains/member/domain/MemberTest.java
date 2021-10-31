@@ -16,25 +16,33 @@ class MemberTest {
     @Autowired
     MemberRepository memberRepository;
 
-    @BeforeEach
+    @Test
     public void create_member() {
-        Member member = Member.builder()
-                .email("membertest@gmail.com")
-                .password("test01")
-                .address("서울시 강남구 역삼동")
-                .nickName("이구역개발왕")
-                .phoneNumber("010-1234-5678")
-                .build();
+        Member member = new Member(1L,
+                "membertest@gmail.com",
+                "test01",
+                "이구역개발왕",
+                "010-1234-5678",
+                "서울시 강남구 역삼동");
+
+        Member member1 = new Member(1L,
+                "membertest@gmail.com",
+                "test01",
+                "이구역개발왕",
+                "010-1234-5678",
+                "서울시 강남구 역삼동");
 
         memberRepository.save(member);
-        System.out.println("Member Id : "+ member.getId() + "Member Email : "+ member.getEmail() + "Member Creadted At : " + member.getCreatedAt());
+        memberRepository.save(member1);
+
+        System.out.println("Member Id : " + member.getId() + "Member Email : " + member.getEmail() + "Member Creadted At : " + member.getCreatedAt());
     }
 
     @Test
     @DisplayName("멤버를 불러온다")
     public void read_member() {
         Optional<Member> member = memberRepository.findById(1L);
-        if(!member.isEmpty()) {
+        if (!member.isEmpty()) {
             System.out.println("Member Nickname : " + member.get().getNickName());
         }
     }

@@ -12,7 +12,6 @@ import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -21,7 +20,7 @@ import java.time.LocalDateTime;
 public class Review extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue
     @Column(name = "review_id", nullable = false)
     private Long id;
 
