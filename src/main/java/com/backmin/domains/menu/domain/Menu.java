@@ -56,12 +56,12 @@ public class Menu extends BaseEntity {
 
     @Builder
     public Menu(Long id,
-                String name,
-                boolean isBest,
-                boolean isSoldOut,
-                boolean isPopular,
-                int price,
-                String description
+            String name,
+            boolean isBest,
+            boolean isSoldOut,
+            boolean isPopular,
+            int price,
+            String description,
     ) {
         this.id = id;
         this.name = name;
@@ -72,6 +72,29 @@ public class Menu extends BaseEntity {
         this.description = description;
         this.orderMenus = new ArrayList<>();
         this.menuOptions = new ArrayList<>();
+    }
+
+    public static Menu of(
+            String name,
+            boolean isBest,
+            boolean isSoldOut,
+            boolean isPopular,
+            int price,
+            String description,
+            List<MenuOption> menuOptions
+    ) {
+        Menu menu = Menu.builder()
+                .name(name)
+                .isBest(isBest)
+                .isSoldOut(isSoldOut)
+                .isPopular(isPopular)
+                .price(price)
+                .description(description)
+                .build();
+
+        menuOptions.forEach(menu::addMenuOption);
+
+        return menu;
     }
 
     public void addMenuOption(MenuOption menuOption) {

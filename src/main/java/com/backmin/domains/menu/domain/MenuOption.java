@@ -2,18 +2,24 @@ package com.backmin.domains.menu.domain;
 
 import com.backmin.domains.common.BaseEntity;
 import com.backmin.domains.order.domain.OrderMenuOption;
-import javax.validation.constraints.Min;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Getter
@@ -31,8 +37,17 @@ public class MenuOption extends BaseEntity {
     private String name;
 
     @Column(name = "price")
-    @Min(0)
     private int price;
+  
+    private int price;
+
+    private Long topOptionId;
+
+    private int maxOptionQuantity;
+
+    private int minOptionQuantity;
+
+    private boolean isSoldOut;
 
     @OneToMany(mappedBy = "menuOption", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMenuOption> orderMenuOptions = new ArrayList<>();
@@ -46,7 +61,13 @@ public class MenuOption extends BaseEntity {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.orderMenuOptions = new ArrayList<>();
+    }
+
+    public static MenuOption of(String name, int price) {
+        return MenuOption.builder()
+                .name(name)
+                .price(price)
+                .build();
     }
 
     public void addOrderMenuOption(OrderMenuOption orderMenuOption) {
