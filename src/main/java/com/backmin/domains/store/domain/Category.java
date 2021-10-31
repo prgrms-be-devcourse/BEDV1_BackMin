@@ -28,4 +28,17 @@ public class Category extends BaseEntity {
         this.name = name;
     }
 
+    public static Category of(String name) {
+        return Category.builder()
+                .name(name)
+                .build();
+    }
+
+    public static Category of(Long id, String name) {
+        return Category.builder()
+                .id(id)
+                .name(name)
+                .build();
+    }
+
 }
