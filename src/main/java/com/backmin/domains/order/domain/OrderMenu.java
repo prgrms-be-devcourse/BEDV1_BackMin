@@ -52,10 +52,10 @@ public class OrderMenu {
         this.orderMenuOptions = new ArrayList<>();
     }
 
-    public static OrderMenu of(Menu menu, int quantity) {
+    public static OrderMenu of(Menu menu, int price, int quantity) {
         return OrderMenu.builder()
                 .menu(menu)
-                .price(menu.getPrice())
+                .price(price)
                 .quantity(quantity)
                 .build();
     }

@@ -1,6 +1,6 @@
 package com.backmin.domains.order.dto;
 
-import com.backmin.domains.menu.dto.MenuDto;
+import com.backmin.domains.menu.dto.MenuReadRequest;
 import com.backmin.domains.order.domain.Payment;
 import java.util.List;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public class OrderCreateRequest {
 
     private Long storeId;
 
-    private List<MenuDto> menuDtos;
+    private List<MenuReadRequest> menuReadRequests;
 
     private Payment payment;
 

@@ -57,7 +57,7 @@ public class Store {
     @Min(0)
     private int deliveryTip;
 
-    @OneToMany(mappedBy = "store", cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Menu> menus = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

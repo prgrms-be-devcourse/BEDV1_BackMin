@@ -30,21 +30,17 @@ public class OrderMenuOption {
 
     private int price;
 
-    private int quantity;
-
     @Builder
-    public OrderMenuOption(Long id, MenuOption menuOption, int price, int quantity) {
+    public OrderMenuOption(Long id, MenuOption menuOption, int price) {
         this.id = id;
         this.menuOption = menuOption;
         this.price = price;
-        this.quantity = quantity;
     }
 
-    public static OrderMenuOption of(MenuOption menuOption, int quantity) {
+    public static OrderMenuOption of(MenuOption menuOption, int price) {
         return OrderMenuOption.builder()
                 .menuOption(menuOption)
-                .price(menuOption.getPrice())
-                .quantity(quantity)
+                .price(price)
                 .build();
     }
 

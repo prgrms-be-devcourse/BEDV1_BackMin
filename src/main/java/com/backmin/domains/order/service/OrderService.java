@@ -5,8 +5,8 @@ import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
 import com.backmin.domains.menu.domain.MenuOptionRepository;
 import com.backmin.domains.menu.domain.MenuRepository;
-import com.backmin.domains.menu.dto.MenuDto;
-import com.backmin.domains.menu.dto.MenuOptionDto;
+import com.backmin.domains.menu.dto.MenuOptionReadRequest;
+import com.backmin.domains.menu.dto.MenuReadRequest;
 import com.backmin.domains.order.domain.Order;
 import com.backmin.domains.order.domain.OrderMenu;
 import com.backmin.domains.order.domain.OrderMenuOption;
@@ -42,9 +42,9 @@ public class OrderService {
     }
 
     private void addOrderMenu(OrderCreateRequest request, Order order) {
-        for (MenuDto menuDto : request.getMenuDtos()) {
+        for (MenuReadRequest menuDto : request.getMenuReadRequests()) {
             Menu menu = menuRepository.findById(menuDto.getId()).get();
-            OrderMenu orderMenu = OrderMenu.of(menu, menuDto.getQuantity());
+            OrderMenu orderMenu = OrderMenu.of(menu, menu.getPrice(), menuDto.getQuantity());
             addOrderMenuOption(menuDto, orderMenu);
             order.addOrderMenu(orderMenu);
         }
@@ -64,10 +64,10 @@ public class OrderService {
 
     }
 
-    private void addOrderMenuOption(MenuDto menuDto, OrderMenu orderMenu) {
-        for (MenuOptionDto menuOptionDto : menuDto.getMenuOptionDtos()) {
-            MenuOption menuOption = menuOptionRepository.findById(menuOptionDto.getId()).get();
-            OrderMenuOption orderMenuOption = OrderMenuOption.of(menuOption, menuOptionDto.getQuantity());
+    private void addOrderMenuOption(MenuReadRequest menuDto, OrderMenu orderMenu) {
+        for (MenuOptionReadRequest menuOptionRequest : menuDto.getMenuOptionReadRequests()) {
+            MenuOption menuOption = menuOptionRepository.findById(menuOptionRequest.getId()).get();
+            OrderMenuOption orderMenuOption = OrderMenuOption.of(menuOption, menuOption.getPrice());
             orderMenu.addOrderMenuOption(orderMenuOption);
         }
 
