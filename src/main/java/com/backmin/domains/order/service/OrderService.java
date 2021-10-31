@@ -33,7 +33,7 @@ public class OrderService {
     @Transactional
     public void saveOrder(OrderCreateRequest request, Member member, Store store) {
         Order order = Order.of(request.getAddress(), request.getRequirement(), request.getPayment(), member, store.getDeliveryTip());
-        addOrderMenu(request, store, order);
+        addOrderMenu(request, order);
 
         if (order.getTotalPrice() < store.getMinOrderPrice()) {
             throw new RuntimeException("최소 주문 금액을 넘어야합니다.");
@@ -41,11 +41,11 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    private void addOrderMenu(OrderCreateRequest request, Store store, Order order) {
+    private void addOrderMenu(OrderCreateRequest request, Order order) {
         for (MenuDto menuDto : request.getMenuDtos()) {
             Menu menu = menuRepository.findById(menuDto.getId()).get();
             OrderMenu orderMenu = OrderMenu.of(menu, menuDto.getQuantity());
-            addOrderMenuOption(menuDto, menu, orderMenu);
+            addOrderMenuOption(menuDto, orderMenu);
             order.addOrderMenu(orderMenu);
         }
 
@@ -64,7 +64,7 @@ public class OrderService {
 
     }
 
-    private void addOrderMenuOption(MenuDto menuDto, Menu menu, OrderMenu orderMenu) {
+    private void addOrderMenuOption(MenuDto menuDto, OrderMenu orderMenu) {
         for (MenuOptionDto menuOptionDto : menuDto.getMenuOptionDtos()) {
             MenuOption menuOption = menuOptionRepository.findById(menuOptionDto.getId()).get();
             OrderMenuOption orderMenuOption = OrderMenuOption.of(menuOption, menuOptionDto.getQuantity());
