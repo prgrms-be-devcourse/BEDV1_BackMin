@@ -53,7 +53,7 @@ public class MenuOption extends BaseEntity {
     private Menu menu;
 
     @Builder
-    public MenuOption(
+    public MenuOption(Long id,
             String name,
             int price,
             Long topOptionId,
@@ -62,6 +62,7 @@ public class MenuOption extends BaseEntity {
             boolean isSoldOut,
             Menu menu
     ) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.topOptionId = topOptionId;
