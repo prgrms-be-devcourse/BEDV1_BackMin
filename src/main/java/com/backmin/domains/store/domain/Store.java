@@ -1,16 +1,24 @@
 package com.backmin.domains.store.domain;
 
-import com.backmin.domains.menu.domain.MenuCategory;
+import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.review.domain.Review;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import javax.validation.constraints.Min;
 
 @Entity
 @Getter
@@ -41,13 +49,13 @@ public class Store {
     @Min(0)
     private int maxDeliveryTime;
 
-    @Column(name = "store_intro", length = 3000, nullable = false)
+    @Column(name = "store_intro", length = 3000)
     private String storeIntro;
 
     @Column(name = "is_service")
     private boolean isService;
 
-    @Column(name = "main_intro", length = 3000, nullable = false)
+    @Column(name = "main_intro", length = 3000)
     private String mainIntro;
 
     @Column(name = "is_package")
@@ -58,7 +66,7 @@ public class Store {
     private int deliveryTip;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MenuCategory> menuCategories = new ArrayList<>();
+    private List<Menu> menus = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category", nullable = false)
@@ -68,20 +76,19 @@ public class Store {
     private List<Review> reviews = new ArrayList<>();
 
     @Builder
-    public Store(Long id,
-                 String name,
-                 String phoneNumber,
-                 int minOrderPrice,
-                 int minDeliveryTime,
-                 int maxDeliveryTime,
-                 String storeIntro,
-                 boolean isService,
-                 String mainIntro,
-                 boolean isPackage,
-                 int deliveryTip,
-                 Category category
+    public Store(
+            String name,
+            String phoneNumber,
+            int minOrderPrice,
+            int minDeliveryTime,
+            int maxDeliveryTime,
+            String storeIntro,
+            boolean isService,
+            String mainIntro,
+            boolean isPackage,
+            int deliveryTip,
+            Category category
     ) {
-        this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.minOrderPrice = minOrderPrice;
@@ -93,11 +100,70 @@ public class Store {
         this.isPackage = isPackage;
         this.deliveryTip = deliveryTip;
         this.category = category;
-        this.menuCategories = new ArrayList<>();
+        this.menus = new ArrayList<>();
     }
 
-    public void addMenuCategory(MenuCategory menuCategory) {
-        menuCategory.changeStore(this);
+    static public Store of(
+            String name,
+            String phoneNumber,
+            String storeIntro,
+            int minOrderPrice,
+            int minDeliveryTime,
+            int maxDeliveryTime,
+            int deliveryTip,
+            boolean isService,
+            boolean isPackage,
+            Category category
+    ) {
+        Store store = Store.builder()
+                .name(name)
+                .phoneNumber(phoneNumber)
+                .minOrderPrice(minOrderPrice)
+                .minDeliveryTime(minDeliveryTime)
+                .maxDeliveryTime(maxDeliveryTime)
+                .storeIntro(storeIntro)
+                .isService(isService)
+                .isPackage(isPackage)
+                .deliveryTip(deliveryTip)
+                .category(category)
+                .build();
+
+        return store;
+    }
+
+    static public Store of(
+            String name,
+            String phoneNumber,
+            String storeIntro,
+            int minOrderPrice,
+            int minDeliveryTime,
+            int maxDeliveryTime,
+            int deliveryTip,
+            boolean isService,
+            boolean isPackage,
+            Category category,
+            List<Menu> menus
+    ) {
+        Store store = Store.builder()
+                .name(name)
+                .phoneNumber(phoneNumber)
+                .minOrderPrice(minOrderPrice)
+                .minDeliveryTime(minDeliveryTime)
+                .maxDeliveryTime(maxDeliveryTime)
+                .storeIntro(storeIntro)
+                .isService(isService)
+                .isPackage(isPackage)
+                .deliveryTip(deliveryTip)
+                .category(category)
+                .build();
+
+        menus.stream().forEach(menu -> store.addMenu(menu));
+
+        return store;
+    }
+
+    public void addMenu(Menu menu) {
+        menu.changeStore(this);
     }
 
     public void addReview(Review review) {

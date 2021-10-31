@@ -34,6 +34,9 @@ public class MenuOption extends BaseEntity {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
+    @Column(name = "price")
+    private int price;
+
     private Long topOptionId;
 
     private int maxOptionQuantity;
@@ -52,6 +55,7 @@ public class MenuOption extends BaseEntity {
     @Builder
     public MenuOption(Long id,
             String name,
+            int price,
             Long topOptionId,
             int maxOptionQuantity,
             int minOptionQuantity,
@@ -60,12 +64,23 @@ public class MenuOption extends BaseEntity {
     ) {
         this.id = id;
         this.name = name;
+        this.price = price;
         this.topOptionId = topOptionId;
         this.maxOptionQuantity = maxOptionQuantity;
         this.minOptionQuantity = minOptionQuantity;
         this.isSoldOut = isSoldOut;
         this.menu = menu;
         this.orderMenuOptions = new ArrayList<>();
+    }
+
+    public static MenuOption of(
+            String name,
+            int price
+    ) {
+        return MenuOption.builder()
+                .name(name)
+                .price(price)
+                .build();
     }
 
     public void addOrderMenuOption(OrderMenuOption orderMenuOption) {

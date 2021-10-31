@@ -2,6 +2,7 @@ package com.backmin.domains.menu.domain;
 
 import com.backmin.domains.common.BaseEntity;
 import com.backmin.domains.order.domain.OrderMenu;
+import com.backmin.domains.store.domain.Store;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,18 +49,18 @@ public class Menu extends BaseEntity {
     private List<MenuOption> menuOptions = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_category_id")
-    private MenuCategory menuCategory;
+    @JoinColumn(name = "store_id")
+    private Store store;
 
     @Builder
     public Menu(Long id,
-                String name,
-                boolean isBest,
-                boolean isSoldOut,
-                boolean isPopular,
-                int price,
-                String description,
-                MenuCategory menuCategory
+            String name,
+            boolean isBest,
+            boolean isSoldOut,
+            boolean isPopular,
+            int price,
+            String description,
+            Store store
     ) {
         this.id = id;
         this.name = name;
@@ -68,9 +69,32 @@ public class Menu extends BaseEntity {
         this.isPopular = isPopular;
         this.price = price;
         this.description = description;
-        this.menuCategory = menuCategory;
+        this.store = store;
         this.orderMenus = new ArrayList<>();
         this.menuOptions = new ArrayList<>();
+    }
+
+    public static Menu of(
+            String name,
+            boolean isBest,
+            boolean isSoldOut,
+            boolean isPopular,
+            int price,
+            String description,
+            List<MenuOption> menuOptions
+    ) {
+        Menu menu = Menu.builder()
+                .name(name)
+                .isBest(isBest)
+                .isSoldOut(isSoldOut)
+                .isPopular(isPopular)
+                .price(price)
+                .description(description)
+                .build();
+
+        menuOptions.forEach(menu::addMenuOption);
+
+        return menu;
     }
 
     public void addMenuOption(MenuOption menuOption) {
@@ -81,13 +105,13 @@ public class Menu extends BaseEntity {
         orderMenu.changeMenu(this);
     }
 
-    public void changeMenuCategory(MenuCategory menuCategory) {
-        if (Objects.nonNull(this.menuCategory)) {
-            this.menuCategory.getMenus().remove(this);
+    public void changeStore(Store store) {
+        if (Objects.nonNull(this.store)) {
+            this.store.getMenus().remove(this);
         }
 
-        this.menuCategory = menuCategory;
-        menuCategory.getMenus().add(this);
+        this.store = store;
+        store.getMenus().add(this);
     }
 
 }
