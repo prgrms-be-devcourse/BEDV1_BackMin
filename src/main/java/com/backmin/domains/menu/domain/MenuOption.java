@@ -2,21 +2,28 @@ package com.backmin.domains.menu.domain;
 
 import com.backmin.domains.common.BaseEntity;
 import com.backmin.domains.order.domain.OrderMenuOption;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "menu _option")
+@Table(name = "menu_option")
 public class MenuOption extends BaseEntity {
 
     @Id
@@ -26,6 +33,9 @@ public class MenuOption extends BaseEntity {
 
     @Column(name = "name", length = 50, nullable = false)
     private String name;
+
+    @Column(name = "price")
+    private int price;
 
     private Long topOptionId;
 
@@ -43,22 +53,33 @@ public class MenuOption extends BaseEntity {
     private Menu menu;
 
     @Builder
-    public MenuOption(Long id,
-                      String name,
-                      Long topOptionId,
-                      int maxOptionQuantity,
-                      int minOptionQuantity,
-                      boolean isSoldOut,
-                      Menu menu
+    public MenuOption(
+            String name,
+            int price,
+            Long topOptionId,
+            int maxOptionQuantity,
+            int minOptionQuantity,
+            boolean isSoldOut,
+            Menu menu
     ) {
-        this.id = id;
         this.name = name;
+        this.price = price;
         this.topOptionId = topOptionId;
         this.maxOptionQuantity = maxOptionQuantity;
         this.minOptionQuantity = minOptionQuantity;
         this.isSoldOut = isSoldOut;
         this.menu = menu;
         this.orderMenuOptions = new ArrayList<>();
+    }
+
+    public static MenuOption of(
+            String name,
+            int price
+    ) {
+        return MenuOption.builder()
+                .name(name)
+                .price(price)
+                .build();
     }
 
     public void addOrderMenuOption(OrderMenuOption orderMenuOption) {
