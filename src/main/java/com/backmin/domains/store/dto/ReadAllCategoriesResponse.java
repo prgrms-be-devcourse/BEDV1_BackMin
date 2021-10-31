@@ -10,9 +10,9 @@ public class ReadAllCategoriesResponse {
 
     private List<CategoryInfoAtList> categories;
 
-    public static ReadAllCategoriesResponse of(List<CategoryInfoAtList> categorys) {
+    public static ReadAllCategoriesResponse of(List<CategoryInfoAtList> categories) {
         ReadAllCategoriesResponse readAllCategoriesResponse = new ReadAllCategoriesResponse();
-        readAllCategoriesResponse.setCategories(categorys);
+        readAllCategoriesResponse.setCategories(categories);
 
         return readAllCategoriesResponse;
     }

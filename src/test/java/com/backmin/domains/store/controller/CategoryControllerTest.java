@@ -2,6 +2,7 @@ package com.backmin.domains.store.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.backmin.domains.store.domain.Category;
@@ -44,8 +45,11 @@ class CategoryControllerTest {
         mockMvc.perform(get(BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("success").exists())
+                .andExpect(jsonPath("data").exists())
+                .andExpect(jsonPath("data.categories").exists())
+                .andExpect(jsonPath("serverDatetime").exists())
                 .andDo(print());
-
     }
 
 }

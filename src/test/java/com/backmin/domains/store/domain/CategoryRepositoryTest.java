@@ -35,4 +35,5 @@ class CategoryRepositoryTest {
         assertThat(foundCategories, notNullValue());
         assertThat(foundCategories.size(), is(categories.size()));
     }
+
 }
