@@ -74,7 +74,9 @@ public class StoreService {
                         store,
                         menuRepository.findBestMenusByStore(store.getId()).stream()
                                 .map(menu -> getConvertedMenuInfoAtStoreList(menu))
-                                .collect(Collectors.toList())
+                                .collect(Collectors.toList()),
+                        reviewRepository.getReviewAverageByStore(store.getId()),
+                        reviewRepository.getReviewTotalCountByStore(store.getId())
                 ))
                 .collect(Collectors.toList());
 

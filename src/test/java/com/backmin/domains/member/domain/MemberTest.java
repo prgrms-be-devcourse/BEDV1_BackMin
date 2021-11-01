@@ -43,7 +43,6 @@ class MemberTest {
     @DisplayName("멤버를 수정한다")
     public void update_member() {
         Optional<Member> member = memberRepository.findById(1L);
-        member.get().changeNickName("개발왕은나야");
 
         System.out.println("Changed Member Nickname : " + member.get().getNickName());
     }
