@@ -133,8 +133,7 @@ class ReviewRepositoryTest {
                 2000,
                 true,
                 true,
-                savedCategory,
-                new ArrayList<>() // menus
+                savedCategory
         );
         Store savedStore = storeRepository.save(store1);
 
