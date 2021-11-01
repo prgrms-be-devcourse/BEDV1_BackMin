@@ -4,7 +4,7 @@ import com.backmin.domains.common.enums.ErrorInfo;
 import lombok.Getter;
 
 @Getter
-public class BusinessException extends RuntimeException{
+public class BusinessException extends RuntimeException {
 
     private ErrorInfo errorInfo;
 

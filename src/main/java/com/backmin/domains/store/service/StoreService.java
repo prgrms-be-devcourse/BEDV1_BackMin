@@ -81,7 +81,8 @@ public class StoreService {
         return menuConverter.convertMenuToMenuInfoAtStoreDetail(
                 menu,
                 menu.getMenuOptions().stream()
-                        .map(menuOptionConverter::convertMenuOptionToMenuOptionInfoAtStoreDetail).collect(Collectors.toList()));
+                        .map(menuOptionConverter::convertMenuOptionToMenuOptionInfoAtStoreDetail)
+                        .collect(Collectors.toList()));
     }
 
     private MenuInfoAtStoreList getConvertedMenuInfoAtStoreList(Menu menu) {
