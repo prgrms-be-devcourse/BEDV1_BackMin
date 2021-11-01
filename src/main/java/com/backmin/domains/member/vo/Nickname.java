@@ -1,6 +1,15 @@
 package com.backmin.domains.member.vo;
 
-public interface Nickname {
+import lombok.Getter;
+import lombok.Setter;
 
-    public boolean checkNicknameDuplicate(String nickname);
+@Getter
+@Setter
+public class Nickname{
+
+    private String nickName;
+
+    public Nickname(String nickName) {
+        this.nickName = nickName;
+    }
 }
