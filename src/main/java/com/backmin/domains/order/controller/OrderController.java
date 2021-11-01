@@ -1,9 +1,11 @@
 package com.backmin.domains.order.controller;
 
 import com.backmin.domains.common.dto.ApiResult;
+import com.backmin.domains.common.dto.PageDto;
 import com.backmin.domains.common.enums.ErrorInfo;
 import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.member.domain.MemberRepository;
+import com.backmin.domains.member.dto.MemberOrderPageResponse;
 import com.backmin.domains.member.service.MemberService;
 import com.backmin.domains.order.dto.OrderCreateRequest;
 import com.backmin.domains.order.dto.UpdateOrderStatusRequest;
@@ -11,7 +13,9 @@ import com.backmin.domains.order.service.OrderService;
 import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,6 +58,12 @@ public class OrderController {
             return ApiResult.ok();
         }
         return ApiResult.error(ErrorInfo.NOT_FOUND.getCode(), ErrorInfo.NOT_FOUND.getMessage());
+    }
+
+    @GetMapping("/members/{memberId}")
+    public ApiResult<PageDto<MemberOrderPageResponse>> getMemberOrders(@PathVariable Long memberId, Pageable pageRequest) {
+        Member member = memberRepository.findById(memberId).get();
+        return ApiResult.ok(orderService.getOrdersByMember(member.getId(), pageRequest));
     }
 
 }

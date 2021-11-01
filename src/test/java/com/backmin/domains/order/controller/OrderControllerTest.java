@@ -1,6 +1,7 @@
 package com.backmin.domains.order.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,6 +28,7 @@ import com.backmin.domains.store.domain.StoreRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,6 +167,48 @@ class OrderControllerTest {
         Order saveOrder = orderRepository.findById(order.getId()).get();
 
         assertThat(saveOrder.getStatus()).isEqualTo(OrderStatus.ACCEPTED);
+    }
+
+    @Test
+    @DisplayName("주문 내역 상세 조회")
+    void getOrdersByMemberId() throws Exception {
+        Member member = Member.builder()
+                .nickName("hello")
+                .phoneNumber("111")
+                .address("주소")
+                .email("email12@email.com")
+                .password("password")
+                .build();
+        Member saveMember = memberRepository.save(member);
+
+        Store store = Store.builder()
+                .name("동대문 엽기 떡볶이")
+                .deliveryTip(1000)
+                .phoneNumber("010-1111-2222")
+                .minOrderPrice(10000)
+                .minDeliveryTime(60)
+                .maxDeliveryTime(120)
+                .mainIntro("메인 소개")
+                .storeIntro("매콤 매콤 떡볶이!")
+                .deliveryTip(3000)
+                .category(saveCategory())
+                .member(member)
+                .build();
+        Store saveStore = storeRepository.save(store);
+
+        Order order = Order.of("주소", "요청사항", Payment.KAKAO_PAY, member, saveStore, 1000);
+        IntStream.range(1, 10).forEach(i -> orderRepository.save(order));
+
+        mockMvc.perform(get("/api/v1/bm/orders/members/{memberId}", saveMember.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", String.valueOf(0))
+                .param("size", String.valueOf(10)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("data.totalCount").exists())
+                .andExpect(jsonPath("data.pageNumber").exists())
+                .andExpect(jsonPath("data.pageSize").exists())
+                .andExpect(jsonPath("data.list").exists());
     }
 
     private Member saveMember() {
