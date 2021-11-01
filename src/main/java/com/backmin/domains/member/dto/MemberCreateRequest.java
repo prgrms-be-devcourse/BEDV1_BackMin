@@ -16,7 +16,7 @@ public class MemberCreateRequest {
 
     @NotBlank(message = "가입하실 이메일을 입력해주세요.")
     @Length(max = 50, message = "이메일 주소는 50자를 넘을 수 없습니다.")
-//    @Pattern(regexp = "([\\w\\.\\-_]+)?\\w+@[\\w-_]+(\\.\\w+){1,}")
+    @Pattern(regexp = "([\\w\\.\\-_]+)?\\w+@[\\w-_]+(\\.\\w+){1,}")
     private String email;
 
     @NotBlank(message = "비밀번호를 입력해주세요.")

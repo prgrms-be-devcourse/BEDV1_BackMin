@@ -12,10 +12,6 @@ public class MemberUpdateRequest {
 
     private Long id;
 
-    private String email;
-
-    private String password;
-
     private String phoneNumber;
 
     private String nickName;
@@ -23,16 +19,12 @@ public class MemberUpdateRequest {
     private String address;
 
     public static MemberUpdateRequest of(Long id,
-//            String password,
-//            String email,
             String phoneNumber,
             String nickName,
             String address
     ) {
         MemberUpdateRequest memberUpdateRequest = new MemberUpdateRequest();
         memberUpdateRequest.setId(id);
-//        memberUpdateRequest.setPassword(password);
-//        memberUpdateRequest.setEmail(email);
         memberUpdateRequest.setPhoneNumber(phoneNumber);
         memberUpdateRequest.setNickName(nickName);
         memberUpdateRequest.setAddress(address);

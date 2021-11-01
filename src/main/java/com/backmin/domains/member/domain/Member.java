@@ -1,12 +1,16 @@
 package com.backmin.domains.member.domain;
 
 import com.backmin.domains.common.BaseEntity;
-import java.util.Objects;
-import javax.validation.constraints.NotNull;
-import lombok.*;
-
-import javax.persistence.*;
-import org.springframework.util.StringUtils;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -74,7 +78,6 @@ public class Member extends BaseEntity {
 
     public void updateInfo(String nickName, String phoneNumber, String address) {
         if (!(nickName.isBlank())) {
-//        if (Objects.nonNull(nickName)) {
             this.nickName = nickName;
         }
 

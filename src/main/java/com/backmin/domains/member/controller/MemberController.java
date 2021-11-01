@@ -20,13 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@ResponseStatus(HttpStatus.OK)
 @RequestMapping(path = "/api/v1/bm/members", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class MemberController {
 
     private final MemberService memberService;
 
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult createMember(@RequestBody @Valid MemberCreateRequest memberCreateRequest) {
         memberService.save(memberCreateRequest);

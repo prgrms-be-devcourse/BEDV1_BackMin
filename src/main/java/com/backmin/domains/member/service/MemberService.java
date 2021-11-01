@@ -23,12 +23,12 @@ public class MemberService {
 
     @Transactional
     public void save(MemberCreateRequest memberCreateRequest) {
-        EmailCheckRequest checkEmail = checkMemberEmail(memberCreateRequest.getEmail());
-        NicknameCheckRequest checkNickname = checkMemberNickname(memberCreateRequest.getNickName());
-        if(checkEmail.isDuplication())
+        if (checkMemberEmail(memberCreateRequest.getEmail()).isDuplication()) {
             throw new IllegalArgumentException("이미 중복된 이메일이 있습니다.");
-        if(checkNickname.isDuplication())
+        }
+        if (checkMemberNickname(memberCreateRequest.getNickName()).isDuplication()) {
             throw new IllegalArgumentException("이미 중복된 닉네임이 있습니다.");
+        }
         memberRepository.save(memberConverter.convertSaveDtoToMember(memberCreateRequest));
     }
 

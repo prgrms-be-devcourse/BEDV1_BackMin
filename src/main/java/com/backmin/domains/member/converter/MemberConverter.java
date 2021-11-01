@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class MemberConverter {
 
     public Member convertSaveDtoToMember(MemberCreateRequest memberSaveDto) {
-        return new Member(memberSaveDto.getId(),
+        return Member.of(memberSaveDto.getId(),
                 memberSaveDto.getEmail(),
                 memberSaveDto.getPassword(),
                 memberSaveDto.getPhoneNumber(),
