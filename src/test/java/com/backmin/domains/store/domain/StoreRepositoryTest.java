@@ -1,6 +1,7 @@
 package com.backmin.domains.store.domain;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
@@ -8,7 +9,9 @@ import static org.hamcrest.Matchers.samePropertyValuesAs;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -159,6 +162,53 @@ class StoreRepositoryTest {
                 .collect(Collectors.toList());
         assertThat(menuIdsBefore, samePropertyValuesAs(menuIdsAfter));
 
+    }
+
+    @Test
+    @DisplayName("가게 이름으로 검색 테스트")
+    void test_searchStoresByName() {
+
+        Category category1 = Category.builder()
+                .name("한식")
+                .build();
+        categoryRepository.save(category1);
+
+        Store store1 = Store.of(
+                "동대문 엽기 떡볶이",
+                "070364532746",
+                "엽떡집입니다.",
+                1000,
+                30,
+                60,
+                2000,
+                true,
+                true,
+                category1,
+                Collections.emptyList()
+        );
+
+        Store store2 = Store.of(
+                "참이맛 감자탕",
+                "070364532746",
+                "뼈해장국 맛집입니다.",
+                1000,
+                30,
+                60,
+                2000,
+                true,
+                true,
+                category1,
+                Collections.emptyList()
+        );
+        List<Store> stores = List.of(store1, store2);
+        storeRepository.saveAll(stores);
+
+        PageRequest pageRequest = PageRequest.of(0, 2);
+
+        Page<Store> storePage = storeRepository.findStoresByNameContaining("감자탕", pageRequest);
+
+        assertThat(storePage.getTotalElements(), is(1L));
+        assertThat(storePage.getContent().get(0).getName(), containsString("감자탕"));
     }
 
 }
