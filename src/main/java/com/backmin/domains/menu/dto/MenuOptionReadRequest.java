@@ -5,14 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MenuOptionDto {
+public class MenuOptionReadRequest {
 
     private Long id;
-
-    private String name;
-
-    private int price;
-
-    private int quantity = 1;
 
 }

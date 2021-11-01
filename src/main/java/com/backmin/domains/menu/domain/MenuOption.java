@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +25,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "menu_option")
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class MenuOption extends BaseEntity {
 
     @Id
@@ -37,14 +39,6 @@ public class MenuOption extends BaseEntity {
     @Column(name = "price")
     private int price;
 
-    private Long topOptionId;
-
-    private int maxOptionQuantity;
-
-    private int minOptionQuantity;
-
-    private boolean isSoldOut;
-
     @OneToMany(mappedBy = "menuOption", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMenuOption> orderMenuOptions = new ArrayList<>();
 
@@ -53,30 +47,13 @@ public class MenuOption extends BaseEntity {
     private Menu menu;
 
     @Builder
-    public MenuOption(Long id,
-            String name,
-            int price,
-            Long topOptionId,
-            int maxOptionQuantity,
-            int minOptionQuantity,
-            boolean isSoldOut,
-            Menu menu
-    ) {
+    public MenuOption(Long id, String name, int price) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.topOptionId = topOptionId;
-        this.maxOptionQuantity = maxOptionQuantity;
-        this.minOptionQuantity = minOptionQuantity;
-        this.isSoldOut = isSoldOut;
-        this.menu = menu;
-        this.orderMenuOptions = new ArrayList<>();
     }
 
-    public static MenuOption of(
-            String name,
-            int price
-    ) {
+    public static MenuOption of(String name, int price) {
         return MenuOption.builder()
                 .name(name)
                 .price(price)

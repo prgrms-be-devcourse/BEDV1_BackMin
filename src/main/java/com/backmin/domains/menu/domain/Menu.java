@@ -5,6 +5,7 @@ import com.backmin.domains.order.domain.OrderMenu;
 import com.backmin.domains.store.domain.Store;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,10 +18,11 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "menu")
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class Menu extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "menu_id", nullable = false)
     private Long id;
 
@@ -42,10 +44,10 @@ public class Menu extends BaseEntity {
     @Column(name = "decription", length = 200, nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "menu", orphanRemoval = true)
     private List<OrderMenu> orderMenus = new ArrayList<>();
 
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "menu", orphanRemoval = true)
     private List<MenuOption> menuOptions = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -59,8 +61,7 @@ public class Menu extends BaseEntity {
             boolean isSoldOut,
             boolean isPopular,
             int price,
-            String description,
-            Store store
+            String description
     ) {
         this.id = id;
         this.name = name;
@@ -69,7 +70,6 @@ public class Menu extends BaseEntity {
         this.isPopular = isPopular;
         this.price = price;
         this.description = description;
-        this.store = store;
         this.orderMenus = new ArrayList<>();
         this.menuOptions = new ArrayList<>();
     }

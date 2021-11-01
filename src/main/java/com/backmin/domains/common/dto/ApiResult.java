@@ -20,8 +20,17 @@ public class ApiResult<T> {
         this.serverDatetime = LocalDateTime.now();
     }
 
+    public ApiResult(boolean success) {
+        this.success = success;
+        this.serverDatetime = LocalDateTime.now();
+    }
+
     public static <T> ApiResult<T> ok(T response) {
         return new ApiResult<>(true, response);
+    }
+
+    public static ApiResult ok() {
+        return new ApiResult<>(true);
     }
 
     public static ApiResult error(String code, Object message) {

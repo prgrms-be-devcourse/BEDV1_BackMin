@@ -28,11 +28,20 @@ public class OrderMenuOption {
     @JoinColumn(name = "order_menu_id", nullable = false)
     private OrderMenu orderMenu;
 
+    private int price;
+
     @Builder
-    public OrderMenuOption(Long id, MenuOption menuOption, OrderMenu orderMenu) {
+    public OrderMenuOption(Long id, MenuOption menuOption, int price) {
         this.id = id;
         this.menuOption = menuOption;
-        this.orderMenu = orderMenu;
+        this.price = price;
+    }
+
+    public static OrderMenuOption of(MenuOption menuOption, int price) {
+        return OrderMenuOption.builder()
+                .menuOption(menuOption)
+                .price(price)
+                .build();
     }
 
     public void changeMenuOption(MenuOption menuOption) {
