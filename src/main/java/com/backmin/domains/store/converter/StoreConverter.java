@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class StoreConverter {
 
-    public StoreInfoAtList convertToStoreInfoAtList(Store store, List<MenuInfoAtStoreList> menuInfoAtStoreLists) {
+    public StoreInfoAtList convertToStoreInfoAtList(Store store, List<MenuInfoAtStoreList> menuInfoAtStoreLists, double averageReviewScore, int totalReviewCount) {
         return StoreInfoAtList.of(
                 store.getId(),
                 store.getName(),
@@ -19,8 +19,8 @@ public class StoreConverter {
                 store.getMaxDeliveryTime(),
                 store.getDeliveryTip(),
                 store.isPackage(),
-                0, // TODO : 평균 평점 넣기
-                0, // TODO : 총 리뷰 수 넣기
+                averageReviewScore, // TODO : 평균 평점 넣기
+                totalReviewCount, // TODO : 총 리뷰 수 넣기
                 menuInfoAtStoreLists
         );
     }
