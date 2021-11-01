@@ -1,24 +1,34 @@
 package com.backmin.domains.member.domain;
 
 import com.backmin.domains.common.BaseEntity;
-import lombok.*;
-
-import javax.persistence.*;
-import javax.validation.constraints.Email;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "members")
+@Table(
+        name = "members",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "UK_member_id", columnNames = "member_id"),
+                @UniqueConstraint(name = "UK_member_email", columnNames = "email")
+        })
 public class Member extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue
     @Column(name = "member_id", nullable = false)
     private Long id;
 
-    @Email
-    @Column(name = "email", length = 30, nullable = false)
+    @Column(name = "email", length = 50, nullable = false)
     private String email;
 
     @Column(name = "password", length = 50, nullable = false)
@@ -34,7 +44,13 @@ public class Member extends BaseEntity {
     private String address;
 
     @Builder
-    public Member(Long id, String email, String password, String phoneNumber, String nickName, String address) {
+    public Member(Long id,
+            String email,
+            String password,
+            String phoneNumber,
+            String nickName,
+            String address
+    ) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -43,16 +59,35 @@ public class Member extends BaseEntity {
         this.address = address;
     }
 
-    public void changeNickName(String nickName) {
-        this.nickName = nickName;
+    public static Member of(Long id,
+            String email,
+            String password,
+            String phoneNumber,
+            String nickName,
+            String address
+    ) {
+        return Member.builder()
+                .id(id)
+                .email(email)
+                .password(password)
+                .phoneNumber(phoneNumber)
+                .nickName(nickName)
+                .address(address)
+                .build();
     }
 
-    public void changePhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+    public void updateInfo(String nickName, String phoneNumber, String address) {
+        if (!(nickName.isBlank())) {
+            this.nickName = nickName;
+        }
 
-    public void changeAddress(String address) {
-        this.address = address;
+        if (!(phoneNumber.isBlank())) {
+            this.phoneNumber = phoneNumber;
+        }
+
+        if(!(address.isBlank())) {
+            this.address = address;
+        }
     }
 
 }

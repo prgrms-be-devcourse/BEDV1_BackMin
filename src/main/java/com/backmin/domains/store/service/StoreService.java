@@ -8,6 +8,7 @@ import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuRepository;
 import com.backmin.domains.menu.dto.MenuInfoAtStoreDetail;
 import com.backmin.domains.menu.dto.MenuInfoAtStoreList;
+import com.backmin.domains.review.domain.ReviewRepository;
 import com.backmin.domains.store.converter.StoreConverter;
 import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
@@ -29,6 +30,7 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private final MenuRepository menuRepository;
+    private final ReviewRepository reviewRepository;
     private final StoreConverter storeConverter;
     private final MenuConverter menuConverter;
     private final MenuOptionConverter menuOptionConverter;
