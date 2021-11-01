@@ -1,11 +1,11 @@
 package com.backmin.domains.order.service;
 
-import com.backmin.domains.common.dto.PageDto;
+import com.backmin.domains.common.dto.PageResult;
 import com.backmin.domains.member.domain.Member;
-import com.backmin.domains.member.dto.MemberOrderPageResponse;
+import com.backmin.domains.member.dto.response.MemberOrderPageResult;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
-import com.backmin.domains.menu.dto.MenuReadRequest;
+import com.backmin.domains.menu.dto.request.MenuReadParam;
 import com.backmin.domains.order.converter.OrderConverter;
 import com.backmin.domains.order.domain.Order;
 import com.backmin.domains.order.domain.OrderMenu;
@@ -45,7 +45,7 @@ public class OrderService {
     private void addOrderMenu(OrderCreateRequest request, Store store, Order order) {
         List<Menu> menus = store.getMenus();
 
-        for (MenuReadRequest menuDto : request.getMenuReadRequests()) {
+        for (MenuReadParam menuDto : request.getMenuReadParams()) {
             for (Menu menu : menus) {
                 if (menu.getId().equals(menuDto.getId())) {
                     OrderMenu orderMenu = OrderMenu.of(menu, menu.getPrice(), menuDto.getQuantity());
@@ -56,7 +56,7 @@ public class OrderService {
         }
     }
 
-    private void addOrderMenuOption(MenuReadRequest menuDto, Menu menu, OrderMenu orderMenu) {
+    private void addOrderMenuOption(MenuReadParam menuDto, Menu menu, OrderMenu orderMenu) {
         for (Long menuOptionId : menuDto.getMenuOptionId()) {
             for (MenuOption menuOption : menu.getMenuOptions()) {
                 if (menuOption.getId().equals(menuOptionId)) {
@@ -98,7 +98,7 @@ public class OrderService {
         }
     }
 
-    public PageDto<MemberOrderPageResponse> getOrdersByMember(Long memberId, Pageable pageRequest) {
+    public PageResult<MemberOrderPageResult> getOrdersByMember(Long memberId, Pageable pageRequest) {
         Page<Order> orders = orderRepository.findAllByMemberId(memberId, pageRequest);
         return orderConverter.convertOrderToMemberOrderPageResponse(orders);
     }

@@ -1,4 +1,4 @@
-package com.backmin.domains.common.exception;
+package com.backmin.config.exception;
 
 import com.backmin.domains.common.enums.ErrorInfo;
 import lombok.Getter;

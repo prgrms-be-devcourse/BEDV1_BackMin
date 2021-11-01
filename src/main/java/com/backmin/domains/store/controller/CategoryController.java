@@ -1,9 +1,8 @@
 package com.backmin.domains.store.controller;
 
 import com.backmin.domains.common.dto.ApiResult;
-import com.backmin.domains.store.dto.CategoryDto;
-import com.backmin.domains.store.dto.CategoryInfoAtList;
-import com.backmin.domains.store.dto.ReadAllCategoriesResponse;
+import com.backmin.domains.store.dto.response.CategoryAtListResult;
+import com.backmin.domains.store.dto.response.CategoriesReadResult;
 import com.backmin.domains.store.service.CategoryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +19,10 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResult<ReadAllCategoriesResponse> list() {
-        List<CategoryInfoAtList> categoryInfoAtLists = categoryService.readAllCategories();
+    public ApiResult<CategoriesReadResult> list() {
+        List<CategoryAtListResult> categoryAtListResults = categoryService.readAllCategories();
 
-        ReadAllCategoriesResponse response = ReadAllCategoriesResponse.of(categoryInfoAtLists);
+        CategoriesReadResult response = CategoriesReadResult.of(categoryAtListResults);
 
         return ApiResult.ok(response);
     }

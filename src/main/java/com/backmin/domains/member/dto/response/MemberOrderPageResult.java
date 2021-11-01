@@ -1,6 +1,6 @@
-package com.backmin.domains.member.dto;
+package com.backmin.domains.member.dto.response;
 
-import com.backmin.domains.menu.dto.MenuReadResponse;
+import com.backmin.domains.menu.dto.response.MenuReadResult;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberOrderPageResponse {
+public class MemberOrderPageResult {
 
     private Long orderId;
 
@@ -16,7 +16,7 @@ public class MemberOrderPageResponse {
 
     private String storeName;
 
-    private List<MenuReadResponse> menuReadResponses;
+    private List<MenuReadResult> menuReadRespons;
 
     private LocalDateTime OrderDateTime;
 

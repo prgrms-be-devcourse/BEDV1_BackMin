@@ -31,11 +31,9 @@ public class OrderMenu {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @Min(0)
     @Column(name = "quantity")
     private int quantity;
 
-    @Min(0)
     @Column(name = "price")
     private int price;
 

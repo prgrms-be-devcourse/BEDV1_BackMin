@@ -5,18 +5,16 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
-import com.backmin.domains.common.dto.PageDto;
+import com.backmin.domains.common.dto.PageResult;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
 import com.backmin.domains.menu.domain.MenuOptionRepository;
-import com.backmin.domains.menu.domain.MenuRepository;
 import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
-import com.backmin.domains.store.dto.DetailStoreInfoReadResponse;
-import com.backmin.domains.store.dto.StoreInfoAtList;
-import java.util.ArrayList;
+import com.backmin.domains.store.dto.response.DetailStoreReadResult;
+import com.backmin.domains.store.dto.response.StoreInfoAtListResult;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +22,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -102,7 +99,7 @@ class StoreServiceTest {
         PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE);
 
         // when
-        PageDto<StoreInfoAtList> response = storeService.readPagingStoresByCategoryId(category1.getId(), pageRequest);
+        PageResult<StoreInfoAtListResult> response = storeService.readPagingStoresByCategoryId(category1.getId(), pageRequest);
 
         // then
         assertThat(response.getTotalCount(), is(Long.valueOf(stores.size())));
@@ -146,19 +143,19 @@ class StoreServiceTest {
         storeRepository.save(store1);
 
         // when
-        DetailStoreInfoReadResponse detailStoreInfoReadResponse = storeService.readDetailStore(store1.getId());
+        DetailStoreReadResult detailStoreReadResult = storeService.readDetailStore(store1.getId());
 
         // then
-        assertThat(detailStoreInfoReadResponse.getStore(), notNullValue());
-        assertThat(detailStoreInfoReadResponse.getBestMenus(), notNullValue());
-        assertThat(detailStoreInfoReadResponse.getMenus(), notNullValue());
+        assertThat(detailStoreReadResult.getStore(), notNullValue());
+        assertThat(detailStoreReadResult.getBestMenus(), notNullValue());
+        assertThat(detailStoreReadResult.getMenus(), notNullValue());
 
         List<Long> bestMenuIdsBefore = menus.stream()
                 .filter(Menu::isBest)
                 .map(menu -> menu.getId())
                 .collect(Collectors.toList());
-        assertThat(detailStoreInfoReadResponse.getBestMenus().size(), is(bestMenuIdsBefore.size()));
-        assertThat(detailStoreInfoReadResponse.getMenus().size(), is(menus.size()));
+        assertThat(detailStoreReadResult.getBestMenus().size(), is(bestMenuIdsBefore.size()));
+        assertThat(detailStoreReadResult.getMenus().size(), is(menus.size()));
     }
 
     @Test
@@ -201,7 +198,7 @@ class StoreServiceTest {
 
         PageRequest pageRequest = PageRequest.of(0, 2);
 
-        PageDto<StoreInfoAtList> searchedStorePage = storeService.searchStoresByName("감자탕", pageRequest);
+        PageResult<StoreInfoAtListResult> searchedStorePage = storeService.searchStoresByName("감자탕", pageRequest);
 
         assertThat(searchedStorePage.getTotalCount(), is(1L));
         assertThat(searchedStorePage.getList().get(0).getStoreName(), containsString("감자탕"));

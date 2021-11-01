@@ -8,8 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-/** todo: 네이밍 수정할 것 */
-public class PageDto<T> {
+public class PageResult<T> {
 
     private long totalCount;
 
@@ -22,7 +21,7 @@ public class PageDto<T> {
     private boolean hasNext;
 
     @Builder
-    public PageDto(long totalCount, int pageNumber, int pageSize, List<T> list, boolean hasNext) {
+    public PageResult(long totalCount, int pageNumber, int pageSize, List<T> list, boolean hasNext) {
         this.totalCount = totalCount;
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
@@ -30,7 +29,7 @@ public class PageDto<T> {
         this.hasNext = hasNext;
     }
 
-    public PageDto() {
+    public PageResult() {
 
     }
 

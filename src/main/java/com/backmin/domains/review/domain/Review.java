@@ -9,11 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Objects;
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -22,7 +18,7 @@ import java.time.LocalDateTime;
 public class Review extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue
     @Column(name = "review_id", nullable = false)
     private Long id;
 
@@ -30,9 +26,7 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "store_id")
     private Store store;
 
-    @Column(name = "score", nullable = true)
-    @Min(1)
-    @Max(5)
+    @Column(name = "score")
     private double score;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -96,12 +90,12 @@ public class Review extends BaseEntity {
     }
 
     public void changeStore(Store store) {
-        if (Objects.nonNull(this.store)) {
-            this.store.getReviews().remove(this);
-        }
+//        if (Objects.nonNull(this.store)) {
+//            this.store.getReviews().remove(this);
+//        }
 
         this.store = store;
-        store.getReviews().add(this);
+//        store.getReviews().add(this);
     }
 
 }

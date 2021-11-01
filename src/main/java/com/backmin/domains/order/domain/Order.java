@@ -3,17 +3,27 @@ package com.backmin.domains.order.domain;
 import com.backmin.domains.common.BaseEntity;
 import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.store.domain.Store;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.*;
-import javax.validation.constraints.Min;
 
 @Entity
 @Getter
@@ -51,7 +61,6 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "store_id")
     private Store store;
 
-    @Min(0)
     private int totalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -119,4 +128,5 @@ public class Order extends BaseEntity {
     public void changeOrderStatus(OrderStatus orderStatus) {
         this.status = orderStatus;
     }
+
 }

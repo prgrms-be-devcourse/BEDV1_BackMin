@@ -6,8 +6,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.CategoryRepository;
-import com.backmin.domains.store.dto.CategoryDto;
-import com.backmin.domains.store.dto.CategoryInfoAtList;
+import com.backmin.domains.store.dto.response.CategoryAtListResult;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,11 +36,11 @@ class CategoryServiceTest {
         categoryRepository.saveAll(categories);
 
         // when
-        List<CategoryInfoAtList> categoryInfoAtLists = categoryService.readAllCategories();
+        List<CategoryAtListResult> categoryAtListResults = categoryService.readAllCategories();
 
         // then
-        assertThat(categoryInfoAtLists, notNullValue());
-        assertThat(categoryInfoAtLists.size(), is(categories.size()));
+        assertThat(categoryAtListResults, notNullValue());
+        assertThat(categoryAtListResults.size(), is(categories.size()));
     }
 
 }

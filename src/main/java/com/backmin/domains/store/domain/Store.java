@@ -40,15 +40,12 @@ public class Store {
     private String phoneNumber;
 
     @Column(name = "min_order_price")
-    @Min(0)
     private int minOrderPrice;
 
     @Column(name = "min_delivery_time")
-    @Min(0)
     private int minDeliveryTime;
 
     @Column(name = "max_delivery_time")
-    @Min(0)
     private int maxDeliveryTime;
 
     @Column(name = "store_intro", length = 3000)
@@ -56,9 +53,6 @@ public class Store {
 
     @Column(name = "is_service")
     private boolean isService;
-
-    @Column(name = "main_intro", length = 3000)
-    private String mainIntro;
 
     @Column(name = "is_package")
     private boolean isPackage;
@@ -74,8 +68,8 @@ public class Store {
     @JoinColumn(name = "category", nullable = false)
     private Category category;
 
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviews = new ArrayList<>();
+//    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Review> reviews = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "member_id")
@@ -90,7 +84,6 @@ public class Store {
             int maxDeliveryTime,
             String storeIntro,
             boolean isService,
-            String mainIntro,
             boolean isPackage,
             int deliveryTip,
             Category category,
@@ -103,7 +96,6 @@ public class Store {
         this.maxDeliveryTime = maxDeliveryTime;
         this.storeIntro = storeIntro;
         this.isService = isService;
-        this.mainIntro = mainIntro;
         this.isPackage = isPackage;
         this.deliveryTip = deliveryTip;
         this.category = category;

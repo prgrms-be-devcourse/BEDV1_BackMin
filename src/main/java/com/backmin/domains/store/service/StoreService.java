@@ -1,20 +1,20 @@
 package com.backmin.domains.store.service;
 
-import com.backmin.domains.common.dto.PageDto;
-import com.backmin.domains.common.exception.StoreNotFoundException;
+import com.backmin.domains.common.dto.PageResult;
+import com.backmin.config.exception.StoreNotFoundException;
 import com.backmin.domains.menu.converter.MenuConverter;
 import com.backmin.domains.menu.converter.MenuOptionConverter;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuRepository;
-import com.backmin.domains.menu.dto.MenuInfoAtStoreDetail;
-import com.backmin.domains.menu.dto.MenuInfoAtStoreList;
+import com.backmin.domains.menu.dto.response.MenuAtStoreDetailResult;
+import com.backmin.domains.menu.dto.response.MenuAtStoreListResult;
 import com.backmin.domains.review.domain.ReviewRepository;
 import com.backmin.domains.store.converter.StoreConverter;
 import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
-import com.backmin.domains.store.dto.DetailStoreInfoReadResponse;
-import com.backmin.domains.store.dto.StoreInfoAtDetail;
-import com.backmin.domains.store.dto.StoreInfoAtList;
+import com.backmin.domains.store.dto.response.DetailStoreReadResult;
+import com.backmin.domains.store.dto.response.StoreAtDetailResult;
+import com.backmin.domains.store.dto.response.StoreInfoAtListResult;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -35,41 +35,41 @@ public class StoreService {
     private final MenuConverter menuConverter;
     private final MenuOptionConverter menuOptionConverter;
 
-    public PageDto<StoreInfoAtList> readPagingStoresByCategoryId(Long categoryId, Pageable pageRequest) {
+    public PageResult<StoreInfoAtListResult> readPagingStoresByCategoryId(Long categoryId, Pageable pageRequest) {
         Page<Store> storePage = storeRepository.findPagingStoresByCategoryId(categoryId, pageRequest);
 
         return getPageDtoWithStoreInfoAtList(storePage);
     }
 
-    public DetailStoreInfoReadResponse readDetailStore(Long storeId) {
+    public DetailStoreReadResult readDetailStore(Long storeId) {
         Store foundStore = storeRepository.findStoreById(storeId)
                 .orElseThrow(() -> new StoreNotFoundException());
 
-        StoreInfoAtDetail storeInfo = storeConverter.convertToStoreInfoAtDetail(foundStore);
+        StoreAtDetailResult storeInfo = storeConverter.convertToStoreInfoAtDetail(foundStore);
 
-        List<MenuInfoAtStoreDetail> bestMenuInfos = menuRepository.findBestMenusByStore(storeId).stream()
+        List<MenuAtStoreDetailResult> bestMenuInfos = menuRepository.findBestMenusByStore(storeId).stream()
                 .map(this::getConvertedMenuInfoAtStoreDetail)
                 .collect(Collectors.toList());
 
-        List<MenuInfoAtStoreDetail> menuInfos = foundStore.getMenus().stream()
+        List<MenuAtStoreDetailResult> menuInfos = foundStore.getMenus().stream()
                 .map(this::getConvertedMenuInfoAtStoreDetail
                 ).collect(Collectors.toList());
 
-        return DetailStoreInfoReadResponse.of(
+        return DetailStoreReadResult.of(
                 storeInfo,
                 bestMenuInfos,
                 menuInfos
         );
     }
 
-    public PageDto<StoreInfoAtList> searchStoresByName(String storeName, Pageable pageRequest) {
+    public PageResult<StoreInfoAtListResult> searchStoresByName(String storeName, Pageable pageRequest) {
         Page<Store> searchedStorePage = storeRepository.findStoresByNameContaining(storeName, pageRequest);
 
         return getPageDtoWithStoreInfoAtList(searchedStorePage);
     }
 
-    private PageDto<StoreInfoAtList> getPageDtoWithStoreInfoAtList(Page<Store> searchedStorePage) {
-        List<StoreInfoAtList> searchedStoreInfoAtLists = searchedStorePage.getContent().stream()
+    private PageResult<StoreInfoAtListResult> getPageDtoWithStoreInfoAtList(Page<Store> searchedStorePage) {
+        List<StoreInfoAtListResult> searchedStoreInfoAtListResults = searchedStorePage.getContent().stream()
                 .map(store -> storeConverter.convertToStoreInfoAtList(
                         store,
                         menuRepository.findBestMenusByStore(store.getId()).stream()
@@ -80,8 +80,8 @@ public class StoreService {
                 ))
                 .collect(Collectors.toList());
 
-        return PageDto.<StoreInfoAtList>builder()
-                .list(searchedStoreInfoAtLists)
+        return PageResult.<StoreInfoAtListResult>builder()
+                .list(searchedStoreInfoAtListResults)
                 .hasNext(searchedStorePage.hasNext())
                 .pageSize(searchedStorePage.getSize())
                 .pageNumber(searchedStorePage.getNumber())
@@ -89,7 +89,7 @@ public class StoreService {
                 .build();
     }
 
-    private MenuInfoAtStoreDetail getConvertedMenuInfoAtStoreDetail(Menu menu) {
+    private MenuAtStoreDetailResult getConvertedMenuInfoAtStoreDetail(Menu menu) {
         return menuConverter.convertMenuToMenuInfoAtStoreDetail(
                 menu,
                 menu.getMenuOptions().stream()
@@ -97,7 +97,7 @@ public class StoreService {
                         .collect(Collectors.toList()));
     }
 
-    private MenuInfoAtStoreList getConvertedMenuInfoAtStoreList(Menu menu) {
+    private MenuAtStoreListResult getConvertedMenuInfoAtStoreList(Menu menu) {
         return menuConverter.convertMenuToMenuInfoAtStoreList(
                 menu,
                 menu.getMenuOptions().stream()
