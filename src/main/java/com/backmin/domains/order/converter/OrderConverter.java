@@ -32,10 +32,10 @@ public class OrderConverter {
                                         menuReadResponse.setSoldOut(menu.isSoldOut());
                                         menuReadResponse.setDescription(menu.getDescription());
                                         return menuReadResponse;
-                                    }).toList()
+                                    }).collect(Collectors.toList())
                     );
                     return response;
-                }).toList();
+                }).collect(Collectors.toList());
 
         PageDto<MemberOrderPageResponse> pageDto = new PageDto<>();
         pageDto.setPageNumber(orders.getNumber());
