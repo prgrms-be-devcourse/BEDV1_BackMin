@@ -1,14 +1,14 @@
 package com.backmin.domains.member.converter;
 
 import com.backmin.domains.member.domain.Member;
-import com.backmin.domains.member.dto.MemberCreateRequest;
-import com.backmin.domains.member.dto.MemberUpdateRequest;
+import com.backmin.domains.member.dto.request.MemberCreateParam;
+import com.backmin.domains.member.dto.request.MemberUpdateParam;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MemberConverter {
 
-    public Member convertSaveDtoToMember(MemberCreateRequest memberSaveDto) {
+    public Member convertSaveDtoToMember(MemberCreateParam memberSaveDto) {
         return Member.of(memberSaveDto.getId(),
                 memberSaveDto.getEmail(),
                 memberSaveDto.getPassword(),
@@ -17,8 +17,8 @@ public class MemberConverter {
                 memberSaveDto.getAddress());
     }
 
-    public MemberCreateRequest convertMemberToSaveDto(Member member) {
-        return MemberCreateRequest.of(member.getId(),
+    public MemberCreateParam convertMemberToSaveDto(Member member) {
+        return MemberCreateParam.of(member.getId(),
                 member.getEmail(),
                 member.getPassword(),
                 member.getNickName(),
@@ -26,10 +26,10 @@ public class MemberConverter {
                 member.getPhoneNumber());
     }
 
-    public Member convertUpdateDtoToMember(Member member, MemberUpdateRequest memberUpdateRequest) {
-        member.updateInfo(memberUpdateRequest.getNickName(),
-                memberUpdateRequest.getPhoneNumber(),
-                memberUpdateRequest.getAddress());
+    public Member convertUpdateDtoToMember(Member member, MemberUpdateParam memberUpdateParam) {
+        member.updateInfo(memberUpdateParam.getNickName(),
+                memberUpdateParam.getPhoneNumber(),
+                memberUpdateParam.getAddress());
         return member;
     }
 

@@ -5,7 +5,6 @@ import com.backmin.domains.order.domain.OrderMenuOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -39,7 +38,7 @@ public class MenuOption extends BaseEntity {
     @Column(name = "price")
     private int price;
 
-    @OneToMany(mappedBy = "menuOption", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "menuOption")
     private List<OrderMenuOption> orderMenuOptions = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

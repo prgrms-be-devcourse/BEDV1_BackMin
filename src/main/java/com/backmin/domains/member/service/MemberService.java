@@ -3,13 +3,12 @@ package com.backmin.domains.member.service;
 import com.backmin.domains.member.converter.MemberConverter;
 import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.member.domain.MemberRepository;
-import com.backmin.domains.member.dto.EmailCheckRequest;
-import com.backmin.domains.member.dto.MemberCreateRequest;
-import com.backmin.domains.member.dto.MemberUpdateRequest;
-import com.backmin.domains.member.dto.NicknameCheckRequest;
+import com.backmin.domains.member.dto.request.EmailCheckParam;
+import com.backmin.domains.member.dto.request.MemberCreateParam;
+import com.backmin.domains.member.dto.request.MemberUpdateParam;
+import com.backmin.domains.member.dto.request.NicknameCheckParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,32 +21,32 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void save(MemberCreateRequest memberCreateRequest) {
-        if (checkMemberEmail(memberCreateRequest.getEmail()).isDuplication()) {
+    public void save(MemberCreateParam memberCreateParam) {
+        if (checkMemberEmail(memberCreateParam.getEmail()).isDuplication()) {
             throw new IllegalArgumentException("이미 중복된 이메일이 있습니다.");
         }
-        if (checkMemberNickname(memberCreateRequest.getNickName()).isDuplication()) {
+        if (checkMemberNickname(memberCreateParam.getNickName()).isDuplication()) {
             throw new IllegalArgumentException("이미 중복된 닉네임이 있습니다.");
         }
-        memberRepository.save(memberConverter.convertSaveDtoToMember(memberCreateRequest));
+        memberRepository.save(memberConverter.convertSaveDtoToMember(memberCreateParam));
     }
 
     @Transactional
-    public void update(Long memberId, MemberUpdateRequest memberUpdateRequest) {
+    public void update(Long memberId, MemberUpdateParam memberUpdateParam) {
         memberRepository.findById(memberId)
-                .map(member -> memberConverter.convertUpdateDtoToMember(member, memberUpdateRequest))
-                .orElseThrow(() -> new RuntimeException("Not Found Member Id : " + memberUpdateRequest.getId()));
+                .map(member -> memberConverter.convertUpdateDtoToMember(member, memberUpdateParam))
+                .orElseThrow(() -> new RuntimeException("Not Found Member Id : " + memberUpdateParam.getId()));
     }
 
     @Transactional(readOnly = true)
-    public MemberCreateRequest findOne(Long id) {
+    public MemberCreateParam findOne(Long id) {
         return memberRepository.findById(id)
                 .map(memberConverter::convertMemberToSaveDto)
                 .orElseThrow(() -> new RuntimeException("Not Found Member Id : " + id));
     }
 
     @Transactional(readOnly = true)
-    public Page<MemberCreateRequest> findAll(Pageable pageable) {
+    public Page<MemberCreateParam> findAll(Pageable pageable) {
         //PageRequest.of(10, 10);
         return memberRepository.findAll(pageable).map(memberConverter::convertMemberToSaveDto);
     }
@@ -58,16 +57,16 @@ public class MemberService {
         memberRepository.delete(deleteMember);
     }
 
-    public EmailCheckRequest checkMemberEmail(String email) {
-        EmailCheckRequest emailCheckRequest = new EmailCheckRequest();
-        emailCheckRequest.setDuplication(memberRepository.existsByEmail(email));
-        return emailCheckRequest;
+    public EmailCheckParam checkMemberEmail(String email) {
+        EmailCheckParam emailCheckParam = new EmailCheckParam();
+        emailCheckParam.setDuplication(memberRepository.existsByEmail(email));
+        return emailCheckParam;
     }
 
-    public NicknameCheckRequest checkMemberNickname(String nickname) {
-        NicknameCheckRequest nicknameCheckRequest = new NicknameCheckRequest();
-        nicknameCheckRequest.setDuplication(memberRepository.existsByNickName(nickname));
-        return nicknameCheckRequest;
+    public NicknameCheckParam checkMemberNickname(String nickname) {
+        NicknameCheckParam nicknameCheckParam = new NicknameCheckParam();
+        nicknameCheckParam.setDuplication(memberRepository.existsByNickName(nickname));
+        return nicknameCheckParam;
     }
 
     public boolean authenticateMember(Long memberId, String email, String password) {

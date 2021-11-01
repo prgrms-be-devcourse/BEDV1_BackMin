@@ -1,18 +1,18 @@
 package com.backmin.domains.menu.converter;
 
 import com.backmin.domains.menu.domain.Menu;
-import com.backmin.domains.menu.dto.MenuInfoAtStoreDetail;
-import com.backmin.domains.menu.dto.MenuInfoAtStoreList;
-import com.backmin.domains.menu.dto.MenuOptionInfoAtStoreDetail;
-import com.backmin.domains.menu.dto.MenuOptionInfoAtStoreList;
+import com.backmin.domains.menu.dto.response.MenuAtStoreDetailResult;
+import com.backmin.domains.menu.dto.response.MenuAtStoreListResult;
+import com.backmin.domains.menu.dto.response.MenuOptionAtStoreDetailResult;
+import com.backmin.domains.menu.dto.response.MenuOptionAtStoreListResult;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MenuConverter {
 
-    public MenuInfoAtStoreList convertMenuToMenuInfoAtStoreList(Menu menu, List<MenuOptionInfoAtStoreList> menuOptionInfoAtStoreLists) {
-        return MenuInfoAtStoreList.of(
+    public MenuAtStoreListResult convertMenuToMenuInfoAtStoreList(Menu menu, List<MenuOptionAtStoreListResult> menuOptionAtStoreListResults) {
+        return MenuAtStoreListResult.of(
                 menu.getId(),
                 menu.getName(),
                 null,
@@ -20,12 +20,12 @@ public class MenuConverter {
                 menu.isSoldOut(),
                 menu.isPopular(),
                 menu.getPrice(),
-                menuOptionInfoAtStoreLists
+                menuOptionAtStoreListResults
         );
     }
 
-    public MenuInfoAtStoreDetail convertMenuToMenuInfoAtStoreDetail(Menu menu, List<MenuOptionInfoAtStoreDetail> menuOptionInfoAtStoreDetails) {
-        return MenuInfoAtStoreDetail.of(
+    public MenuAtStoreDetailResult convertMenuToMenuInfoAtStoreDetail(Menu menu, List<MenuOptionAtStoreDetailResult> menuOptionAtStoreDetailResults) {
+        return MenuAtStoreDetailResult.of(
                 menu.getId(),
                 menu.getName(),
                 null,
@@ -33,7 +33,7 @@ public class MenuConverter {
                 menu.isSoldOut(),
                 menu.isPopular(),
                 menu.getPrice(),
-                menuOptionInfoAtStoreDetails
+                menuOptionAtStoreDetailResults
         );
     }
 

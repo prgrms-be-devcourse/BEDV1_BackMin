@@ -1,9 +1,9 @@
 package com.backmin.domains.store.controller;
 
 import com.backmin.domains.common.dto.ApiResult;
-import com.backmin.domains.common.dto.PageDto;
-import com.backmin.domains.store.dto.DetailStoreInfoReadResponse;
-import com.backmin.domains.store.dto.StoreInfoAtList;
+import com.backmin.domains.common.dto.PageResult;
+import com.backmin.domains.store.dto.response.DetailStoreReadResult;
+import com.backmin.domains.store.dto.response.StoreInfoAtListResult;
 import com.backmin.domains.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -25,30 +25,28 @@ public class StoreController {
     private final StoreService storeService;
 
     @GetMapping(value = "/categories/{categoryId}/stores",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResult<PageDto<StoreInfoAtList>> list(@PathVariable("categoryId") Long categoryId, Pageable pageRequest) {
-        PageDto<StoreInfoAtList> storeInfoAtListPageDto = storeService.readPagingStoresByCategoryId(categoryId, pageRequest);
+    public ApiResult<PageResult<StoreInfoAtListResult>> list(@PathVariable("categoryId") Long categoryId, Pageable pageRequest) {
+        PageResult<StoreInfoAtListResult> storeInfoAtListPageResult = storeService.readPagingStoresByCategoryId(categoryId, pageRequest);
 
-        return ApiResult.ok(storeInfoAtListPageDto);
+        return ApiResult.ok(storeInfoAtListPageResult);
     }
 
     @GetMapping(value = "/stores/{storeId}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResult<DetailStoreInfoReadResponse> detail(@PathVariable("storeId") Long storeId) {
-        DetailStoreInfoReadResponse detailStoreInfoReadResponse = storeService.readDetailStore(storeId);
+    public ApiResult<DetailStoreReadResult> detail(@PathVariable("storeId") Long storeId) {
+        DetailStoreReadResult detailStoreReadResult = storeService.readDetailStore(storeId);
 
-        return ApiResult.ok(detailStoreInfoReadResponse);
+        return ApiResult.ok(detailStoreReadResult);
     }
 
     @GetMapping(value = "/stores",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResult<PageDto<StoreInfoAtList>> list(@RequestParam("keyword") String storeName, Pageable pageRequest) {
-        PageDto<StoreInfoAtList> storeInfoAtListPageDto = storeService.searchStoresByName(storeName, pageRequest);
+    public ApiResult<PageResult<StoreInfoAtListResult>> list(@RequestParam("keyword") String storeName, Pageable pageRequest) {
+        PageResult<StoreInfoAtListResult> storeInfoAtListPageResult = storeService.searchStoresByName(storeName, pageRequest);
 
-        return ApiResult.ok(storeInfoAtListPageDto);
+        return ApiResult.ok(storeInfoAtListPageResult);
     }
 
 }

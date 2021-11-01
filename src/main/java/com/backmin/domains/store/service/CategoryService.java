@@ -3,7 +3,7 @@ package com.backmin.domains.store.service;
 import com.backmin.domains.store.converter.CategoryConverter;
 import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.CategoryRepository;
-import com.backmin.domains.store.dto.CategoryInfoAtList;
+import com.backmin.domains.store.dto.response.CategoryAtListResult;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class CategoryService {
 
     private final CategoryConverter categoryConverter;
 
-    public List<CategoryInfoAtList> readAllCategories() {
+    public List<CategoryAtListResult> readAllCategories() {
         final List<Category> categories = categoryRepository.findAll();
 
         return categories.stream()

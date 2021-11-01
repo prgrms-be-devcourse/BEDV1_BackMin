@@ -1,14 +1,14 @@
 package com.backmin.domains.store.converter;
 
 import com.backmin.domains.store.domain.Category;
-import com.backmin.domains.store.dto.CategoryInfoAtList;
+import com.backmin.domains.store.dto.response.CategoryAtListResult;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CategoryConverter {
 
-    public CategoryInfoAtList convertCategoryToCategoryInfoAtList(Category category) {
-        return CategoryInfoAtList.of(category.getId(), category.getName());
+    public CategoryAtListResult convertCategoryToCategoryInfoAtList(Category category) {
+        return CategoryAtListResult.of(category.getId(), category.getName());
     }
 
 }

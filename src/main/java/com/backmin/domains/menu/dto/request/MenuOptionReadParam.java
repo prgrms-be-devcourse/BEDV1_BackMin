@@ -1,11 +1,11 @@
-package com.backmin.domains.menu.dto;
+package com.backmin.domains.menu.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class MenuOptionReadRequest {
+public class MenuOptionReadParam {
 
     private Long id;
 

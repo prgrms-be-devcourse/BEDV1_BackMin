@@ -13,8 +13,8 @@ import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
 import com.backmin.domains.menu.domain.MenuOptionRepository;
 import com.backmin.domains.menu.domain.MenuRepository;
-import com.backmin.domains.menu.dto.MenuOptionReadRequest;
-import com.backmin.domains.menu.dto.MenuReadRequest;
+import com.backmin.domains.menu.dto.request.MenuOptionReadParam;
+import com.backmin.domains.menu.dto.request.MenuReadParam;
 import com.backmin.domains.order.domain.Order;
 import com.backmin.domains.order.domain.OrderRepository;
 import com.backmin.domains.order.domain.OrderStatus;
@@ -77,7 +77,6 @@ class OrderControllerTest {
                 .minOrderPrice(10000)
                 .minDeliveryTime(60)
                 .maxDeliveryTime(120)
-                .mainIntro("메인 소개")
                 .storeIntro("매콤 매콤 떡볶이!")
                 .deliveryTip(3000)
                 .category(saveCategory())
@@ -188,7 +187,6 @@ class OrderControllerTest {
                 .minOrderPrice(10000)
                 .minDeliveryTime(60)
                 .maxDeliveryTime(120)
-                .mainIntro("메인 소개")
                 .storeIntro("매콤 매콤 떡볶이!")
                 .deliveryTip(3000)
                 .category(saveCategory())
@@ -242,19 +240,19 @@ class OrderControllerTest {
     }
 
     private OrderCreateRequest createRequest(Store saveStore, Member saveMember, Menu saveMenu, MenuOption saveMenuOption) {
-        MenuOptionReadRequest menuOptionDto = new MenuOptionReadRequest();
+        MenuOptionReadParam menuOptionDto = new MenuOptionReadParam();
         menuOptionDto.setId(saveMenuOption.getId());
 
         List<Long> menuOptionDtos = new ArrayList<>();
         menuOptionDtos.add(menuOptionDto.getId());
 
-        MenuReadRequest menuReadRequest = new MenuReadRequest();
-        menuReadRequest.setId(saveMenu.getId());
-        menuReadRequest.setQuantity(2);
-        menuReadRequest.setMenuOptionId(menuOptionDtos);
+        MenuReadParam menuReadParam = new MenuReadParam();
+        menuReadParam.setId(saveMenu.getId());
+        menuReadParam.setQuantity(2);
+        menuReadParam.setMenuOptionId(menuOptionDtos);
 
-        List<MenuReadRequest> menuReadRequests = new ArrayList<>();
-        menuReadRequests.add(menuReadRequest);
+        List<MenuReadParam> menuReadParams = new ArrayList<>();
+        menuReadParams.add(menuReadParam);
 
         OrderCreateRequest orderCreateRequest = new OrderCreateRequest();
         orderCreateRequest.setAddress("서울시 건대");
@@ -263,7 +261,7 @@ class OrderControllerTest {
         orderCreateRequest.setPayment(Payment.KAKAO_PAY);
         orderCreateRequest.setPassword("123456789a!");
         orderCreateRequest.setStoreId(saveStore.getId());
-        orderCreateRequest.setMenuReadRequests(menuReadRequests);
+        orderCreateRequest.setMenuReadParams(menuReadParams);
         return orderCreateRequest;
     }
 
@@ -276,7 +274,6 @@ class OrderControllerTest {
                 .minOrderPrice(10000)
                 .minDeliveryTime(60)
                 .maxDeliveryTime(120)
-                .mainIntro("메인 소개")
                 .storeIntro("매콤 매콤 떡볶이!")
                 .deliveryTip(3000)
                 .category(saveCategory())

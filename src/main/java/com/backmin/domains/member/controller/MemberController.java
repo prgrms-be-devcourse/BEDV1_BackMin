@@ -1,12 +1,11 @@
 package com.backmin.domains.member.controller;
 
 import com.backmin.domains.common.dto.ApiResult;
-import com.backmin.domains.member.dto.MemberCreateRequest;
-import com.backmin.domains.member.dto.MemberUpdateRequest;
+import com.backmin.domains.member.dto.request.MemberCreateParam;
+import com.backmin.domains.member.dto.request.MemberUpdateParam;
 import com.backmin.domains.member.service.MemberService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,14 +24,14 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResult createMember(@RequestBody @Valid MemberCreateRequest memberCreateRequest) {
-        memberService.save(memberCreateRequest);
+    public ApiResult createMember(@RequestBody @Valid MemberCreateParam memberCreateParam) {
+        memberService.save(memberCreateParam);
         return ApiResult.ok(null);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResult updateMember(@PathVariable("id") Long memberId, @RequestBody @Valid MemberUpdateRequest memberUpdateRequest) {
-        memberService.update(memberId, memberUpdateRequest);
+    public ApiResult updateMember(@PathVariable("id") Long memberId, @RequestBody @Valid MemberUpdateParam memberUpdateParam) {
+        memberService.update(memberId, memberUpdateParam);
         return ApiResult.ok(null);
     }
 

@@ -1,9 +1,9 @@
 package com.backmin.domains.order.converter;
 
-import com.backmin.domains.common.dto.PageDto;
-import com.backmin.domains.member.dto.MemberOrderPageResponse;
+import com.backmin.domains.common.dto.PageResult;
+import com.backmin.domains.member.dto.response.MemberOrderPageResult;
 import com.backmin.domains.menu.domain.Menu;
-import com.backmin.domains.menu.dto.MenuReadResponse;
+import com.backmin.domains.menu.dto.response.MenuReadResult;
 import com.backmin.domains.order.domain.Order;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,37 +13,37 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderConverter {
 
-    public PageDto<MemberOrderPageResponse> convertOrderToMemberOrderPageResponse(Page<Order> orders) {
-        List<MemberOrderPageResponse> memberOrderPageResponses = orders.getContent().stream()
+    public PageResult<MemberOrderPageResult> convertOrderToMemberOrderPageResponse(Page<Order> orders) {
+        List<MemberOrderPageResult> memberOrderPageRespons = orders.getContent().stream()
                 .map(order -> {
-                    MemberOrderPageResponse response = new MemberOrderPageResponse();
+                    MemberOrderPageResult response = new MemberOrderPageResult();
                     response.setOrderId(order.getId());
                     response.setStoreId(order.getStore().getId());
                     response.setOrderDateTime(order.getRequestAt());
                     response.setStoreName(order.getStore().getName());
-                    response.setMenuReadResponses(
+                    response.setMenuReadRespons(
                             order.getOrderMenus().stream()
                                     .map(orderMenu -> {
-                                        MenuReadResponse menuReadResponse = new MenuReadResponse();
+                                        MenuReadResult menuReadResult = new MenuReadResult();
                                         Menu menu = orderMenu.getMenu();
-                                        menuReadResponse.setMenuId(menu.getId());
-                                        menuReadResponse.setName(menu.getName());
-                                        menuReadResponse.setPopular(menu.isPopular());
-                                        menuReadResponse.setSoldOut(menu.isSoldOut());
-                                        menuReadResponse.setDescription(menu.getDescription());
-                                        return menuReadResponse;
+                                        menuReadResult.setMenuId(menu.getId());
+                                        menuReadResult.setName(menu.getName());
+                                        menuReadResult.setPopular(menu.isPopular());
+                                        menuReadResult.setSoldOut(menu.isSoldOut());
+                                        menuReadResult.setDescription(menu.getDescription());
+                                        return menuReadResult;
                                     }).collect(Collectors.toList())
                     );
                     return response;
                 }).collect(Collectors.toList());
 
-        PageDto<MemberOrderPageResponse> pageDto = new PageDto<>();
-        pageDto.setPageNumber(orders.getNumber());
-        pageDto.setPageSize(orders.getSize());
-        pageDto.setHasNext(orders.hasNext());
-        pageDto.setTotalCount(orders.getNumberOfElements());
-        pageDto.setList(memberOrderPageResponses);
-        return pageDto;
+        PageResult<MemberOrderPageResult> pageResult = new PageResult<>();
+        pageResult.setPageNumber(orders.getNumber());
+        pageResult.setPageSize(orders.getSize());
+        pageResult.setHasNext(orders.hasNext());
+        pageResult.setTotalCount(orders.getNumberOfElements());
+        pageResult.setList(memberOrderPageRespons);
+        return pageResult;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.backmin.domains.menu.dto;
+package com.backmin.domains.menu.dto.request;
 
 import java.util.List;
 import javax.validation.constraints.Max;
@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MenuReadRequest {
+public class MenuReadParam {
 
     private Long id;
 

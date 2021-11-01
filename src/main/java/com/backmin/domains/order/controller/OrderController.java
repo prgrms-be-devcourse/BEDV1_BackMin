@@ -1,11 +1,11 @@
 package com.backmin.domains.order.controller;
 
 import com.backmin.domains.common.dto.ApiResult;
-import com.backmin.domains.common.dto.PageDto;
+import com.backmin.domains.common.dto.PageResult;
 import com.backmin.domains.common.enums.ErrorInfo;
 import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.member.domain.MemberRepository;
-import com.backmin.domains.member.dto.MemberOrderPageResponse;
+import com.backmin.domains.member.dto.response.MemberOrderPageResult;
 import com.backmin.domains.member.service.MemberService;
 import com.backmin.domains.order.dto.OrderCreateRequest;
 import com.backmin.domains.order.dto.UpdateOrderStatusRequest;
@@ -61,7 +61,7 @@ public class OrderController {
     }
 
     @GetMapping("/members/{memberId}")
-    public ApiResult<PageDto<MemberOrderPageResponse>> getMemberOrders(@PathVariable Long memberId, Pageable pageRequest) {
+    public ApiResult<PageResult<MemberOrderPageResult>> getMemberOrders(@PathVariable Long memberId, Pageable pageRequest) {
         Member member = memberRepository.findById(memberId).get();
         return ApiResult.ok(orderService.getOrdersByMember(member.getId(), pageRequest));
     }

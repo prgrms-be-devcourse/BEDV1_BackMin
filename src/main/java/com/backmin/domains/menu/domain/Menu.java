@@ -41,13 +41,13 @@ public class Menu extends BaseEntity {
     @Column(name = "menu_price")
     private int price;
 
-    @Column(name = "decription", length = 200, nullable = false)
+    @Column(name = "decription", length = 200)
     private String description;
 
-    @OneToMany(mappedBy = "menu", orphanRemoval = true)
+    @OneToMany(mappedBy = "menu")
     private List<OrderMenu> orderMenus = new ArrayList<>();
 
-    @OneToMany(mappedBy = "menu", orphanRemoval = true)
+    @OneToMany(mappedBy = "menu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private List<MenuOption> menuOptions = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

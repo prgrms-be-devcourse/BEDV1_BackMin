@@ -12,7 +12,6 @@ import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
-import com.backmin.domains.store.service.StoreService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

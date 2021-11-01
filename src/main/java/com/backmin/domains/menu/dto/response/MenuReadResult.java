@@ -1,11 +1,11 @@
-package com.backmin.domains.menu.dto;
+package com.backmin.domains.menu.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class MenuReadResponse {
+public class MenuReadResult {
 
     private Long menuId;
 
