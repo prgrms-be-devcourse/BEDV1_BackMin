@@ -2,6 +2,7 @@ package com.backmin.domains.order.domain;
 
 import com.backmin.domains.common.BaseEntity;
 import com.backmin.domains.member.domain.Member;
+import com.backmin.domains.store.domain.Store;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,6 +47,10 @@ public class Order extends BaseEntity {
     @Column(name = "payment", nullable = false)
     private Payment payMent;
 
+    @OneToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
+
     @Min(0)
     private int totalPrice;
 
@@ -65,7 +70,8 @@ public class Order extends BaseEntity {
                  LocalDateTime completeAt,
                  Payment payMent,
                  int totalPrice,
-                 Member member
+                 Member member,
+                 Store store
     ) {
         this.id = id;
         this.address = address;
@@ -76,6 +82,7 @@ public class Order extends BaseEntity {
         this.payMent = payMent;
         this.totalPrice = totalPrice;
         this.member = member;
+        this.store = store;
         this.orderMenus = new ArrayList<>();
     }
 
@@ -91,9 +98,25 @@ public class Order extends BaseEntity {
                 .build();
     }
 
+    public static Order of(String address, String requirement, Payment payment, Member member, Store store, int deliveryTip) {
+        return Order.builder()
+                .address(address)
+                .requirement(requirement)
+                .payMent(payment)
+                .member(member)
+                .requestAt(LocalDateTime.now())
+                .status(OrderStatus.ACCEPTED)
+                .totalPrice(deliveryTip)
+                .store(store)
+                .build();
+    }
+
     public void addOrderMenu(OrderMenu orderMenu) {
         orderMenu.changeOrder(this);
         this.totalPrice += orderMenu.getPrice() * orderMenu.getQuantity();
     }
 
+    public void changeOrderStatus(OrderStatus orderStatus) {
+        this.status = orderStatus;
+    }
 }
