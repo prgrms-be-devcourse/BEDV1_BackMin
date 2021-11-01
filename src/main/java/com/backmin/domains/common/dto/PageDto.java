@@ -6,7 +6,9 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter @Setter
+@Getter
+@Setter
+/** todo: 네이밍 수정할 것 */
 public class PageDto<T> {
 
     private long totalCount;
@@ -26,6 +28,10 @@ public class PageDto<T> {
         this.pageSize = pageSize;
         this.list = list;
         this.hasNext = hasNext;
+    }
+
+    public PageDto() {
+
     }
 
 }

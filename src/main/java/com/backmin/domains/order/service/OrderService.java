@@ -1,9 +1,12 @@
 package com.backmin.domains.order.service;
 
+import com.backmin.domains.common.dto.PageDto;
 import com.backmin.domains.member.domain.Member;
+import com.backmin.domains.member.dto.MemberOrderPageResponse;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
 import com.backmin.domains.menu.dto.MenuReadRequest;
+import com.backmin.domains.order.converter.OrderConverter;
 import com.backmin.domains.order.domain.Order;
 import com.backmin.domains.order.domain.OrderMenu;
 import com.backmin.domains.order.domain.OrderMenuOption;
@@ -14,6 +17,8 @@ import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +29,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final StoreRepository storeRepository;
+    private final OrderConverter orderConverter;
 
     @Transactional
     public void saveOrder(OrderCreateRequest request, Member member, Store store) {
@@ -90,6 +96,11 @@ public class OrderService {
         if (order.getStore().getMember().equals(member)) {
             order.changeOrderStatus(orderStatus);
         }
+    }
+
+    public PageDto<MemberOrderPageResponse> getOrdersByMember(Long memberId, Pageable pageRequest) {
+        Page<Order> orders = orderRepository.findAllByMemberId(memberId, pageRequest);
+        return orderConverter.convertOrderToMemberOrderPageResponse(orders);
     }
 
 }
