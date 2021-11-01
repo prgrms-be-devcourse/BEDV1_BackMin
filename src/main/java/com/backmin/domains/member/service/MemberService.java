@@ -70,4 +70,9 @@ public class MemberService {
         return nicknameCheckRequest;
     }
 
+    public boolean authenticateMember(Long memberId, String email, String password) {
+        Member member = memberRepository.findById(memberId).get();
+        return member.getEmail().equals(email) && member.getPassword().equals(password);
+    }
+
 }

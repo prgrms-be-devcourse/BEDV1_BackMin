@@ -2,6 +2,7 @@ package com.backmin.domains.common.aop;
 
 import com.backmin.domains.common.dto.ApiResult;
 import com.backmin.domains.common.enums.ErrorInfo;
+import com.backmin.domains.common.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,6 +25,15 @@ public class GlobalExceptionHandler {
             .forEach(error -> errors.put(((FieldError) error).getField(), error.getDefaultMessage()));
 
         return ApiResult.error("METHOD_ARG_NOT_VALID", errors);
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ApiResult<?> handleBusinessExceptionException(BusinessException ex) {
+        log.error("{}", ex);
+
+        ErrorInfo errorInfo = ex.getErrorInfo();
+
+        return ApiResult.error(errorInfo.getCode(), errorInfo.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

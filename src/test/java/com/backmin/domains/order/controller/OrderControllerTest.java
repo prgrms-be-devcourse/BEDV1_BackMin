@@ -19,6 +19,7 @@ import com.backmin.domains.order.domain.OrderRepository;
 import com.backmin.domains.order.domain.OrderStatus;
 import com.backmin.domains.order.domain.Payment;
 import com.backmin.domains.order.dto.OrderCreateRequest;
+import com.backmin.domains.order.dto.UpdateOrderStatusRequest;
 import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
@@ -99,11 +100,71 @@ class OrderControllerTest {
                 .andExpect(jsonPath("data").doesNotExist())
                 .andExpect(jsonPath("serverDatetime").isString());
 
-        Order order = orderRepository.findAll().get(0); // 떡복이2개 각각 당면추가
+        Order order = orderRepository.findAll().get(1);   // 떡복이2개 각각 당면추가
         assertThat(order.getAddress()).isEqualTo(orderCreateRequest.getAddress());
         assertThat(order.getStatus()).isEqualTo(OrderStatus.ACCEPTED);
         assertThat(order.getPayMent()).isEqualTo(Payment.KAKAO_PAY);
         assertThat(order.getTotalPrice()).isEqualTo(29000);
+    }
+
+    @Test
+    @DisplayName("[고객] 주문을 정상적으로 수정한다.")
+    void updateOrderStatusByCustomer() throws Exception {
+        Store saveStore = setUpAndGivenStore();
+        Member member = saveMember();
+
+        Order order = Order.of("주소", "요구사항", Payment.KAKAO_PAY, member, saveStore,1000);
+
+        orderRepository.save(order);
+
+        UpdateOrderStatusRequest request = new UpdateOrderStatusRequest();
+        request.setEmail("tester@email.com");
+        request.setPassword("123456789a!");
+        request.setOrderStatus(OrderStatus.CANCELED);
+        request.setMemberId(member.getId());
+
+        mockMvc.perform(post("/api/v1/bm/orders/{orderId}", order.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("success").isBoolean())
+                .andExpect(jsonPath("data").doesNotExist())
+                .andExpect(jsonPath("serverDatetime").isString());
+
+        Order saveOrder = orderRepository.findById(order.getId()).get();
+
+        assertThat(saveOrder.getStatus()).isEqualTo(OrderStatus.CANCELED);
+    }
+
+    @Test
+    @DisplayName("[고객] 고객은 주문 수락을 할 수 없다.")
+    void updateOrderStatusToOkByMember() throws Exception {
+        Store saveStore = setUpAndGivenStore();
+        Member member = saveMember();
+
+        Order order = Order.of("주소", "요구사항", Payment.KAKAO_PAY, member, saveStore,1000);
+
+        orderRepository.save(order);
+
+        UpdateOrderStatusRequest request = new UpdateOrderStatusRequest();
+        request.setEmail("tester@email.com");
+        request.setPassword("123456789a!");
+        request.setOrderStatus(OrderStatus.DELIVERED);
+        request.setMemberId(member.getId());
+
+        mockMvc.perform(post("/api/v1/bm/orders/{orderId}", order.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("success").isBoolean())
+                .andExpect(jsonPath("data").exists())
+                .andExpect(jsonPath("serverDatetime").isString());
+
+        Order saveOrder = orderRepository.findById(order.getId()).get();
+
+        assertThat(saveOrder.getStatus()).isEqualTo(OrderStatus.ACCEPTED);
     }
 
     private Member saveMember() {
@@ -160,5 +221,35 @@ class OrderControllerTest {
         orderCreateRequest.setStoreId(saveStore.getId());
         orderCreateRequest.setMenuReadRequests(menuReadRequests);
         return orderCreateRequest;
+    }
+
+    private Store setUpAndGivenStore() {
+        Member saveOwner = givenOwner();
+        Store store = Store.builder()
+                .name("동대문 엽기 떡볶이")
+                .deliveryTip(1000)
+                .phoneNumber("010-1111-2222")
+                .minOrderPrice(10000)
+                .minDeliveryTime(60)
+                .maxDeliveryTime(120)
+                .mainIntro("메인 소개")
+                .storeIntro("매콤 매콤 떡볶이!")
+                .deliveryTip(3000)
+                .category(saveCategory())
+                .member(saveOwner)
+                .build();
+        return storeRepository.save(store);
+    }
+
+    private Member givenOwner() {
+        Member owner = Member.builder()
+                .nickName("owner")
+                .phoneNumber("111")
+                .address("주소")
+                .email("email@email.com")
+                .password("password")
+                .build();
+        Member saveOwner = memberRepository.save(owner);
+        return saveOwner;
     }
 }

@@ -8,6 +8,7 @@ import com.backmin.domains.order.domain.Order;
 import com.backmin.domains.order.domain.OrderMenu;
 import com.backmin.domains.order.domain.OrderMenuOption;
 import com.backmin.domains.order.domain.OrderRepository;
+import com.backmin.domains.order.domain.OrderStatus;
 import com.backmin.domains.order.dto.OrderCreateRequest;
 import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
@@ -57,6 +58,37 @@ public class OrderService {
                     orderMenu.addOrderMenuOption(orderMenuOption);
                 }
             }
+        }
+    }
+
+    @Transactional
+    public void editOrderStatus(Long orderId, Member member, OrderStatus orderStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("해당 주문을 찾을 수 없습니다."));
+        isMemberByCustomer(member, orderStatus, order);
+        isMemberByStoreOwner(member, orderStatus, order);
+    }
+
+    /**
+     * 주문 상태변경을 요청하는 회원이 고객일 경우 취소만 가능하다.
+     */
+    private void isMemberByCustomer(Member member, OrderStatus orderStatus, Order order) {
+        if (order.getMember().equals(member)) {
+            if (orderStatus == OrderStatus.CANCELED) {
+                order.changeOrderStatus(orderStatus);
+            }
+            if (orderStatus == OrderStatus.DELIVERED) {
+                throw new RuntimeException("고객은 주문을 수락할 수 없습니다.");
+            }
+        }
+    }
+
+    /**
+     * 주문 상태변경을 요청하는 회원이 사장일 경우 수락과 취소가 가능하다.
+     */
+    private void isMemberByStoreOwner(Member member, OrderStatus orderStatus, Order order) {
+        if (order.getStore().getMember().equals(member)) {
+            order.changeOrderStatus(orderStatus);
         }
     }
 

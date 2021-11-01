@@ -38,16 +38,6 @@ public class MenuOption extends BaseEntity {
 
     @Column(name = "price")
     private int price;
-  
-    private int price;
-
-    private Long topOptionId;
-
-    private int maxOptionQuantity;
-
-    private int minOptionQuantity;
-
-    private boolean isSoldOut;
 
     @OneToMany(mappedBy = "menuOption", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMenuOption> orderMenuOptions = new ArrayList<>();

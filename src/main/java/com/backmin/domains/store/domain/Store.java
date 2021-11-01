@@ -1,5 +1,6 @@
 package com.backmin.domains.store.domain;
 
+import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.review.domain.Review;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import lombok.AccessLevel;
@@ -75,6 +77,10 @@ public class Store {
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
+    @OneToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
     @Builder
     public Store(
             String name,
@@ -87,7 +93,8 @@ public class Store {
             String mainIntro,
             boolean isPackage,
             int deliveryTip,
-            Category category
+            Category category,
+            Member member
     ) {
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -101,6 +108,7 @@ public class Store {
         this.deliveryTip = deliveryTip;
         this.category = category;
         this.menus = new ArrayList<>();
+        this.member = member;
     }
 
     static public Store of(
@@ -128,6 +136,35 @@ public class Store {
                 .category(category)
                 .build();
 
+        return store;
+    }
+
+    static public Store of(
+            String name,
+            String phoneNumber,
+            String storeIntro,
+            int minOrderPrice,
+            int minDeliveryTime,
+            int maxDeliveryTime,
+            int deliveryTip,
+            boolean isService,
+            boolean isPackage,
+            Category category,
+            Member member
+    ) {
+        Store store = Store.builder()
+                .name(name)
+                .phoneNumber(phoneNumber)
+                .minOrderPrice(minOrderPrice)
+                .minDeliveryTime(minDeliveryTime)
+                .maxDeliveryTime(maxDeliveryTime)
+                .storeIntro(storeIntro)
+                .isService(isService)
+                .isPackage(isPackage)
+                .deliveryTip(deliveryTip)
+                .category(category)
+                .member(member)
+                .build();
         return store;
     }
 
