@@ -8,6 +8,7 @@ import com.backmin.domains.order.domain.Order;
 import com.backmin.domains.order.domain.OrderMenu;
 import com.backmin.domains.order.domain.OrderMenuOption;
 import com.backmin.domains.order.domain.OrderRepository;
+import com.backmin.domains.order.domain.OrderStatus;
 import com.backmin.domains.order.dto.OrderCreateRequest;
 import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
@@ -60,4 +61,7 @@ public class OrderService {
         }
     }
 
+    public void editOrderStatus(Long id, OrderStatus orderStatus) {
+
+    }
 }
