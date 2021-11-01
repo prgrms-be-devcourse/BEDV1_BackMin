@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.backmin.domains.common.dto.PageDto;
 import com.backmin.domains.menu.domain.Menu;
+import com.backmin.domains.menu.domain.MenuOption;
+import com.backmin.domains.menu.domain.MenuOptionRepository;
+import com.backmin.domains.menu.domain.MenuRepository;
 import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
@@ -34,6 +37,9 @@ class StoreServiceTest {
     private StoreRepository storeRepository;
 
     @Autowired
+    private MenuOptionRepository menuOptionRepository;
+
+    @Autowired
     private StoreService storeService;
 
     @Test
@@ -47,6 +53,19 @@ class StoreServiceTest {
                 .build();
         categoryRepository.save(category1);
 
+        MenuOption option1 = MenuOption.of("치즈추가", 500);
+        MenuOption option2 = MenuOption.of("사리추가", 600);
+        MenuOption option3 = MenuOption.of("감자추가", 700);
+        MenuOption option4 = MenuOption.of("고구마추가", 800);
+        List<MenuOption> menuOptions1 = List.of(option1, option2);
+        List<MenuOption> menuOptions2 = List.of(option3, option4);
+        menuOptionRepository.saveAll(menuOptions1);
+        menuOptionRepository.saveAll(menuOptions2);
+
+        Menu menu1 = Menu.of("엽기떡볶이", true, false, true, 17000, "겁나 맛있는 떡볶이입니다.", menuOptions1);
+        Menu menu2 = Menu.of("치즈떡볶이", true, false, true, 18000, "겁나 맛있는 치즈 떡볶이입니다.", menuOptions2);
+        List<Menu> menus = List.of(menu1, menu2);
+
         Store store1 = Store.of(
                 "동대문 엽기 떡볶이",
                 "070364532746",
@@ -58,7 +77,7 @@ class StoreServiceTest {
                 true,
                 true,
                 category1,
-                new ArrayList<>() // menus
+                menus
         );
 
         Store store2 = Store.of(
@@ -72,37 +91,10 @@ class StoreServiceTest {
                 true,
                 true,
                 category1,
-                new ArrayList<>() // menus
+                menus
         );
 
-        Store store3 = Store.of(
-                "놀부 부대찌개",
-                "070364532746",
-                "부대찌개 맛집입니다.",
-                1000,
-                30,
-                60,
-                2000,
-                true,
-                true,
-                category1,
-                new ArrayList<>() // menus
-        );
-
-        Store store4 = Store.of(
-                "마왕족발",
-                "070364532746",
-                "족발 맛집입니다.",
-                1000,
-                30,
-                60,
-                2000,
-                true,
-                true,
-                category1,
-                new ArrayList<>() // menus
-        );
-        List<Store> stores = List.of(store1, store2, store3, store4);
+        List<Store> stores = List.of(store1, store2);
         storeRepository.saveAll(stores);
 
         PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE);
@@ -113,8 +105,7 @@ class StoreServiceTest {
         // then
         assertThat(response.getTotalCount(), is(Long.valueOf(stores.size())));
         assertThat(response.getPageSize(), is(PAGE_SIZE));
-        assertThat(response.isHasNext(), is(true));
-
+        assertThat(response.isHasNext(), is(false));
     }
 
 }
