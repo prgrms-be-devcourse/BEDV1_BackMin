@@ -28,7 +28,7 @@ public class StoreInfoAtList {
 
     private boolean isPackage;
 
-    private int averageScore;
+    private double averageScore;
 
     int totalReviewCount;
 
@@ -43,7 +43,7 @@ public class StoreInfoAtList {
             int maxDeliveryTime,
             int deliveryTip,
             boolean isPackage,
-            int averageScore,
+            double averageScore,
             int totalReviewCount,
             List<MenuInfoAtStoreList> bestMenus
     ) {
