@@ -2,9 +2,14 @@ package com.backmin.domains.store.domain;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.samePropertyValuesAs;
 
+import com.backmin.domains.menu.domain.Menu;
+import com.backmin.domains.menu.domain.MenuOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +95,7 @@ class StoreRepositoryTest {
                 category1,
                 new ArrayList<>() // menus
         );
+
         List<Store> stores = List.of(store1, store2, store3, store4);
         storeRepository.saveAll(stores);
 
@@ -103,6 +109,56 @@ class StoreRepositoryTest {
         assertThat(storeByCategoryId.getTotalElements(), is(Long.valueOf(stores.size())));
         assertThat(storeByCategoryId.getContent().size(), is(PAGE_SIZE));
         assertThat(storeByCategoryId.hasNext(), is(true));
+    }
+
+    @Test
+    @DisplayName("가게 상세조회 테스트")
+    void test_findStoreById() {
+        // given
+        Category category1 = Category.builder()
+                .name("한식")
+                .build();
+        categoryRepository.save(category1);
+
+        MenuOption option1 = MenuOption.of("치즈추가", 500);
+        MenuOption option2 = MenuOption.of("사리추가", 600);
+        MenuOption option3 = MenuOption.of("감자추가", 700);
+        MenuOption option4 = MenuOption.of("고구마추가", 800);
+        List<MenuOption> menuOptions1 = List.of(option1, option2);
+        List<MenuOption> menuOptions2 = List.of(option3, option4);
+
+        Menu menu1 = Menu.of("엽기떡볶이", true, false, true, 17000, "겁나 맛있는 떡볶이입니다.", menuOptions1);
+        Menu menu2 = Menu.of("치즈떡볶이", true, false, true, 18000, "겁나 맛있는 치즈 떡볶이입니다.", menuOptions2);
+        List<Menu> menus = List.of(menu1, menu2);
+
+        Store store1 = Store.of(
+                "동대문 엽기 떡볶이",
+                "070364532746",
+                "엽떡집입니다.",
+                1000,
+                30,
+                60,
+                2000,
+                true,
+                true,
+                category1,
+                menus
+        );
+        storeRepository.save(store1);
+
+        Store foundStore = storeRepository.findStoreById(store1.getId()).get();
+
+        assertThat(foundStore, notNullValue());
+        assertThat(foundStore.getId(), is(store1.getId()));
+
+        List<Long> menuIdsBefore = menus.stream()
+                .map(menu -> menu.getId())
+                .collect(Collectors.toList());
+        List<Long> menuIdsAfter = foundStore.getMenus().stream()
+                .map(menu -> menu.getId())
+                .collect(Collectors.toList());
+        assertThat(menuIdsBefore, samePropertyValuesAs(menuIdsAfter));
+
     }
 
 }

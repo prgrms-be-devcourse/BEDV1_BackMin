@@ -2,13 +2,15 @@ package com.backmin.domains.member.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 @Getter
 @Setter
-public class MemberDto {
+public class MemberCreateRequest {
 
     private Long id;
 
@@ -26,11 +28,28 @@ public class MemberDto {
     private String phoneNumber;
 
     @NotBlank(message = "닉네임을 입력해주세요.")
-    @Length(max = 20, message = "닉네임은 20자를 넘을 수 없습니다.")
+    @Length(max = 10, message = "닉네임은 10자를 넘을 수 없습니다.")
     private String nickName;
 
     @NotBlank(message = "주소를 입력해주세요.")
     @Length(max = 100, message = "주소는 100자를 넘을 수 없습니다.")
     private String address;
 
+    public static MemberCreateRequest of(Long id,
+            String email,
+            String password,
+            String phoneNumber,
+            String nickName,
+            String address
+    ) {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest();
+        memberCreateRequest.setId(id);
+        memberCreateRequest.setEmail(email);
+        memberCreateRequest.setPassword(password);
+        memberCreateRequest.setPhoneNumber(phoneNumber);
+        memberCreateRequest.setNickName(nickName);
+        memberCreateRequest.setAddress(address);
+
+        return memberCreateRequest;
+    }
 }

@@ -2,6 +2,7 @@ package com.backmin.domains.store.controller;
 
 import com.backmin.domains.common.dto.ApiResult;
 import com.backmin.domains.common.dto.PageDto;
+import com.backmin.domains.store.dto.DetailStoreInfoReadResponse;
 import com.backmin.domains.store.dto.StoreInfoAtList;
 import com.backmin.domains.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,15 @@ public class StoreController {
         PageDto<StoreInfoAtList> storeInfoAtListPageDto = storeService.readPagingStoresByCategoryId(categoryId, pageRequest);
 
         return ApiResult.ok(storeInfoAtListPageDto);
+    }
+
+    @GetMapping(value = "/stores/{storeId}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiResult<DetailStoreInfoReadResponse> detail(@PathVariable("storeId") Long storeId) {
+        DetailStoreInfoReadResponse detailStoreInfoReadResponse = storeService.readDetailStore(storeId);
+
+        return ApiResult.ok(detailStoreInfoReadResponse);
     }
 
 }

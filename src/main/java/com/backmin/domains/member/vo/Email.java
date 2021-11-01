@@ -1,6 +1,15 @@
 package com.backmin.domains.member.vo;
 
-public interface Email {
+import lombok.Getter;
+import lombok.Setter;
 
-    public boolean checkEmailDuplicate(String email);
+@Getter
+@Setter
+public class Email {
+
+    private String email;
+
+    public Email(String email) {
+        this.email = email;
+    }
 }
