@@ -104,4 +104,57 @@ class StoreControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    @DisplayName("가게 이름으로 검색 테스트")
+    void test_search() throws Exception {
+
+        // given
+        Category category1 = Category.builder()
+                .name("한식")
+                .build();
+        categoryRepository.save(category1);
+
+        MenuOption option1 = MenuOption.of("치즈추가", 500);
+        MenuOption option2 = MenuOption.of("사리추가", 600);
+        MenuOption option3 = MenuOption.of("감자추가", 700);
+        MenuOption option4 = MenuOption.of("고구마추가", 800);
+        List<MenuOption> menuOptions1 = List.of(option1, option2);
+        List<MenuOption> menuOptions2 = List.of(option3, option4);
+
+        Menu menu1 = Menu.of("엽기떡볶이", true, false, true, 17000, "겁나 맛있는 떡볶이입니다.", menuOptions1);
+        Menu menu2 = Menu.of("치즈떡볶이", true, false, true, 18000, "겁나 맛있는 치즈 떡볶이입니다.", menuOptions2);
+        List<Menu> menus = List.of(menu1, menu2);
+
+        Store store1 = Store.of(
+                "동대문 엽기 떡볶이",
+                "070364532746",
+                "엽떡집입니다.",
+                1000,
+                30,
+                60,
+                2000,
+                true,
+                true,
+                category1,
+                menus
+        );
+        storeRepository.save(store1);
+
+        // when // then
+        mockMvc.perform(get("/api/v1/bm/stores")
+                .param("keyword", "동대문")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("success").value(true))
+                .andExpect(jsonPath("data").exists())
+                .andExpect(jsonPath("data.totalCount").exists())
+                .andExpect(jsonPath("data.pageNumber").exists())
+                .andExpect(jsonPath("data.pageSize").exists())
+                .andExpect(jsonPath("data.hasNext").exists())
+                .andExpect(jsonPath("data.list").exists())
+                .andExpect(jsonPath("serverDatetime").exists())
+                .andDo(print());
+
+    }
+
 }
