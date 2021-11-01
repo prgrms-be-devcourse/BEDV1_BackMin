@@ -1,6 +1,7 @@
 package com.backmin.domains.store.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -16,12 +17,14 @@ import com.backmin.domains.store.domain.StoreRepository;
 import com.backmin.domains.store.dto.DetailStoreInfoReadResponse;
 import com.backmin.domains.store.dto.StoreInfoAtList;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -157,5 +160,51 @@ class StoreServiceTest {
         assertThat(detailStoreInfoReadResponse.getBestMenus().size(), is(bestMenuIdsBefore.size()));
         assertThat(detailStoreInfoReadResponse.getMenus().size(), is(menus.size()));
     }
-  
+
+    @Test
+    @DisplayName("가게 이름으로 검색 테스트")
+    void test_searchStoresByName() {
+        Category category1 = Category.builder()
+                .name("한식")
+                .build();
+        categoryRepository.save(category1);
+
+        Store store1 = Store.of(
+                "동대문 엽기 떡볶이",
+                "070364532746",
+                "엽떡집입니다.",
+                1000,
+                30,
+                60,
+                2000,
+                true,
+                true,
+                category1,
+                Collections.emptyList()
+        );
+
+        Store store2 = Store.of(
+                "참이맛 감자탕",
+                "070364532746",
+                "뼈해장국 맛집입니다.",
+                1000,
+                30,
+                60,
+                2000,
+                true,
+                true,
+                category1,
+                Collections.emptyList()
+        );
+        List<Store> stores = List.of(store1, store2);
+        storeRepository.saveAll(stores);
+
+        PageRequest pageRequest = PageRequest.of(0, 2);
+
+        PageDto<StoreInfoAtList> searchedStorePage = storeService.searchStoresByName("감자탕", pageRequest);
+
+        assertThat(searchedStorePage.getTotalCount(), is(1L));
+        assertThat(searchedStorePage.getList().get(0).getStoreName(), containsString("감자탕"));
+    }
+
 }
