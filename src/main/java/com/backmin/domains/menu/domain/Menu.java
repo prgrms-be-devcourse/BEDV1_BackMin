@@ -61,7 +61,7 @@ public class Menu extends BaseEntity {
             boolean isSoldOut,
             boolean isPopular,
             int price,
-            String description,
+            String description
     ) {
         this.id = id;
         this.name = name;
