@@ -85,7 +85,7 @@ public class Member extends BaseEntity {
             this.phoneNumber = phoneNumber;
         }
 
-        if(!(address.isBlank())) {
+        if (!(address.isBlank())) {
             this.address = address;
         }
     }

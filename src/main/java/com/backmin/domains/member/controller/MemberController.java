@@ -18,18 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/v1/bm/members", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/v1/bm/members")
 public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult createMember(@RequestBody @Valid MemberCreateParam memberCreateParam) {
         memberService.save(memberCreateParam);
         return ApiResult.ok(null);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult updateMember(@PathVariable("id") Long memberId, @RequestBody @Valid MemberUpdateParam memberUpdateParam) {
         memberService.update(memberId, memberUpdateParam);
         return ApiResult.ok(null);
@@ -41,12 +41,12 @@ public class MemberController {
         return ApiResult.ok(null);
     }
 
-    @GetMapping("/email/{email}")
+    @GetMapping(value = "/email/{email}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult emailCheck(@PathVariable String email) {
         return ApiResult.ok(memberService.checkMemberEmail(email));
     }
 
-    @GetMapping("/nickname/{nickname}")
+    @GetMapping(value = "/nickname/{nickname}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult nickNameCheck(@PathVariable String nickname) {
         return ApiResult.ok(memberService.checkMemberNickname(nickname));
     }

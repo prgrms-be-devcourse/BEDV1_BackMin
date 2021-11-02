@@ -19,4 +19,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     @EntityGraph(attributePaths = {"menus"})
     Page<Store> findStoresByNameContaining(String name, Pageable pageable);
 
+    boolean existsById(Long storeId);
+
 }
