@@ -9,19 +9,21 @@ import org.springframework.stereotype.Component;
 public class MenuOptionConverter {
 
     public MenuOptionAtStoreListResult convertMenuOptionToMenuOptionInfoAtStoreList(MenuOption menuOption) {
-        return MenuOptionAtStoreListResult.of(
-                menuOption.getId(),
-                menuOption.getName(),
-                menuOption.getPrice()
-        );
+        MenuOptionAtStoreListResult menuOptionAtStoreListResult = new MenuOptionAtStoreListResult();
+        menuOptionAtStoreListResult.setOptionId(menuOption.getId());
+        menuOptionAtStoreListResult.setOptionName(menuOption.getName());
+        menuOptionAtStoreListResult.setOptionPrice(menuOption.getPrice());
+
+        return menuOptionAtStoreListResult;
     }
 
     public MenuOptionAtStoreDetailResult convertMenuOptionToMenuOptionInfoAtStoreDetail(MenuOption menuOption) {
-        return MenuOptionAtStoreDetailResult.of(
-                menuOption.getId(),
-                menuOption.getName(),
-                menuOption.getPrice()
-        );
+        MenuOptionAtStoreDetailResult menuOptionAtStoreDetailResult = new MenuOptionAtStoreDetailResult();
+        menuOptionAtStoreDetailResult.setOptionId(menuOption.getId());
+        menuOptionAtStoreDetailResult.setOptionName(menuOption.getName());
+        menuOptionAtStoreDetailResult.setOptionPrice(menuOption.getPrice());
+
+        return menuOptionAtStoreDetailResult;
     }
 
 }

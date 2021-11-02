@@ -1,4 +1,4 @@
-package com.backmin.domains.order.dto;
+package com.backmin.domains.order.dto.request;
 
 import com.backmin.domains.order.domain.OrderStatus;
 import lombok.Getter;

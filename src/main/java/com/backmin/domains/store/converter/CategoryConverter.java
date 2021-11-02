@@ -8,7 +8,11 @@ import org.springframework.stereotype.Component;
 public class CategoryConverter {
 
     public CategoryAtListResult convertCategoryToCategoryInfoAtList(Category category) {
-        return CategoryAtListResult.of(category.getId(), category.getName());
+        CategoryAtListResult categoryAtListResult = new CategoryAtListResult();
+        categoryAtListResult.setId(category.getId());
+        categoryAtListResult.setName(category.getName());
+
+        return categoryAtListResult;
     }
 
 }

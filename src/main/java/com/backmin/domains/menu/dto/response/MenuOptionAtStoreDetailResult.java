@@ -13,13 +13,4 @@ public class MenuOptionAtStoreDetailResult {
 
     private int optionPrice;
 
-    public static MenuOptionAtStoreDetailResult of(Long optionId, String optionName, int optionPrice) {
-        MenuOptionAtStoreDetailResult menuOptionAtStoreDetailResult = new MenuOptionAtStoreDetailResult();
-        menuOptionAtStoreDetailResult.setOptionId(optionId);
-        menuOptionAtStoreDetailResult.setOptionName(optionName);
-        menuOptionAtStoreDetailResult.setOptionPrice(optionPrice);
-
-        return menuOptionAtStoreDetailResult;
-    }
-
 }

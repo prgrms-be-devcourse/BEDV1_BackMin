@@ -14,7 +14,7 @@ import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
 import com.backmin.domains.store.dto.response.DetailStoreReadResult;
 import com.backmin.domains.store.dto.response.StoreAtDetailResult;
-import com.backmin.domains.store.dto.response.StoreInfoAtListResult;
+import com.backmin.domains.store.dto.response.StoreAtListResult;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class StoreService {
     private final MenuConverter menuConverter;
     private final MenuOptionConverter menuOptionConverter;
 
-    public PageResult<StoreInfoAtListResult> readPagingStoresByCategoryId(Long categoryId, Pageable pageRequest) {
+    public PageResult<StoreAtListResult> readPagingStoresByCategoryId(Long categoryId, Pageable pageRequest) {
         Page<Store> storePage = storeRepository.findPagingStoresByCategoryId(categoryId, pageRequest);
 
         return getPageDtoWithStoreInfoAtList(storePage);
@@ -55,21 +55,22 @@ public class StoreService {
                 .map(this::getConvertedMenuInfoAtStoreDetail
                 ).collect(Collectors.toList());
 
-        return DetailStoreReadResult.of(
-                storeInfo,
-                bestMenuInfos,
-                menuInfos
-        );
+        DetailStoreReadResult detailStoreReadResult = new DetailStoreReadResult();
+        detailStoreReadResult.setStore(storeInfo);
+        detailStoreReadResult.setBestMenus(bestMenuInfos);
+        detailStoreReadResult.setMenus(menuInfos);
+
+        return detailStoreReadResult;
     }
 
-    public PageResult<StoreInfoAtListResult> searchStoresByName(String storeName, Pageable pageRequest) {
+    public PageResult<StoreAtListResult> searchStoresByName(String storeName, Pageable pageRequest) {
         Page<Store> searchedStorePage = storeRepository.findStoresByNameContaining(storeName, pageRequest);
 
         return getPageDtoWithStoreInfoAtList(searchedStorePage);
     }
 
-    private PageResult<StoreInfoAtListResult> getPageDtoWithStoreInfoAtList(Page<Store> searchedStorePage) {
-        List<StoreInfoAtListResult> searchedStoreInfoAtListResults = searchedStorePage.getContent().stream()
+    private PageResult<StoreAtListResult> getPageDtoWithStoreInfoAtList(Page<Store> searchedStorePage) {
+        List<StoreAtListResult> searchedStoreAtListResults = searchedStorePage.getContent().stream()
                 .map(store -> storeConverter.convertToStoreInfoAtList(
                         store,
                         menuRepository.findBestMenusByStore(store.getId()).stream()
@@ -80,8 +81,8 @@ public class StoreService {
                 ))
                 .collect(Collectors.toList());
 
-        return PageResult.<StoreInfoAtListResult>builder()
-                .list(searchedStoreInfoAtListResults)
+        return PageResult.<StoreAtListResult>builder()
+                .list(searchedStoreAtListResults)
                 .hasNext(searchedStorePage.hasNext())
                 .pageSize(searchedStorePage.getSize())
                 .pageNumber(searchedStorePage.getNumber())
