@@ -4,6 +4,7 @@ import com.backmin.config.exception.BusinessException;
 import com.backmin.domains.common.dto.PageResult;
 import com.backmin.domains.common.enums.ErrorInfo;
 import com.backmin.domains.member.domain.Member;
+import com.backmin.domains.member.domain.MemberRepository;
 import com.backmin.domains.member.dto.response.MemberOrderPageResult;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
@@ -30,10 +31,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final MemberRepository memberRepository;
+    private final StoreRepository storeRepository;
     private final OrderConverter orderConverter;
 
     @Transactional
-    public void saveOrder(CreateOrderParam request, Member member, Store store) {
+    public void saveOrder(CreateOrderParam request) {
+        Member member = findMember(request.getMemberId());
+        Store store = findStore(request.getStoreId());
         Order order = Order.of(request.getAddress(), request.getRequirement(), request.getPayment(), member, store.getDeliveryTip());
         addOrderMenuToOrder(request, order, store.getMenus());
         /**
@@ -43,6 +48,16 @@ public class OrderService {
             throw new RuntimeException("최소 주문 금액을 넘어야합니다.");
         }
         orderRepository.save(order);
+    }
+
+    private Member findMember(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(ErrorInfo.MEMBER_NOT_FOUND));
+    }
+
+    private Store findStore(Long storeId) {
+        return storeRepository.findById(storeId)
+                .orElseThrow(() -> new BusinessException(ErrorInfo.STORE_NOT_FOUND));
     }
 
     private void addOrderMenuToOrder(CreateOrderParam request, Order order, List<Menu> menus) {
@@ -75,9 +90,9 @@ public class OrderService {
     }
     
     @Transactional
-    public void editOrderStatus(Long orderId, Member member, OrderStatus orderStatus) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("해당 주문을 찾을 수 없습니다."));
+    public void editOrderStatus(Long orderId, Long memberId, OrderStatus orderStatus) {
+        Member member = findMember(memberId);
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new BusinessException(ErrorInfo.ORDER_NOT_FOUND));
         isMemberByCustomer(member, orderStatus, order);
         isMemberByStoreOwner(member, orderStatus, order);
     }
@@ -91,7 +106,7 @@ public class OrderService {
                 order.changeOrderStatus(orderStatus);
             }
             if (orderStatus == OrderStatus.DELIVERED) {
-                throw new RuntimeException("고객은 주문을 수락할 수 없습니다.");
+                throw new BusinessException(ErrorInfo.ORDER_STATUS_AUTHORITY);
             }
         }
     }
