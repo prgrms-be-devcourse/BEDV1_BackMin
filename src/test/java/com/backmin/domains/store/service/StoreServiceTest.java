@@ -14,7 +14,7 @@ import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
 import com.backmin.domains.store.dto.response.DetailStoreReadResult;
-import com.backmin.domains.store.dto.response.StoreInfoAtListResult;
+import com.backmin.domains.store.dto.response.StoreAtListResult;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -99,7 +99,7 @@ class StoreServiceTest {
         PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE);
 
         // when
-        PageResult<StoreInfoAtListResult> response = storeService.readPagingStoresByCategoryId(category1.getId(), pageRequest);
+        PageResult<StoreAtListResult> response = storeService.readPagingStoresByCategoryId(category1.getId(), pageRequest);
 
         // then
         assertThat(response.getTotalCount(), is(Long.valueOf(stores.size())));
@@ -198,7 +198,7 @@ class StoreServiceTest {
 
         PageRequest pageRequest = PageRequest.of(0, 2);
 
-        PageResult<StoreInfoAtListResult> searchedStorePage = storeService.searchStoresByName("감자탕", pageRequest);
+        PageResult<StoreAtListResult> searchedStorePage = storeService.searchStoresByName("감자탕", pageRequest);
 
         assertThat(searchedStorePage.getTotalCount(), is(1L));
         assertThat(searchedStorePage.getList().get(0).getStoreName(), containsString("감자탕"));

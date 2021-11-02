@@ -23,27 +23,4 @@ public class MenuAtStoreDetailResult {
 
     private List<MenuOptionAtStoreDetailResult> menuOptions;
 
-    public static MenuAtStoreDetailResult of(
-            Long id,
-            String name,
-            String imageUrl,
-            boolean isBest,
-            boolean isSoldOut,
-            boolean isPopular,
-            int price,
-            List<MenuOptionAtStoreDetailResult> menuOptions
-    ) {
-        MenuAtStoreDetailResult menuAtStoreDetailResult = new MenuAtStoreDetailResult();
-        menuAtStoreDetailResult.setId(id);
-        menuAtStoreDetailResult.setName(name);
-        menuAtStoreDetailResult.setImageUrl(imageUrl);
-        menuAtStoreDetailResult.setBest(isBest);
-        menuAtStoreDetailResult.setSoldOut(isSoldOut);
-        menuAtStoreDetailResult.setPopular(isPopular);
-        menuAtStoreDetailResult.setPrice(price);
-        menuAtStoreDetailResult.setMenuOptions(menuOptions);
-
-        return menuAtStoreDetailResult;
-    }
-
 }

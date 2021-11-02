@@ -10,11 +10,4 @@ public class CategoryAtListResult {
 
     private String name;
 
-    public static CategoryAtListResult of(Long id, String name) {
-        CategoryAtListResult categoryAtListResult = new CategoryAtListResult();
-        categoryAtListResult.setId(id);
-        categoryAtListResult.setName(name);
-
-        return categoryAtListResult;
-    }
 }

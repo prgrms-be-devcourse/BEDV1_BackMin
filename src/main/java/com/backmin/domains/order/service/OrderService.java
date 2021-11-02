@@ -12,7 +12,7 @@ import com.backmin.domains.order.domain.OrderMenu;
 import com.backmin.domains.order.domain.OrderMenuOption;
 import com.backmin.domains.order.domain.OrderRepository;
 import com.backmin.domains.order.domain.OrderStatus;
-import com.backmin.domains.order.dto.OrderCreateRequest;
+import com.backmin.domains.order.dto.request.OrderCreateRequest;
 import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
 import java.util.List;

@@ -25,29 +25,4 @@ public class StoreAtDetailResult {
 
     private boolean isPackage;
 
-    public static StoreAtDetailResult of(
-            Long storeId,
-            String storeName,
-            String phoneNumber,
-            String storeIntro,
-            int minOrderPrice,
-            int minDeliveryTime,
-            int maxDeliveryTime,
-            int deliveryTip,
-            boolean isPackage
-    ) {
-        StoreAtDetailResult storeAtDetailResult = new StoreAtDetailResult();
-        storeAtDetailResult.setStoreId(storeId);
-        storeAtDetailResult.setStoreName(storeName);
-        storeAtDetailResult.setPhoneNumber(phoneNumber);
-        storeAtDetailResult.setStoreIntro(storeIntro);
-        storeAtDetailResult.setMinOrderPrice(minOrderPrice);
-        storeAtDetailResult.setMinDeliveryTime(minDeliveryTime);
-        storeAtDetailResult.setMaxDeliveryTime(maxDeliveryTime);
-        storeAtDetailResult.setDeliveryTip(deliveryTip);
-        storeAtDetailResult.setPackage(isPackage);
-
-        return storeAtDetailResult;
-    }
-
 }
