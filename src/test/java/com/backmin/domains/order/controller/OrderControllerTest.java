@@ -217,7 +217,7 @@ class OrderControllerTest {
         MenuReadParam menuReadParam = new MenuReadParam();
         menuReadParam.setId(saveMenu.getId());
         menuReadParam.setQuantity(2);
-        menuReadParam.setMenuOptionId(menuOptionDtos);
+        menuReadParam.setMenuOptionIds(menuOptionDtos);
 
         List<MenuReadParam> menuReadParams = new ArrayList<>();
         menuReadParams.add(menuReadParam);
