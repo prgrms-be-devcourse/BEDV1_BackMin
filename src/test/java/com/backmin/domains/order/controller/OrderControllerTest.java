@@ -29,6 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,31 +68,33 @@ class OrderControllerTest {
     @Autowired
     OrderRepository orderRepository;
 
+    Store store;
+    Member member;
+    Menu menu;
+    MenuOption menuOption;
+
+    @BeforeEach
+    void setUp() {
+        this.store = givenSavedStore();
+        this.member = givenSaveMember();
+        this.menu = givenSavedMenu();
+        this.menuOption = givenSavedMenuOption();
+        this.menu.addMenuOption(menuOption);
+        this.store.addMenu(menu);
+    }
+
+    @AfterEach
+    void tearDown() {
+        orderRepository.deleteAll();
+        storeRepository.deleteAll();
+        memberRepository.deleteAll();
+    }
+
     @Test
     @DisplayName("주문 저장 API 테스트")
     @Transactional
     void createOrder() throws Exception {
-        Store store = Store.builder()
-                .name("동대문 엽기 떡볶이")
-                .deliveryTip(1000)
-                .phoneNumber("010-1111-2222")
-                .minOrderPrice(10000)
-                .minDeliveryTime(60)
-                .maxDeliveryTime(120)
-                .storeIntro("매콤 매콤 떡볶이!")
-                .deliveryTip(3000)
-                .category(saveCategory())
-                .build();
-        Store saveStore = storeRepository.save(store);
-
-        Member saveMember = saveMember();
-        Menu saveMenu = saveMenu();
-        MenuOption saveMenuOption = saveMenuOption();
-
-        saveMenu.addMenuOption(saveMenuOption);
-        saveStore.addMenu(saveMenu);
-
-        OrderCreateRequest orderCreateRequest = createRequest(saveStore, saveMember, saveMenu, saveMenuOption);
+        OrderCreateRequest orderCreateRequest = createRequest(store, member, menu, menuOption);
 
         mockMvc.perform(post("/api/v1/bm/orders")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -101,7 +105,7 @@ class OrderControllerTest {
                 .andExpect(jsonPath("data").doesNotExist())
                 .andExpect(jsonPath("serverDatetime").isString());
 
-        Order order = orderRepository.findAll().get(1);   // 떡복이2개 각각 당면추가
+        Order order = orderRepository.findAll().get(0);   // 떡복이2개 각각 당면추가
         assertThat(order.getAddress()).isEqualTo(orderCreateRequest.getAddress());
         assertThat(order.getStatus()).isEqualTo(OrderStatus.ACCEPTED);
         assertThat(order.getPayMent()).isEqualTo(Payment.KAKAO_PAY);
@@ -111,12 +115,8 @@ class OrderControllerTest {
     @Test
     @DisplayName("[고객] 주문을 정상적으로 수정한다.")
     void updateOrderStatusByCustomer() throws Exception {
-        Store saveStore = setUpAndGivenStore();
-        Member member = saveMember();
-
-        Order order = Order.of("주소", "요구사항", Payment.KAKAO_PAY, member, saveStore,1000);
-
-        orderRepository.save(order);
+        Order order = Order.of("주소", "요구사항", Payment.KAKAO_PAY, member, store, 1000);
+        Order savedOrder = orderRepository.save(order);
 
         UpdateOrderStatusRequest request = new UpdateOrderStatusRequest();
         request.setEmail("tester@email.com");
@@ -124,7 +124,7 @@ class OrderControllerTest {
         request.setOrderStatus(OrderStatus.CANCELED);
         request.setMemberId(member.getId());
 
-        mockMvc.perform(post("/api/v1/bm/orders/{orderId}", order.getId())
+        mockMvc.perform(post("/api/v1/bm/orders/{orderId}", savedOrder.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -133,20 +133,16 @@ class OrderControllerTest {
                 .andExpect(jsonPath("data").doesNotExist())
                 .andExpect(jsonPath("serverDatetime").isString());
 
-        Order saveOrder = orderRepository.findById(order.getId()).get();
-
-        assertThat(saveOrder.getStatus()).isEqualTo(OrderStatus.CANCELED);
+        Order updatedOrder = orderRepository.findById(savedOrder.getId()).get();
+        assertThat(updatedOrder.getStatus()).isEqualTo(OrderStatus.CANCELED);
     }
 
     @Test
     @DisplayName("[고객] 고객은 주문 수락을 할 수 없다.")
     void updateOrderStatusToOkByMember() throws Exception {
-        Store saveStore = setUpAndGivenStore();
-        Member member = saveMember();
+        Order order = Order.of("주소", "요구사항", Payment.KAKAO_PAY, member, store, 1000);
 
-        Order order = Order.of("주소", "요구사항", Payment.KAKAO_PAY, member, saveStore,1000);
-
-        orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
 
         UpdateOrderStatusRequest request = new UpdateOrderStatusRequest();
         request.setEmail("tester@email.com");
@@ -154,50 +150,22 @@ class OrderControllerTest {
         request.setOrderStatus(OrderStatus.DELIVERED);
         request.setMemberId(member.getId());
 
-        mockMvc.perform(post("/api/v1/bm/orders/{orderId}", order.getId())
+        mockMvc.perform(post("/api/v1/bm/orders/{orderId}", savedOrder.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("success").isBoolean())
-                .andExpect(jsonPath("data").exists())
-                .andExpect(jsonPath("serverDatetime").isString());
+                .andExpect(status().isBadRequest());
 
-        Order saveOrder = orderRepository.findById(order.getId()).get();
-
-        assertThat(saveOrder.getStatus()).isEqualTo(OrderStatus.ACCEPTED);
+        assertThat(savedOrder.getStatus()).isEqualTo(OrderStatus.ACCEPTED);
     }
 
     @Test
     @DisplayName("주문 내역 상세 조회")
     void getOrdersByMemberId() throws Exception {
-        Member member = Member.builder()
-                .nickName("hello")
-                .phoneNumber("111")
-                .address("주소")
-                .email("email12@email.com")
-                .password("password")
-                .build();
-        Member saveMember = memberRepository.save(member);
-
-        Store store = Store.builder()
-                .name("동대문 엽기 떡볶이")
-                .deliveryTip(1000)
-                .phoneNumber("010-1111-2222")
-                .minOrderPrice(10000)
-                .minDeliveryTime(60)
-                .maxDeliveryTime(120)
-                .storeIntro("매콤 매콤 떡볶이!")
-                .deliveryTip(3000)
-                .category(saveCategory())
-                .member(member)
-                .build();
-        Store saveStore = storeRepository.save(store);
-
-        Order order = Order.of("주소", "요청사항", Payment.KAKAO_PAY, member, saveStore, 1000);
+        Order order = Order.of("주소", "요청사항", Payment.KAKAO_PAY, member, store, 1000);
         IntStream.range(1, 10).forEach(i -> orderRepository.save(order));
 
-        mockMvc.perform(get("/api/v1/bm/orders/members/{memberId}", saveMember.getId())
+        mockMvc.perform(get("/api/v1/bm/orders/members/{memberId}", member.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("page", String.valueOf(0))
                 .param("size", String.valueOf(10)))
@@ -209,7 +177,7 @@ class OrderControllerTest {
                 .andExpect(jsonPath("data.list").exists());
     }
 
-    private Member saveMember() {
+    private Member givenSaveMember() {
         return memberRepository.save(Member.builder()
                 .nickName("tester")
                 .email("tester@email.com")
@@ -219,11 +187,11 @@ class OrderControllerTest {
                 .build());
     }
 
-    private Category saveCategory() {
+    private Category givenSavedCategory() {
         return categoryRepository.save(Category.builder().name("떡볶이").build());
     }
 
-    private Menu saveMenu() {
+    private Menu givenSavedMenu() {
         return menuRepository.save(Menu.builder()
                 .name("떡볶이")
                 .price(12000)
@@ -231,7 +199,7 @@ class OrderControllerTest {
                 .build());
     }
 
-    private MenuOption saveMenuOption() {
+    private MenuOption givenSavedMenuOption() {
         return menuOptionRepository.save(MenuOption.builder()
                 .id(111L)
                 .name("당면추가")
@@ -265,8 +233,7 @@ class OrderControllerTest {
         return orderCreateRequest;
     }
 
-    private Store setUpAndGivenStore() {
-        Member saveOwner = givenOwner();
+    private Store givenSavedStore() {
         Store store = Store.builder()
                 .name("동대문 엽기 떡볶이")
                 .deliveryTip(1000)
@@ -276,13 +243,13 @@ class OrderControllerTest {
                 .maxDeliveryTime(120)
                 .storeIntro("매콤 매콤 떡볶이!")
                 .deliveryTip(3000)
-                .category(saveCategory())
-                .member(saveOwner)
+                .category(givenSavedCategory())
+                .member(givenSavedOwner())
                 .build();
         return storeRepository.save(store);
     }
 
-    private Member givenOwner() {
+    private Member givenSavedOwner() {
         Member owner = Member.builder()
                 .nickName("owner")
                 .phoneNumber("111")
@@ -290,7 +257,6 @@ class OrderControllerTest {
                 .email("email@email.com")
                 .password("password")
                 .build();
-        Member saveOwner = memberRepository.save(owner);
-        return saveOwner;
+        return memberRepository.save(owner);
     }
 }

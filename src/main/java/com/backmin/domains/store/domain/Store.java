@@ -58,7 +58,7 @@ public class Store {
     private boolean isPackage;
 
     @Column(name = "delivery_tip")
-    @Min(0)
+    @Min(0) /** todo: 삭제할 것*/
     private int deliveryTip;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
