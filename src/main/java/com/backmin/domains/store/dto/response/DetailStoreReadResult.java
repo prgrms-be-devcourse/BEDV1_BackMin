@@ -15,17 +15,4 @@ public class DetailStoreReadResult {
 
     private List<MenuAtStoreDetailResult> menus;
 
-    public static DetailStoreReadResult of(
-            StoreAtDetailResult store,
-            List<MenuAtStoreDetailResult> bestMenus,
-            List<MenuAtStoreDetailResult> menus
-    ) {
-        DetailStoreReadResult detailStoreReadResult = new DetailStoreReadResult();
-        detailStoreReadResult.setStore(store);
-        detailStoreReadResult.setBestMenus(bestMenus);
-        detailStoreReadResult.setMenus(menus);
-
-        return detailStoreReadResult;
-    }
-
 }

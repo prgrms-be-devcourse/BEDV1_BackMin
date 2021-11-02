@@ -12,29 +12,31 @@ import org.springframework.stereotype.Component;
 public class MenuConverter {
 
     public MenuAtStoreListResult convertMenuToMenuInfoAtStoreList(Menu menu, List<MenuOptionAtStoreListResult> menuOptionAtStoreListResults) {
-        return MenuAtStoreListResult.of(
-                menu.getId(),
-                menu.getName(),
-                null,
-                menu.isBest(),
-                menu.isSoldOut(),
-                menu.isPopular(),
-                menu.getPrice(),
-                menuOptionAtStoreListResults
-        );
+        MenuAtStoreListResult menuAtStoreListResult = new MenuAtStoreListResult();
+        menuAtStoreListResult.setId(menu.getId());
+        menuAtStoreListResult.setName(menu.getName());
+        menuAtStoreListResult.setImageUrl(null);
+        menuAtStoreListResult.setBest(menu.isBest());
+        menuAtStoreListResult.setSoldOut(menu.isSoldOut());
+        menuAtStoreListResult.setPopular(menu.isPopular());
+        menuAtStoreListResult.setPrice(menu.getPrice());
+        menuAtStoreListResult.setMenuOptions(menuOptionAtStoreListResults);
+
+        return menuAtStoreListResult;
     }
 
     public MenuAtStoreDetailResult convertMenuToMenuInfoAtStoreDetail(Menu menu, List<MenuOptionAtStoreDetailResult> menuOptionAtStoreDetailResults) {
-        return MenuAtStoreDetailResult.of(
-                menu.getId(),
-                menu.getName(),
-                null,
-                menu.isBest(),
-                menu.isSoldOut(),
-                menu.isPopular(),
-                menu.getPrice(),
-                menuOptionAtStoreDetailResults
-        );
+        MenuAtStoreDetailResult menuAtStoreDetailResult = new MenuAtStoreDetailResult();
+        menuAtStoreDetailResult.setId(menu.getId());
+        menuAtStoreDetailResult.setName(menu.getName());
+        menuAtStoreDetailResult.setImageUrl(null);
+        menuAtStoreDetailResult.setBest(menu.isBest());
+        menuAtStoreDetailResult.setSoldOut(menu.isSoldOut());
+        menuAtStoreDetailResult.setPopular(menu.isPopular());
+        menuAtStoreDetailResult.setPrice(menu.getPrice());
+        menuAtStoreDetailResult.setMenuOptions(menuOptionAtStoreDetailResults);
+
+        return menuAtStoreDetailResult;
     }
 
 }
