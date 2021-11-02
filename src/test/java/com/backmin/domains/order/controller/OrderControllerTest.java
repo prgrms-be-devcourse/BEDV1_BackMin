@@ -19,8 +19,8 @@ import com.backmin.domains.order.domain.Order;
 import com.backmin.domains.order.domain.OrderRepository;
 import com.backmin.domains.order.domain.OrderStatus;
 import com.backmin.domains.order.domain.Payment;
-import com.backmin.domains.order.dto.request.OrderCreateRequest;
-import com.backmin.domains.order.dto.request.UpdateOrderStatusRequest;
+import com.backmin.domains.order.dto.request.CreateOrderParam;
+import com.backmin.domains.order.dto.request.UpdateOrderStatusParam;
 import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
@@ -29,6 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,43 +68,47 @@ class OrderControllerTest {
     @Autowired
     OrderRepository orderRepository;
 
+    Store store;
+    Member member;
+    Menu menu;
+    MenuOption menuOption;
+    Member owner;
+
+    @BeforeEach
+    void setUp() {
+        this.member = givenSaveMember();
+        this.owner = givenSavedOwner();
+        this.store = givenSavedStore(owner);
+        this.menu = givenSavedMenu();
+        this.menuOption = givenSavedMenuOption();
+        this.menu.addMenuOption(menuOption);
+        this.store.addMenu(menu);
+    }
+
+    @AfterEach
+    void tearDown() {
+        orderRepository.deleteAll();
+        storeRepository.deleteAll();
+        memberRepository.deleteAll();
+    }
+
     @Test
     @DisplayName("주문 저장 API 테스트")
     @Transactional
     void createOrder() throws Exception {
-        Store store = Store.builder()
-                .name("동대문 엽기 떡볶이")
-                .deliveryTip(1000)
-                .phoneNumber("010-1111-2222")
-                .minOrderPrice(10000)
-                .minDeliveryTime(60)
-                .maxDeliveryTime(120)
-                .storeIntro("매콤 매콤 떡볶이!")
-                .deliveryTip(3000)
-                .category(saveCategory())
-                .build();
-        Store saveStore = storeRepository.save(store);
-
-        Member saveMember = saveMember();
-        Menu saveMenu = saveMenu();
-        MenuOption saveMenuOption = saveMenuOption();
-
-        saveMenu.addMenuOption(saveMenuOption);
-        saveStore.addMenu(saveMenu);
-
-        OrderCreateRequest orderCreateRequest = createRequest(saveStore, saveMember, saveMenu, saveMenuOption);
+        CreateOrderParam createOrderParam = createRequest(store, member, menu, menuOption);
 
         mockMvc.perform(post("/api/v1/bm/orders")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(orderCreateRequest)))
+                .content(objectMapper.writeValueAsString(createOrderParam)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("success").isBoolean())
                 .andExpect(jsonPath("data").doesNotExist())
                 .andExpect(jsonPath("serverDatetime").isString());
 
-        Order order = orderRepository.findAll().get(1);   // 떡복이2개 각각 당면추가
-        assertThat(order.getAddress()).isEqualTo(orderCreateRequest.getAddress());
+        Order order = orderRepository.findAll().get(0);   // 떡복이2개 각각 당면추가
+        assertThat(order.getAddress()).isEqualTo(createOrderParam.getAddress());
         assertThat(order.getStatus()).isEqualTo(OrderStatus.ACCEPTED);
         assertThat(order.getPayMent()).isEqualTo(Payment.KAKAO_PAY);
         assertThat(order.getTotalPrice()).isEqualTo(29000);
@@ -111,20 +117,16 @@ class OrderControllerTest {
     @Test
     @DisplayName("[고객] 주문을 정상적으로 수정한다.")
     void updateOrderStatusByCustomer() throws Exception {
-        Store saveStore = setUpAndGivenStore();
-        Member member = saveMember();
+        Order order = Order.of("주소", "요구사항", Payment.KAKAO_PAY, member, store, 1000);
+        Order savedOrder = orderRepository.save(order);
 
-        Order order = Order.of("주소", "요구사항", Payment.KAKAO_PAY, member, saveStore,1000);
-
-        orderRepository.save(order);
-
-        UpdateOrderStatusRequest request = new UpdateOrderStatusRequest();
+        UpdateOrderStatusParam request = new UpdateOrderStatusParam();
         request.setEmail("tester@email.com");
         request.setPassword("123456789a!");
         request.setOrderStatus(OrderStatus.CANCELED);
         request.setMemberId(member.getId());
 
-        mockMvc.perform(post("/api/v1/bm/orders/{orderId}", order.getId())
+        mockMvc.perform(post("/api/v1/bm/orders/{orderId}", savedOrder.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -133,71 +135,65 @@ class OrderControllerTest {
                 .andExpect(jsonPath("data").doesNotExist())
                 .andExpect(jsonPath("serverDatetime").isString());
 
-        Order saveOrder = orderRepository.findById(order.getId()).get();
-
-        assertThat(saveOrder.getStatus()).isEqualTo(OrderStatus.CANCELED);
+        Order updatedOrder = orderRepository.findById(savedOrder.getId()).get();
+        assertThat(updatedOrder.getStatus()).isEqualTo(OrderStatus.CANCELED);
     }
 
     @Test
     @DisplayName("[고객] 고객은 주문 수락을 할 수 없다.")
-    void updateOrderStatusToOkByMember() throws Exception {
-        Store saveStore = setUpAndGivenStore();
-        Member member = saveMember();
+    void not_updateOrderStatusToOkByMember() throws Exception {
+        Order order = Order.of("주소", "요구사항", Payment.KAKAO_PAY, member, store, 1000);
 
-        Order order = Order.of("주소", "요구사항", Payment.KAKAO_PAY, member, saveStore,1000);
+        Order savedOrder = orderRepository.save(order);
 
-        orderRepository.save(order);
-
-        UpdateOrderStatusRequest request = new UpdateOrderStatusRequest();
+        UpdateOrderStatusParam request = new UpdateOrderStatusParam();
         request.setEmail("tester@email.com");
         request.setPassword("123456789a!");
         request.setOrderStatus(OrderStatus.DELIVERED);
         request.setMemberId(member.getId());
 
-        mockMvc.perform(post("/api/v1/bm/orders/{orderId}", order.getId())
+        mockMvc.perform(post("/api/v1/bm/orders/{orderId}", savedOrder.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        assertThat(savedOrder.getStatus()).isEqualTo(OrderStatus.ACCEPTED);
+    }
+
+    @Test
+    @DisplayName("[가게 사장] 가게 주인은 주문을 수락할 수 있다.")
+    void updateOrderStatusToOkByOwner() throws Exception {
+        Order order = Order.of("주소", "요구사항", Payment.KAKAO_PAY, member, store, 1000);
+
+        Order savedOrder = orderRepository.save(order);
+
+        UpdateOrderStatusParam request = new UpdateOrderStatusParam();
+        request.setEmail("owner@email.com");
+        request.setPassword("123456789a!");
+        request.setOrderStatus(OrderStatus.DELIVERED);
+        request.setMemberId(owner.getId());
+
+        mockMvc.perform(post("/api/v1/bm/orders/{orderId}", savedOrder.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("success").isBoolean())
-                .andExpect(jsonPath("data").exists())
+                .andExpect(jsonPath("data").doesNotExist())
                 .andExpect(jsonPath("serverDatetime").isString());
 
-        Order saveOrder = orderRepository.findById(order.getId()).get();
-
-        assertThat(saveOrder.getStatus()).isEqualTo(OrderStatus.ACCEPTED);
+        Order updatedOrder = orderRepository.findById(savedOrder.getId()).get();
+        assertThat(updatedOrder.getStatus()).isEqualTo(OrderStatus.DELIVERED);
     }
 
     @Test
     @DisplayName("주문 내역 상세 조회")
     void getOrdersByMemberId() throws Exception {
-        Member member = Member.builder()
-                .nickName("hello")
-                .phoneNumber("111")
-                .address("주소")
-                .email("email12@email.com")
-                .password("password")
-                .build();
-        Member saveMember = memberRepository.save(member);
-
-        Store store = Store.builder()
-                .name("동대문 엽기 떡볶이")
-                .deliveryTip(1000)
-                .phoneNumber("010-1111-2222")
-                .minOrderPrice(10000)
-                .minDeliveryTime(60)
-                .maxDeliveryTime(120)
-                .storeIntro("매콤 매콤 떡볶이!")
-                .deliveryTip(3000)
-                .category(saveCategory())
-                .member(member)
-                .build();
-        Store saveStore = storeRepository.save(store);
-
-        Order order = Order.of("주소", "요청사항", Payment.KAKAO_PAY, member, saveStore, 1000);
+        Order order = Order.of("주소", "요청사항", Payment.KAKAO_PAY, member, store, 1000);
         IntStream.range(1, 10).forEach(i -> orderRepository.save(order));
 
-        mockMvc.perform(get("/api/v1/bm/orders/members/{memberId}", saveMember.getId())
+        mockMvc.perform(get("/api/v1/bm/orders/members/{memberId}", member.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("page", String.valueOf(0))
                 .param("size", String.valueOf(10)))
@@ -209,7 +205,7 @@ class OrderControllerTest {
                 .andExpect(jsonPath("data.list").exists());
     }
 
-    private Member saveMember() {
+    private Member givenSaveMember() {
         return memberRepository.save(Member.builder()
                 .nickName("tester")
                 .email("tester@email.com")
@@ -219,11 +215,11 @@ class OrderControllerTest {
                 .build());
     }
 
-    private Category saveCategory() {
+    private Category givenSavedCategory() {
         return categoryRepository.save(Category.builder().name("떡볶이").build());
     }
 
-    private Menu saveMenu() {
+    private Menu givenSavedMenu() {
         return menuRepository.save(Menu.builder()
                 .name("떡볶이")
                 .price(12000)
@@ -231,7 +227,7 @@ class OrderControllerTest {
                 .build());
     }
 
-    private MenuOption saveMenuOption() {
+    private MenuOption givenSavedMenuOption() {
         return menuOptionRepository.save(MenuOption.builder()
                 .id(111L)
                 .name("당면추가")
@@ -239,7 +235,7 @@ class OrderControllerTest {
                 .build());
     }
 
-    private OrderCreateRequest createRequest(Store saveStore, Member saveMember, Menu saveMenu, MenuOption saveMenuOption) {
+    private CreateOrderParam createRequest(Store saveStore, Member saveMember, Menu saveMenu, MenuOption saveMenuOption) {
         MenuOptionReadParam menuOptionDto = new MenuOptionReadParam();
         menuOptionDto.setId(saveMenuOption.getId());
 
@@ -249,24 +245,23 @@ class OrderControllerTest {
         MenuReadParam menuReadParam = new MenuReadParam();
         menuReadParam.setId(saveMenu.getId());
         menuReadParam.setQuantity(2);
-        menuReadParam.setMenuOptionId(menuOptionDtos);
+        menuReadParam.setMenuOptionIds(menuOptionDtos);
 
         List<MenuReadParam> menuReadParams = new ArrayList<>();
         menuReadParams.add(menuReadParam);
 
-        OrderCreateRequest orderCreateRequest = new OrderCreateRequest();
-        orderCreateRequest.setAddress("서울시 건대");
-        orderCreateRequest.setMemberId(saveMember.getId());
-        orderCreateRequest.setRequirement("요구사항");
-        orderCreateRequest.setPayment(Payment.KAKAO_PAY);
-        orderCreateRequest.setPassword("123456789a!");
-        orderCreateRequest.setStoreId(saveStore.getId());
-        orderCreateRequest.setMenuReadParams(menuReadParams);
-        return orderCreateRequest;
+        CreateOrderParam createOrderParam = new CreateOrderParam();
+        createOrderParam.setAddress("서울시 건대");
+        createOrderParam.setMemberId(saveMember.getId());
+        createOrderParam.setRequirement("요구사항");
+        createOrderParam.setPayment(Payment.KAKAO_PAY);
+        createOrderParam.setPassword("123456789a!");
+        createOrderParam.setStoreId(saveStore.getId());
+        createOrderParam.setMenuReadParams(menuReadParams);
+        return createOrderParam;
     }
 
-    private Store setUpAndGivenStore() {
-        Member saveOwner = givenOwner();
+    private Store givenSavedStore(Member owner) {
         Store store = Store.builder()
                 .name("동대문 엽기 떡볶이")
                 .deliveryTip(1000)
@@ -276,21 +271,20 @@ class OrderControllerTest {
                 .maxDeliveryTime(120)
                 .storeIntro("매콤 매콤 떡볶이!")
                 .deliveryTip(3000)
-                .category(saveCategory())
-                .member(saveOwner)
+                .category(givenSavedCategory())
+                .member(owner)
                 .build();
         return storeRepository.save(store);
     }
 
-    private Member givenOwner() {
+    private Member givenSavedOwner() {
         Member owner = Member.builder()
                 .nickName("owner")
                 .phoneNumber("111")
                 .address("주소")
-                .email("email@email.com")
-                .password("password")
+                .email("owner@email.com")
+                .password("123456789a!")
                 .build();
-        Member saveOwner = memberRepository.save(owner);
-        return saveOwner;
+        return memberRepository.save(owner);
     }
 }

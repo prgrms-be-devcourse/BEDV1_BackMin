@@ -22,6 +22,7 @@ import java.util.Objects;
 public class Menu extends BaseEntity {
 
     @Id
+    /** todo 어노테이션 수정할 것*/
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "menu_id", nullable = false)
     private Long id;
