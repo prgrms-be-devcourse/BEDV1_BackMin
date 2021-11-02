@@ -7,8 +7,8 @@ import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.member.domain.MemberRepository;
 import com.backmin.domains.member.dto.response.MemberOrderPageResult;
 import com.backmin.domains.member.service.MemberService;
-import com.backmin.domains.order.dto.OrderCreateRequest;
-import com.backmin.domains.order.dto.UpdateOrderStatusRequest;
+import com.backmin.domains.order.dto.request.CreateOrderParam;
+import com.backmin.domains.order.dto.request.UpdateOrderStatusParam;
 import com.backmin.domains.order.service.OrderService;
 import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
@@ -37,16 +37,16 @@ public class OrderController {
 
 
     @PostMapping
-    public ApiResult createOrder(@RequestBody OrderCreateRequest orderCreateRequest) {
-        Member findMember = memberRepository.findById(orderCreateRequest.getMemberId()).get();
-        Store store = storeRepository.findById(orderCreateRequest.getStoreId()).get();
+    public ApiResult createOrder(@RequestBody CreateOrderParam createOrderParam) {
+        Member findMember = memberRepository.findById(createOrderParam.getMemberId()).get();
+        Store store = storeRepository.findById(createOrderParam.getStoreId()).get();
 
-        orderService.saveOrder(orderCreateRequest, findMember, store);
+        orderService.saveOrder(createOrderParam, findMember, store);
         return ApiResult.builder().success(true).build();
     }
 
     @PostMapping("/{orderId}")
-    public ApiResult updateOrderStatus(@PathVariable Long orderId, @RequestBody UpdateOrderStatusRequest request) {
+    public ApiResult updateOrderStatus(@PathVariable Long orderId, @RequestBody UpdateOrderStatusParam request) {
         boolean isAuthentication = memberService.authenticateMember(request.getMemberId(), request.getEmail(), request.getPassword());
         /**
          * 추후에 security가 생기면 if문은 aop나 다른 방법으로 사용되어 변경 될 코드

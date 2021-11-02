@@ -19,8 +19,8 @@ import com.backmin.domains.order.domain.Order;
 import com.backmin.domains.order.domain.OrderRepository;
 import com.backmin.domains.order.domain.OrderStatus;
 import com.backmin.domains.order.domain.Payment;
-import com.backmin.domains.order.dto.OrderCreateRequest;
-import com.backmin.domains.order.dto.UpdateOrderStatusRequest;
+import com.backmin.domains.order.dto.request.CreateOrderParam;
+import com.backmin.domains.order.dto.request.UpdateOrderStatusParam;
 import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
@@ -94,11 +94,11 @@ class OrderControllerTest {
     @DisplayName("주문 저장 API 테스트")
     @Transactional
     void createOrder() throws Exception {
-        OrderCreateRequest orderCreateRequest = createRequest(store, member, menu, menuOption);
+        CreateOrderParam createOrderParam = createRequest(store, member, menu, menuOption);
 
         mockMvc.perform(post("/api/v1/bm/orders")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(orderCreateRequest)))
+                .content(objectMapper.writeValueAsString(createOrderParam)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("success").isBoolean())
@@ -106,7 +106,7 @@ class OrderControllerTest {
                 .andExpect(jsonPath("serverDatetime").isString());
 
         Order order = orderRepository.findAll().get(0);   // 떡복이2개 각각 당면추가
-        assertThat(order.getAddress()).isEqualTo(orderCreateRequest.getAddress());
+        assertThat(order.getAddress()).isEqualTo(createOrderParam.getAddress());
         assertThat(order.getStatus()).isEqualTo(OrderStatus.ACCEPTED);
         assertThat(order.getPayMent()).isEqualTo(Payment.KAKAO_PAY);
         assertThat(order.getTotalPrice()).isEqualTo(29000);
@@ -118,7 +118,7 @@ class OrderControllerTest {
         Order order = Order.of("주소", "요구사항", Payment.KAKAO_PAY, member, store, 1000);
         Order savedOrder = orderRepository.save(order);
 
-        UpdateOrderStatusRequest request = new UpdateOrderStatusRequest();
+        UpdateOrderStatusParam request = new UpdateOrderStatusParam();
         request.setEmail("tester@email.com");
         request.setPassword("123456789a!");
         request.setOrderStatus(OrderStatus.CANCELED);
@@ -144,7 +144,7 @@ class OrderControllerTest {
 
         Order savedOrder = orderRepository.save(order);
 
-        UpdateOrderStatusRequest request = new UpdateOrderStatusRequest();
+        UpdateOrderStatusParam request = new UpdateOrderStatusParam();
         request.setEmail("tester@email.com");
         request.setPassword("123456789a!");
         request.setOrderStatus(OrderStatus.DELIVERED);
@@ -207,7 +207,7 @@ class OrderControllerTest {
                 .build());
     }
 
-    private OrderCreateRequest createRequest(Store saveStore, Member saveMember, Menu saveMenu, MenuOption saveMenuOption) {
+    private CreateOrderParam createRequest(Store saveStore, Member saveMember, Menu saveMenu, MenuOption saveMenuOption) {
         MenuOptionReadParam menuOptionDto = new MenuOptionReadParam();
         menuOptionDto.setId(saveMenuOption.getId());
 
@@ -222,15 +222,15 @@ class OrderControllerTest {
         List<MenuReadParam> menuReadParams = new ArrayList<>();
         menuReadParams.add(menuReadParam);
 
-        OrderCreateRequest orderCreateRequest = new OrderCreateRequest();
-        orderCreateRequest.setAddress("서울시 건대");
-        orderCreateRequest.setMemberId(saveMember.getId());
-        orderCreateRequest.setRequirement("요구사항");
-        orderCreateRequest.setPayment(Payment.KAKAO_PAY);
-        orderCreateRequest.setPassword("123456789a!");
-        orderCreateRequest.setStoreId(saveStore.getId());
-        orderCreateRequest.setMenuReadParams(menuReadParams);
-        return orderCreateRequest;
+        CreateOrderParam createOrderParam = new CreateOrderParam();
+        createOrderParam.setAddress("서울시 건대");
+        createOrderParam.setMemberId(saveMember.getId());
+        createOrderParam.setRequirement("요구사항");
+        createOrderParam.setPayment(Payment.KAKAO_PAY);
+        createOrderParam.setPassword("123456789a!");
+        createOrderParam.setStoreId(saveStore.getId());
+        createOrderParam.setMenuReadParams(menuReadParams);
+        return createOrderParam;
     }
 
     private Store givenSavedStore() {

@@ -12,7 +12,7 @@ import com.backmin.domains.order.domain.OrderMenu;
 import com.backmin.domains.order.domain.OrderMenuOption;
 import com.backmin.domains.order.domain.OrderRepository;
 import com.backmin.domains.order.domain.OrderStatus;
-import com.backmin.domains.order.dto.OrderCreateRequest;
+import com.backmin.domains.order.dto.request.CreateOrderParam;
 import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
 import java.util.List;
@@ -32,7 +32,7 @@ public class OrderService {
     private final OrderConverter orderConverter;
 
     @Transactional
-    public void saveOrder(OrderCreateRequest request, Member member, Store store) {
+    public void saveOrder(CreateOrderParam request, Member member, Store store) {
         Order order = Order.of(request.getAddress(), request.getRequirement(), request.getPayment(), member, store.getDeliveryTip());
         addOrderMenu(request, store, order);
 
@@ -42,7 +42,7 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    private void addOrderMenu(OrderCreateRequest request, Store store, Order order) {
+    private void addOrderMenu(CreateOrderParam request, Store store, Order order) {
         List<Menu> menus = store.getMenus();
 
         for (MenuReadParam menuDto : request.getMenuReadParams()) {
