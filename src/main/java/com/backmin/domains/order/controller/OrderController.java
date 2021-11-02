@@ -23,20 +23,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/api/v1/bm/orders", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/v1/bm/orders")
 @RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
     private final MemberService memberService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult createOrder(@RequestBody CreateOrderParam createOrderParam) {
         orderService.saveOrder(createOrderParam);
         return ApiResult.builder().success(true).build();
     }
 
-    @PostMapping("/{orderId}")
+    @PostMapping(path = "/{orderId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult updateOrderStatus(@PathVariable Long orderId, @RequestBody UpdateOrderStatusParam request) {
         boolean isAuthentication = memberService.authenticateMember(request.getMemberId(), request.getEmail(), request.getPassword());
         /**
@@ -50,7 +50,7 @@ public class OrderController {
         return ApiResult.error(ErrorInfo.MEMBER_NOT_FOUND.getCode(), ErrorInfo.MEMBER_NOT_FOUND.getMessage());
     }
 
-    @GetMapping("/members/{memberId}")
+    @GetMapping(path = "/members/{memberId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult<PageResult<MemberOrderPageResult>> getMemberOrders(@PathVariable Long memberId, Pageable pageRequest) {
         return ApiResult.ok(orderService.getOrdersByMember(memberId, pageRequest));
     }
