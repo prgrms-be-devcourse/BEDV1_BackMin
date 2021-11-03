@@ -9,8 +9,7 @@ import org.springframework.stereotype.Component;
 public class MemberConverter {
 
     public Member convertSaveDtoToMember(MemberCreateParam memberSaveDto) {
-        return Member.of(memberSaveDto.getId(),
-                memberSaveDto.getEmail(),
+        return Member.of(memberSaveDto.getEmail(),
                 memberSaveDto.getPassword(),
                 memberSaveDto.getPhoneNumber(),
                 memberSaveDto.getNickName(),
@@ -18,12 +17,13 @@ public class MemberConverter {
     }
 
     public MemberCreateParam convertMemberToSaveDto(Member member) {
-        return MemberCreateParam.of(member.getId(),
-                member.getEmail(),
-                member.getPassword(),
-                member.getNickName(),
-                member.getAddress(),
-                member.getPhoneNumber());
+        MemberCreateParam memberCreateParam = new MemberCreateParam();
+        memberCreateParam.setEmail(member.getEmail());
+        memberCreateParam.setPassword(member.getPassword());
+        memberCreateParam.setNickName(member.getNickName());
+        memberCreateParam.setAddress(member.getAddress());
+        memberCreateParam.setPhoneNumber(member.getPhoneNumber());
+        return memberCreateParam;
     }
 
     public Member convertUpdateDtoToMember(Member member, MemberUpdateParam memberUpdateParam) {

@@ -1,12 +1,14 @@
 package com.backmin.domains.member.domain;
 
 import com.backmin.domains.common.BaseEntity;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +31,7 @@ public class Member extends BaseEntity {
     private Long id;
 
     @Column(name = "email", length = 50, nullable = false)
+    @Pattern(regexp = "([\\w\\.\\-_]+)?\\w+@[\\w-_]+(\\.\\w+){1,}", message = "입력된 이메일 형식이 올바르지 않습니다.")
     private String email;
 
     @Column(name = "password", length = 50, nullable = false)
@@ -59,7 +62,7 @@ public class Member extends BaseEntity {
         this.address = address;
     }
 
-    public static Member of(Long id,
+    public static Member of(
             String email,
             String password,
             String phoneNumber,
@@ -67,7 +70,6 @@ public class Member extends BaseEntity {
             String address
     ) {
         return Member.builder()
-                .id(id)
                 .email(email)
                 .password(password)
                 .phoneNumber(phoneNumber)
@@ -77,15 +79,15 @@ public class Member extends BaseEntity {
     }
 
     public void updateInfo(String nickName, String phoneNumber, String address) {
-        if (!(nickName.isBlank())) {
+        if (Objects.nonNull(nickName)) {
             this.nickName = nickName;
         }
 
-        if (!(phoneNumber.isBlank())) {
+        if (Objects.nonNull(phoneNumber)) {
             this.phoneNumber = phoneNumber;
         }
 
-        if(!(address.isBlank())) {
+        if (Objects.nonNull(address)) {
             this.address = address;
         }
     }

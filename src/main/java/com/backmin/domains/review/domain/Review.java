@@ -50,21 +50,7 @@ public class Review extends BaseEntity {
         this.content = content;
     }
 
-    public static Review of(Long id, String content, Store store, double score, Member member, Order order) {
-        Review review = Review.builder()
-                .id(id)
-                .score(score)
-                .content(content)
-                .build();
-
-        review.changeStore(store);
-        review.changeMember(member);
-        review.changeOrder(order);
-
-        return review;
-    }
-
-    public static Review of( String content, double score, Store store,Member member, Order order) {
+    public static Review of(Store store, double score, Member member, Order order, String content) {
         Review review = Review.builder()
                 .score(score)
                 .content(content)
@@ -90,12 +76,7 @@ public class Review extends BaseEntity {
     }
 
     public void changeStore(Store store) {
-//        if (Objects.nonNull(this.store)) {
-//            this.store.getReviews().remove(this);
-//        }
-
         this.store = store;
-//        store.getReviews().add(this);
     }
 
 }

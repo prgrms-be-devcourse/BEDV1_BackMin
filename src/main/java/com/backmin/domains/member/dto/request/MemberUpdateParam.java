@@ -15,18 +15,7 @@ public class MemberUpdateParam {
 
     private String address;
 
-    public static MemberUpdateParam of(Long id,
-            String phoneNumber,
-            String nickName,
-            String address
-    ) {
-        MemberUpdateParam memberUpdateParam = new MemberUpdateParam();
-        memberUpdateParam.setId(id);
-        memberUpdateParam.setPhoneNumber(phoneNumber);
-        memberUpdateParam.setNickName(nickName);
-        memberUpdateParam.setAddress(address);
+    private String email;
 
-        return memberUpdateParam;
-    }
-
+    private String password;
 }
