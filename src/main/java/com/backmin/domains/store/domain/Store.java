@@ -1,5 +1,6 @@
 package com.backmin.domains.store.domain;
 
+import com.backmin.domains.common.BaseEntity;
 import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.review.domain.Review;
@@ -26,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "store")
-public class Store {
+public class Store extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -58,18 +59,14 @@ public class Store {
     private boolean isPackage;
 
     @Column(name = "delivery_tip")
-    @Min(0) /** todo: 삭제할 것*/
     private int deliveryTip;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Menu> menus = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category", nullable = false)
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-
-//    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Review> reviews = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "member_id")
