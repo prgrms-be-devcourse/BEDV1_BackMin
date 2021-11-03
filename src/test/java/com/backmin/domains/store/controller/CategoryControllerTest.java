@@ -1,5 +1,11 @@
 package com.backmin.domains.store.controller;
 
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -11,14 +17,17 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs
 @Transactional
 @DisplayName("CategoryController 테스트")
 class CategoryControllerTest {
@@ -49,7 +58,18 @@ class CategoryControllerTest {
                 .andExpect(jsonPath("data").exists())
                 .andExpect(jsonPath("data.categories").exists())
                 .andExpect(jsonPath("serverDatetime").exists())
-                .andDo(print());
+                .andDo(print())
+                .andDo(document("category-list",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공여부"),
+                                fieldWithPath("serverDatetime").type(JsonFieldType.STRING).description("서버 응답 시간"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터").optional(),
+                                fieldWithPath("data.categories").type(JsonFieldType.ARRAY).description("카테고리 목록"),
+                                fieldWithPath("data.categories[].id").type(JsonFieldType.NUMBER).description("카테고리 Id"),
+                                fieldWithPath("data.categories[].name").type(JsonFieldType.STRING).description("카테고리명")
+                        )));
     }
 
 }

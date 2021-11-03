@@ -21,7 +21,7 @@ public class OrderConverter {
                     response.setStoreId(order.getStore().getId());
                     response.setOrderDateTime(order.getRequestAt());
                     response.setStoreName(order.getStore().getName());
-                    response.setMenuReadRespons(
+                    response.setMenuReadResponses(
                             order.getOrderMenus().stream()
                                     .map(orderMenu -> {
                                         MenuReadResult menuReadResult = new MenuReadResult();

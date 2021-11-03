@@ -72,7 +72,7 @@ public class MemberService {
     }
 
     public boolean authenticateMember(Long memberId, String email, String password) {
-        Member member = memberRepository.findById(memberId).get();
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new BusinessException(ErrorInfo.MEMBER_NOT_FOUND));
         return member.getEmail().equals(email) && member.getPassword().equals(password);
     }
 

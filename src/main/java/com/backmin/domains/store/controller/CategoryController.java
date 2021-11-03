@@ -22,7 +22,8 @@ public class CategoryController {
     public ApiResult<CategoriesReadResult> list() {
         List<CategoryAtListResult> categoryAtListResults = categoryService.readAllCategories();
 
-        CategoriesReadResult response = CategoriesReadResult.of(categoryAtListResults);
+        CategoriesReadResult response = new CategoriesReadResult();
+        response.setCategories(categoryAtListResults);
 
         return ApiResult.ok(response);
     }

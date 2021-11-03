@@ -16,7 +16,7 @@ public class MemberOrderPageResult {
 
     private String storeName;
 
-    private List<MenuReadResult> menuReadRespons;
+    private List<MenuReadResult> menuReadResponses;
 
     private LocalDateTime OrderDateTime;
 

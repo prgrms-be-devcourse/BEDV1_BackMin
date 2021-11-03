@@ -10,10 +10,4 @@ public class CategoriesReadResult {
 
     private List<CategoryAtListResult> categories;
 
-    public static CategoriesReadResult of(List<CategoryAtListResult> categories) {
-        CategoriesReadResult categoriesReadResult = new CategoriesReadResult();
-        categoriesReadResult.setCategories(categories);
-
-        return categoriesReadResult;
-    }
 }

@@ -16,6 +16,6 @@ public class MenuReadParam {
     @Max(10)
     private int quantity;
 
-    private List<Long> menuOptionId;
+    private List<Long> menuOptionIds;
 
 }
