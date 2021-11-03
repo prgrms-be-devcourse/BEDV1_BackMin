@@ -255,7 +255,7 @@ class OrderControllerTest {
                                 fieldWithPath("data.list[].orderId").type(JsonFieldType.NUMBER).description("응답 데이터"),
                                 fieldWithPath("data.list[].storeId").type(JsonFieldType.NUMBER).description("응답 데이터"),
                                 fieldWithPath("data.list[].storeName").type(JsonFieldType.STRING).description("응답 데이터"),
-                                fieldWithPath("data.list[].menuReadRespons").type(JsonFieldType.ARRAY).description("응답 데이터"),
+                                fieldWithPath("data.list[].menuReadResponses").type(JsonFieldType.ARRAY).description("응답 데이터"),
                                 fieldWithPath("data.list[].orderDateTime").type(JsonFieldType.STRING).description("응답 데이터"),
                                 fieldWithPath("data.hasNext").type(JsonFieldType.BOOLEAN).description("응답 데이터"),
                                 fieldWithPath("serverDatetime").type(JsonFieldType.STRING).description("응답시간")
