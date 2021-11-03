@@ -100,7 +100,6 @@ class OrderControllerTest {
         orderRepository.deleteAll();
         storeRepository.deleteAll();
         memberRepository.deleteAll();
-        categoryRepository.deleteAll();
     }
 
     @Test

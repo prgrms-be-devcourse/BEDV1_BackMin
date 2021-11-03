@@ -1,6 +1,5 @@
 package com.backmin.domains.store.domain;
 
-import com.backmin.domains.common.BaseEntity;
 import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.review.domain.Review;
@@ -27,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "store")
-public class Store extends BaseEntity {
+public class Store {
 
     @Id
     @GeneratedValue
