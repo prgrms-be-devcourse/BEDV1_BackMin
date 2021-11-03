@@ -81,26 +81,26 @@ class ReviewRepositoryTest {
         orderRepository.saveAll(orders);
 
         Review review1 = Review.of(
-                "맛있습니다.",
-                1,
                 savedStore,
+                1,
                 member,
-                order1
+                order1,
+                "맛있습니다."
         );
 
         Review review2 = Review.of(
-                "맛있습니다.22",
-                2,
                 savedStore,
+                2,
                 member,
-                order2
+                order2,
+                "맛있습니다.22"
         );
         Review review3 = Review.of(
-                "맛있습니다.33",
-                3,
                 savedStore,
+                3,
                 member,
-                order3
+                order3,
+                "맛있습니다.33"
         );
 
         List<Review> reviews = List.of(review1, review2, review3);
@@ -155,40 +155,40 @@ class ReviewRepositoryTest {
         orderRepository.saveAll(orders);
 
         Review review1 = Review.of(
-                "맛있습니다.",
-                1,
                 savedStore,
+                1,
                 member,
-                order1
+                order1,
+                "맛있습니다."
         );
 
         Review review2 = Review.of(
-                "맛있습니다.22",
-                2,
                 savedStore,
+                2,
                 member,
-                order2
+                order2,
+                "맛있습니다.22"
         );
         Review review3 = Review.of(
-                "맛있습니다.33",
-                3,
                 savedStore,
+                3,
                 member,
-                order3
+                order3,
+                "맛있습니다.33"
         );
         Review review4 = Review.of(
-                "맛있습니다.44",
-                4,
                 savedStore,
+                4,
                 member,
-                order4
+                order4,
+                "맛있습니다.44"
         );
         Review review5 = Review.of(
-                "맛있습니다.55",
-                5,
                 savedStore,
+                5,
                 member,
-                order5
+                order5,
+                "맛있습니다.55"
         );
         List<Review> reviews = List.of(review1, review2, review3, review4, review5);
         reviewRepository.saveAll(reviews);
