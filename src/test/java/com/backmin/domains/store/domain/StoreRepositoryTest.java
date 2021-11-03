@@ -16,12 +16,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
+@DataJpaTest
 @Transactional
 @DisplayName("StoreRepository 테스트")
 class StoreRepositoryTest {
@@ -38,7 +37,9 @@ class StoreRepositoryTest {
         // given
         final int PAGE_SIZE = 2;
 
-        Category category1 = Category.of("한식");
+        Category category1 = Category.builder()
+                .name("한식")
+                .build();
         categoryRepository.save(category1);
 
         Store store1 = Store.of(
