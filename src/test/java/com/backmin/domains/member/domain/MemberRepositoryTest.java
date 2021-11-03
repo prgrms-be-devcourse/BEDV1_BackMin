@@ -7,6 +7,8 @@ import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,13 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
+@TestInstance(Lifecycle.PER_CLASS)
 class MemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
 
-    @BeforeEach
-    public void create_member() {
+    @BeforeAll
+    public void setUp() {
         Member member = Member.builder()
                 .email("membertest@gmail.com")
                 .password("test01")
@@ -30,7 +33,6 @@ class MemberRepositoryTest {
                 .build();
 
         Member savedMember = memberRepository.save(member);
-        assertThat(savedMember.getNickName(), is("이구역개발왕"));
     }
 
     @Test
