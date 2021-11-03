@@ -42,7 +42,7 @@ public class Menu extends BaseEntity {
     @Column(name = "menu_price")
     private int price;
 
-    @Column(name = "decription", length = 200)
+    @Column(name = "description", length = 200)
     private String description;
 
     @OneToMany(mappedBy = "menu")
