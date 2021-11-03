@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
 @SpringBootTest
-@DisplayName("categoryRepository 테스트")
+@DisplayName("CategoryRepository 테스트")
 class CategoryRepositoryTest {
 
     @Autowired
