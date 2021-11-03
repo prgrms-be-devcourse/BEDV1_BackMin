@@ -26,26 +26,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReviewController {
 
     private final ReviewService reviewService;
-    private final StoreRepository storeRepository;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult createReview(@RequestBody @Valid ReviewCreateParam reviewCreateParam) {
         reviewService.save(reviewCreateParam);
-        return ApiResult.ok(null);
+        return ApiResult.ok();
     }
 
     @GetMapping(value = "/store/{storeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult<PageResult<ReviewResult>> readAllReview(@PathVariable("storeId") Long storeId, Pageable pageable) {
-        if (storeRepository.existsById(storeId)) {
-            return ApiResult.ok(reviewService.getReviewsByStoreId(storeId, pageable));
-        }
-        throw new BusinessException(ErrorInfo.NOT_FOUND);
+        return ApiResult.ok(reviewService.getReviewsByStoreId(storeId, pageable));
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult deleteReview(@PathVariable("id") Long reviewId) {
         reviewService.deleteReview(reviewId);
-        return ApiResult.ok(null);
+        return ApiResult.ok();
     }
 
 }

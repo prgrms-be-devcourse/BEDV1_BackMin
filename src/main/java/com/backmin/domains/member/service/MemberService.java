@@ -30,7 +30,7 @@ public class MemberService {
         if (checkMemberNickname(memberCreateParam.getNickName()).isDuplication()) {
             throw new BusinessException(ErrorInfo.DUPLICATE_NICKNAME);
         }
-        memberRepository.save(Member.of(memberCreateParam.getId(), memberCreateParam.getEmail(), memberCreateParam.getPassword(),
+        memberRepository.save(Member.of(memberCreateParam.getEmail(), memberCreateParam.getPassword(),
                 memberCreateParam.getPhoneNumber(), memberCreateParam.getNickName(), memberCreateParam.getAddress()));
     }
 
@@ -38,25 +38,24 @@ public class MemberService {
     public void update(Long memberId, MemberUpdateParam memberUpdateParam) {
         memberRepository.findById(memberId)
                 .map(member -> memberConverter.convertUpdateDtoToMember(member, memberUpdateParam))
-                .orElseThrow(() -> new BusinessException(ErrorInfo.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorInfo.MEMBER_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
     public MemberCreateParam findOne(Long id) {
         return memberRepository.findById(id)
                 .map(memberConverter::convertMemberToSaveDto)
-                .orElseThrow(() -> new BusinessException(ErrorInfo.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorInfo.MEMBER_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
     public Page<MemberCreateParam> findAll(Pageable pageable) {
-        //PageRequest.of(10, 10);
         return memberRepository.findAll(pageable).map(memberConverter::convertMemberToSaveDto);
     }
 
     @Transactional
     public void deleteMember(Long memberId) {
-        Member foundMember = memberRepository.findById(memberId).orElseThrow(() -> new BusinessException(ErrorInfo.NOT_FOUND));
+        Member foundMember = memberRepository.findById(memberId).orElseThrow(() -> new BusinessException(ErrorInfo.MEMBER_NOT_FOUND));
         memberRepository.delete(foundMember);
     }
 

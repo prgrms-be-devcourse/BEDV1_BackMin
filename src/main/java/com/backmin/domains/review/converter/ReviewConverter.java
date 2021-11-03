@@ -15,7 +15,7 @@ public class ReviewConverter {
         List<ReviewResult> reviewResultList = reviews.getContent().stream()
                 .map(review -> {
                     ReviewResult result = new ReviewResult();
-                    result.setId(review.getId());
+                    result.setReviewId(review.getId());
                     result.setStoreId(review.getStore().getId());
                     result.setMemberId(review.getMember().getId());
                     result.setNickName(review.getMember().getNickName());

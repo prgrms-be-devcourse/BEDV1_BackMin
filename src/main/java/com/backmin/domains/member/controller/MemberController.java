@@ -1,6 +1,8 @@
 package com.backmin.domains.member.controller;
 
+import com.backmin.config.exception.BusinessException;
 import com.backmin.domains.common.dto.ApiResult;
+import com.backmin.domains.common.enums.ErrorInfo;
 import com.backmin.domains.member.dto.request.MemberCreateParam;
 import com.backmin.domains.member.dto.request.MemberUpdateParam;
 import com.backmin.domains.member.service.MemberService;
@@ -26,19 +28,22 @@ public class MemberController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult createMember(@RequestBody @Valid MemberCreateParam memberCreateParam) {
         memberService.save(memberCreateParam);
-        return ApiResult.ok(null);
+        return ApiResult.ok();
     }
 
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult updateMember(@PathVariable("id") Long memberId, @RequestBody @Valid MemberUpdateParam memberUpdateParam) {
-        memberService.update(memberId, memberUpdateParam);
-        return ApiResult.ok(null);
+        if (memberService.authenticateMember(memberId, memberUpdateParam.getEmail(), memberUpdateParam.getPassword())) {
+            memberService.update(memberId, memberUpdateParam);
+            return ApiResult.ok();
+        }
+        throw new BusinessException(ErrorInfo.INCORRECT_MEMBER_SECURITY);
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResult<Object> deleteMember(@PathVariable("id") Long memberId) {
+    public ApiResult deleteMember(@PathVariable("id") Long memberId) {
         memberService.deleteMember(memberId);
-        return ApiResult.ok(null);
+        return ApiResult.ok();
     }
 
     @GetMapping(value = "/email/{email}", consumes = MediaType.APPLICATION_JSON_VALUE)

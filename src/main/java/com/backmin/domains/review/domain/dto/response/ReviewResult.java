@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class ReviewResult {
 
-    private Long id;
+    private Long reviewId;
 
     private Long storeId;
 
@@ -29,27 +29,4 @@ public class ReviewResult {
 
     private LocalDateTime updatedAt;
 
-    public static ReviewResult of(
-            Long id,
-            Store store,
-            double score,
-            Member member,
-            Order order,
-            String content,
-            LocalDateTime createdAt,
-            LocalDateTime updatedAt
-    ) {
-        ReviewResult reviewResult = new ReviewResult();
-        reviewResult.setId(id);
-        reviewResult.setStoreId(store.getId());
-        reviewResult.setMemberId(member.getId());
-        reviewResult.setNickName(member.getNickName());
-        reviewResult.setOrderId(order.getId());
-        reviewResult.setScore(score);
-        reviewResult.setContent(content);
-        reviewResult.setCreatedAt(createdAt);
-        reviewResult.setUpdatedAt(updatedAt);
-
-        return reviewResult;
-    }
 }

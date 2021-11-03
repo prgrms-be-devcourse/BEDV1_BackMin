@@ -15,10 +15,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("SELECT COALESCE(AVG(r.score),0) FROM Review r WHERE r.store.id = :storeId")
     double getReviewAverageByStore(@Param("storeId") Long storeId);
 
-//    Page<Review> findAllByStoreId(Long storeId, Pageable pageable);
-    Review findReviewByStoreId(Long storeId);
-
-//    @Query("select r from Review r Where Review.store.id = :storeId")
     Page<Review> getAllByStoreId(Long storeId, Pageable pageable);
 
 }
