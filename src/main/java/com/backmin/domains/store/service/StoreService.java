@@ -1,7 +1,9 @@
 package com.backmin.domains.store.service;
 
+import com.backmin.config.exception.BusinessException;
 import com.backmin.domains.common.dto.PageResult;
 import com.backmin.config.exception.StoreNotFoundException;
+import com.backmin.domains.common.enums.ErrorInfo;
 import com.backmin.domains.menu.converter.MenuConverter;
 import com.backmin.domains.menu.converter.MenuOptionConverter;
 import com.backmin.domains.menu.domain.Menu;
@@ -43,7 +45,7 @@ public class StoreService {
 
     public DetailStoreReadResult readDetailStore(Long storeId) {
         Store foundStore = storeRepository.findStoreById(storeId)
-                .orElseThrow(() -> new StoreNotFoundException());
+                .orElseThrow(() -> new BusinessException(ErrorInfo.STORE_NOT_FOUND));
 
         StoreAtDetailResult storeInfo = storeConverter.convertToStoreInfoAtDetail(foundStore);
 
