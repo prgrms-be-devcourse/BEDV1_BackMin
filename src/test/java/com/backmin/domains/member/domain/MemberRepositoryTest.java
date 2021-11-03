@@ -22,8 +22,8 @@ class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
-    @BeforeEach
-    public void create_member() {
+    @BeforeAll
+    public void setUp() {
         Member member = Member.builder()
                 .email("membertest@gmail.com")
                 .password("test01")
@@ -33,7 +33,6 @@ class MemberRepositoryTest {
                 .build();
 
         Member savedMember = memberRepository.save(member);
-        assertThat(savedMember.getNickName(), is("이구역개발왕"));
     }
 
     @Test
