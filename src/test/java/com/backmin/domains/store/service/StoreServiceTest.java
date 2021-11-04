@@ -1,24 +1,21 @@
 package com.backmin.domains.store.service;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+import com.backmin.config.exception.BusinessException;
 import com.backmin.domains.BaseControllerTest;
 import com.backmin.domains.common.dto.PageResult;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
-import com.backmin.domains.menu.domain.MenuOptionRepository;
-import com.backmin.domains.menu.domain.MenuRepository;
 import com.backmin.domains.store.domain.Category;
-import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
-import com.backmin.domains.store.domain.StoreRepository;
 import com.backmin.domains.store.dto.response.DetailStoreReadResult;
 import com.backmin.domains.store.dto.response.StoreAtListResult;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 class StoreServiceTest extends BaseControllerTest {
@@ -136,6 +132,16 @@ class StoreServiceTest extends BaseControllerTest {
                 .collect(Collectors.toList());
         assertThat(detailStoreReadResult.getBestMenus().size(), is(bestMenuIdsBefore.size()));
         assertThat(detailStoreReadResult.getMenus().size(), is(store1.getMenus().size()));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 가게에 대한 상세조회 테스트")
+    void test_readDetailStoreInfo_invalid() {
+        // given
+        // when
+        // then
+        assertThatThrownBy(() -> storeService.readDetailStore(200L))
+        .isInstanceOf(BusinessException.class);
     }
 
     @Test
