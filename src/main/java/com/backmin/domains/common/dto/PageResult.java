@@ -20,17 +20,4 @@ public class PageResult<T> {
 
     private boolean hasNext;
 
-    @Builder
-    public PageResult(long totalCount, int pageNumber, int pageSize, List<T> list, boolean hasNext) {
-        this.totalCount = totalCount;
-        this.pageNumber = pageNumber;
-        this.pageSize = pageSize;
-        this.list = list;
-        this.hasNext = hasNext;
-    }
-
-    public PageResult() {
-
-    }
-
 }

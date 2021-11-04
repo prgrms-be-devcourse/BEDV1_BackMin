@@ -82,13 +82,14 @@ public class StoreService {
                 ))
                 .collect(Collectors.toList());
 
-        return PageResult.<StoreAtListResult>builder()
-                .list(searchedStoreAtListResults)
-                .hasNext(searchedStorePage.hasNext())
-                .pageSize(searchedStorePage.getSize())
-                .pageNumber(searchedStorePage.getNumber())
-                .totalCount(searchedStorePage.getTotalElements())
-                .build();
+        PageResult<StoreAtListResult> pageResult = new PageResult<>();
+        pageResult.setList(searchedStoreAtListResults);
+        pageResult.setHasNext(searchedStorePage.hasNext());
+        pageResult.setPageSize(searchedStorePage.getSize());
+        pageResult.setPageNumber(searchedStorePage.getNumber());
+        pageResult.setTotalCount(searchedStorePage.getTotalElements());
+
+        return pageResult;
     }
 
     private MenuAtStoreDetailResult getConvertedMenuInfoAtStoreDetail(Menu menu) {
