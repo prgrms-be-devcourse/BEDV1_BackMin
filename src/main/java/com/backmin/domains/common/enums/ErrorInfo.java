@@ -17,7 +17,8 @@ public enum ErrorInfo {
     ORDER_NOT_FOUND("ORDER_NOT_FOUND", "해당 주문을 찾을 수 없습니다."),
     DUPLICATE_EMAIL("DUPLICATE_EMAIL", "이미 등록된 이메일입니다."),
     DUPLICATE_NICKNAME("DUPLICATE_NICKNAME", "이미 등록된 닉네임입니다."),
-    INCORRECT_MEMBER_SECURITY("INCORRECT_MEMBER_SECURITY", "회원정보와 일치하지 않습니다.");
+    INCORRECT_MEMBER_SECURITY("INCORRECT_MEMBER_SECURITY", "회원정보와 일치하지 않습니다."),
+    ORDER_MIN_PRICE("ORDER_MIN_PRICE", "최소 주문 금액을 넘어야 합니다.");
 
     ErrorInfo(String code, String message) {
         this.code = code;
