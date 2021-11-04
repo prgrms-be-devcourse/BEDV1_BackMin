@@ -3,6 +3,7 @@ package com.backmin.domains.store.service;
 import com.backmin.domains.store.converter.CategoryConverter;
 import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.CategoryRepository;
+import com.backmin.domains.store.dto.response.CategoriesReadResult;
 import com.backmin.domains.store.dto.response.CategoryAtListResult;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,15 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-
     private final CategoryConverter categoryConverter;
 
-    public List<CategoryAtListResult> readAllCategories() {
-        final List<Category> categories = categoryRepository.findAll();
-
-        return categories.stream()
-                .map(categoryConverter::convertCategoryToCategoryInfoAtList)
-                .collect(Collectors.toList());
+    public CategoriesReadResult readAllCategories() {
+        return categoryConverter.convertCategoryToCategoryInfoAtList(categoryRepository.findAll());
     }
 
 }
