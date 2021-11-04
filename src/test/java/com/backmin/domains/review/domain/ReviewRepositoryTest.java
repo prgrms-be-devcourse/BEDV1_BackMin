@@ -61,7 +61,7 @@ class ReviewRepositoryTest {
 
         Store store1 = Store.of(
                 "동대문 엽기 떡볶이",
-                "070364532746",
+                "070-3645-2746",
                 "엽떡집입니다.",
                 1000,
                 30,
@@ -134,7 +134,7 @@ class ReviewRepositoryTest {
 
         Store store1 = Store.of(
                 "동대문 엽기 떡볶이",
-                "070364532746",
+                "070-3645-2746",
                 "엽떡집입니다.",
                 1000,
                 30,
@@ -151,7 +151,7 @@ class ReviewRepositoryTest {
                 .address("수원시")
                 .nickName("K")
                 .password("1234")
-                .phoneNumber("01023564756")
+                .phoneNumber("010-2356-4756")
                 .build();
         memberRepository.save(member);
 

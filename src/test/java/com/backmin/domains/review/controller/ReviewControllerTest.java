@@ -35,7 +35,7 @@ class ReviewControllerTest extends BaseControllerTest {
     void create_Review() throws Exception {
         Member member = Member.builder()
                 .nickName("hello")
-                .phoneNumber("111")
+                .phoneNumber("010-1234-5671")
                 .address("주소")
                 .email("email12@email.com")
                 .password("password")
@@ -99,7 +99,7 @@ class ReviewControllerTest extends BaseControllerTest {
     void findStoreReviews() throws Exception {
         Member member = Member.builder()
                 .nickName("나부자")
-                .phoneNumber("112")
+                .phoneNumber("010-1111-1112")
                 .address("서울시 송파구 올림픽로 300 롯데월드타워 101층")
                 .email("thisisemail@email.com")
                 .password("passwordispassword")

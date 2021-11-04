@@ -78,7 +78,7 @@ class StoreControllerTest extends BaseControllerTest {
 
         Store store2 = Store.of(
                 "참이맛 감자탕",
-                "070364532746",
+                "070-3643-2746",
                 "뼈해장국 맛집입니다.",
                 1000,
                 30,
@@ -176,7 +176,7 @@ class StoreControllerTest extends BaseControllerTest {
 
         Store store1 = Store.of(
                 "동대문 엽기 떡볶이",
-                "070364532746",
+                "070-3645-2746",
                 "엽떡집입니다.",
                 1000,
                 30,
@@ -269,7 +269,7 @@ class StoreControllerTest extends BaseControllerTest {
 
         Store store1 = Store.of(
                 "동대문 엽기 떡볶이",
-                "070364532746",
+                "070-3645-2746",
                 "엽떡집입니다.",
                 1000,
                 30,

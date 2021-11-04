@@ -52,7 +52,7 @@ class StoreRepositoryTest {
 
         Store store1 = Store.of(
                 "동대문 엽기 떡볶이",
-                "070364532746",
+                "070-3645-3746",
                 "엽떡집입니다.",
                 1000,
                 30,
@@ -80,7 +80,7 @@ class StoreRepositoryTest {
 
         Store store3 = Store.of(
                 "놀부 부대찌개",
-                "070364532746",
+                "070-3643-2746",
                 "부대찌개 맛집입니다.",
                 1000,
                 30,
@@ -94,7 +94,7 @@ class StoreRepositoryTest {
 
         Store store4 = Store.of(
                 "마왕족발",
-                "070364532746",
+                "070-3643-2746",
                 "족발 맛집입니다.",
                 1000,
                 30,
@@ -143,7 +143,7 @@ class StoreRepositoryTest {
 
         Store store1 = Store.of(
                 "동대문 엽기 떡볶이",
-                "070364532746",
+                "070-3643-2746",
                 "엽떡집입니다.",
                 1000,
                 30,
@@ -182,7 +182,7 @@ class StoreRepositoryTest {
 
         Store store1 = Store.of(
                 "동대문 엽기 떡볶이",
-                "070364532746",
+                "070-3645-2746",
                 "엽떡집입니다.",
                 1000,
                 30,
@@ -196,7 +196,7 @@ class StoreRepositoryTest {
 
         Store store2 = Store.of(
                 "참이맛 감자탕",
-                "070364532746",
+                "070-3643-2746",
                 "뼈해장국 맛집입니다.",
                 1000,
                 30,

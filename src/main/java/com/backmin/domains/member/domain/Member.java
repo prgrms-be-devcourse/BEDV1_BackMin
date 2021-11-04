@@ -31,14 +31,12 @@ public class Member extends BaseEntity {
     private Long id;
 
     @Column(name = "email", length = 50, nullable = false)
-    @Pattern(regexp = "^([\\w\\.\\-_]+)?\\w+@[\\w-_]+(\\.\\w+){1,}$", message = "입력된 이메일 형식이 올바르지 않습니다.")
     private String email;
 
     @Column(name = "password", length = 50, nullable = false)
     private String password;
 
     @Column(name = "phone_number", length = 20, nullable = false)
-    @Pattern(regexp = "^0.{0}\\d{1,2}-\\d{3,4}-\\d{4}$", message = "입력된 전화번호 형식이 올바르지 않습니다.")
     private String phoneNumber;
 
     @Column(name = "nick_name", length = 20, nullable = false)
