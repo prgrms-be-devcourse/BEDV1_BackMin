@@ -40,7 +40,7 @@ public class OrderService {
     public void saveOrder(CreateOrderParam request) {
         Member member = findMember(request.getMemberId());
         Store store = findStore(request.getStoreId());
-        Order order = Order.of(request.getAddress(), request.getRequirement(), request.getPayment(), member, store.getDeliveryTip());
+        Order order = Order.of(request.getAddress(), request.getRequirement(), request.getPayment(), member, store, store.getDeliveryTip());
         addOrderMenuToOrder(request, order, store.getMenus());
         AssertThrow.isTrue(order.getTotalPrice() < store.getMinOrderPrice(), ErrorInfo.ORDER_MIN_PRICE);
         orderRepository.save(order);

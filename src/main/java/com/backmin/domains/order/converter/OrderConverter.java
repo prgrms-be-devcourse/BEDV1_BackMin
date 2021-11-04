@@ -14,36 +14,45 @@ import org.springframework.stereotype.Component;
 public class OrderConverter {
 
     public PageResult<MemberOrderPageResult> convertOrderToMemberOrderPageResponse(Page<Order> orders) {
-        List<MemberOrderPageResult> memberOrderPageRespons = orders.getContent().stream()
-                .map(order -> {
-                    MemberOrderPageResult response = new MemberOrderPageResult();
-                    response.setOrderId(order.getId());
-                    response.setStoreId(order.getStore().getId());
-                    response.setOrderDateTime(order.getRequestAt());
-                    response.setStoreName(order.getStore().getName());
-                    response.setMenuReadResponses(
-                            order.getOrderMenus().stream()
-                                    .map(orderMenu -> {
-                                        MenuReadResult menuReadResult = new MenuReadResult();
-                                        Menu menu = orderMenu.getMenu();
-                                        menuReadResult.setMenuId(menu.getId());
-                                        menuReadResult.setName(menu.getName());
-                                        menuReadResult.setPopular(menu.isPopular());
-                                        menuReadResult.setSoldOut(menu.isSoldOut());
-                                        menuReadResult.setDescription(menu.getDescription());
-                                        return menuReadResult;
-                                    }).collect(Collectors.toList())
-                    );
-                    return response;
-                }).collect(Collectors.toList());
+        List<MemberOrderPageResult> memberOrderPageResponse = orders.getContent().stream()
+                .map(this::createMemberOrderPageResult)
+                .collect(Collectors.toList());
+        return createPageResult(orders, memberOrderPageResponse);
+    }
 
+    private PageResult<MemberOrderPageResult> createPageResult(Page<Order> orders, List<MemberOrderPageResult> memberOrderPageResponse) {
         PageResult<MemberOrderPageResult> pageResult = new PageResult<>();
         pageResult.setPageNumber(orders.getNumber());
         pageResult.setPageSize(orders.getSize());
         pageResult.setHasNext(orders.hasNext());
         pageResult.setTotalCount(orders.getNumberOfElements());
-        pageResult.setList(memberOrderPageRespons);
+        pageResult.setList(memberOrderPageResponse);
         return pageResult;
+    }
+
+    private MemberOrderPageResult createMemberOrderPageResult(Order order) {
+        MemberOrderPageResult response = new MemberOrderPageResult();
+        response.setOrderId(order.getId());
+        response.setStoreId(order.getStore().getId());
+        response.setOrderDateTime(order.getRequestAt());
+        response.setStoreName(order.getStore().getName());
+        response.setMenuReadResponses(
+                order.getOrderMenus().stream()
+                        .map(this::createMenuReadResult)
+                        .collect(Collectors.toList())
+        );
+        return response;
+    }
+
+    private MenuReadResult createMenuReadResult(com.backmin.domains.order.domain.OrderMenu orderMenu) {
+        MenuReadResult menuReadResult = new MenuReadResult();
+        Menu menu = orderMenu.getMenu();
+        menuReadResult.setMenuId(menu.getId());
+        menuReadResult.setName(menu.getName());
+        menuReadResult.setPopular(menu.isPopular());
+        menuReadResult.setSoldOut(menu.isSoldOut());
+        menuReadResult.setDescription(menu.getDescription());
+        return menuReadResult;
     }
 
 }

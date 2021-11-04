@@ -7,8 +7,6 @@ import lombok.Setter;
 @Setter
 public class MemberUpdateParam {
 
-    private Long id;
-
     private String phoneNumber;
 
     private String nickName;
@@ -18,4 +16,5 @@ public class MemberUpdateParam {
     private String email;
 
     private String password;
+
 }

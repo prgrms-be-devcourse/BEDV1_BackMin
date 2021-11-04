@@ -20,12 +20,7 @@ public class CategoryController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult<CategoriesReadResult> list() {
-        List<CategoryAtListResult> categoryAtListResults = categoryService.readAllCategories();
-
-        CategoriesReadResult response = new CategoriesReadResult();
-        response.setCategories(categoryAtListResults);
-
-        return ApiResult.ok(response);
+        return ApiResult.ok(categoryService.readAllCategories());
     }
 
 }

@@ -26,23 +26,17 @@ public class StoreController {
 
     @GetMapping(value = "/categories/{categoryId}/stores", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult<PageResult<StoreAtListResult>> list(@PathVariable("categoryId") Long categoryId, Pageable pageRequest) {
-        PageResult<StoreAtListResult> storeInfoAtListPageResult = storeService.readPagingStoresByCategoryId(categoryId, pageRequest);
-
-        return ApiResult.ok(storeInfoAtListPageResult);
+        return ApiResult.ok(storeService.readPagingStoresByCategoryId(categoryId, pageRequest));
     }
 
     @GetMapping(value = "/stores/{storeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult<DetailStoreReadResult> detail(@PathVariable("storeId") Long storeId) {
-        DetailStoreReadResult detailStoreReadResult = storeService.readDetailStore(storeId);
-
-        return ApiResult.ok(detailStoreReadResult);
+        return ApiResult.ok(storeService.readDetailStore(storeId));
     }
 
     @GetMapping(value = "/stores", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult<PageResult<StoreAtListResult>> list(@RequestParam("keyword") String storeName, Pageable pageRequest) {
-        PageResult<StoreAtListResult> storeInfoAtListPageResult = storeService.searchStoresByName(storeName, pageRequest);
-
-        return ApiResult.ok(storeInfoAtListPageResult);
+        return ApiResult.ok(storeService.searchStoresByName(storeName, pageRequest));
     }
 
 }

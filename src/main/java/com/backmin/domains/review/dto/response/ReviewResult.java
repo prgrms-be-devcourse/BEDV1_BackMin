@@ -1,15 +1,14 @@
-package com.backmin.domains.review.domain.dto.request;
+package com.backmin.domains.review.dto.response;
 
-import com.backmin.domains.member.domain.Member;
-import com.backmin.domains.order.domain.Order;
-import com.backmin.domains.store.domain.Store;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ReviewCreateParam {
+public class ReviewResult {
+
+    private Long reviewId;
 
     private Long storeId;
 

@@ -11,4 +11,5 @@ public class BusinessException extends RuntimeException {
     public BusinessException(ErrorInfo errorInfo) {
         this.errorInfo = errorInfo;
     }
+
 }

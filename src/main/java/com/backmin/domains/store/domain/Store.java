@@ -124,7 +124,6 @@ public class Store extends BaseEntity {
                 .deliveryTip(deliveryTip)
                 .category(category)
                 .build();
-
         return store;
     }
 
@@ -182,9 +181,7 @@ public class Store extends BaseEntity {
                 .deliveryTip(deliveryTip)
                 .category(category)
                 .build();
-
         menus.stream().forEach(menu -> store.addMenu(menu));
-
         return store;
     }
 

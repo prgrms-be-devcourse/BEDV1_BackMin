@@ -13,7 +13,6 @@ public class MenuOptionConverter {
         menuOptionAtStoreListResult.setOptionId(menuOption.getId());
         menuOptionAtStoreListResult.setOptionName(menuOption.getName());
         menuOptionAtStoreListResult.setOptionPrice(menuOption.getPrice());
-
         return menuOptionAtStoreListResult;
     }
 
@@ -22,7 +21,6 @@ public class MenuOptionConverter {
         menuOptionAtStoreDetailResult.setOptionId(menuOption.getId());
         menuOptionAtStoreDetailResult.setOptionName(menuOption.getName());
         menuOptionAtStoreDetailResult.setOptionPrice(menuOption.getPrice());
-
         return menuOptionAtStoreDetailResult;
     }
 

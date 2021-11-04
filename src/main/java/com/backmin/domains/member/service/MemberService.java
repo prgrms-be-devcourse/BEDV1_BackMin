@@ -6,10 +6,10 @@ import com.backmin.domains.common.enums.ErrorInfo;
 import com.backmin.domains.member.converter.MemberConverter;
 import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.member.domain.MemberRepository;
-import com.backmin.domains.member.dto.request.EmailCheckParam;
+import com.backmin.domains.member.dto.response.EmailCheckResult;
 import com.backmin.domains.member.dto.request.MemberCreateParam;
 import com.backmin.domains.member.dto.request.MemberUpdateParam;
-import com.backmin.domains.member.dto.request.NicknameCheckParam;
+import com.backmin.domains.member.dto.response.NicknameCheckResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberConverter memberConverter;
@@ -38,14 +39,12 @@ public class MemberService {
                 .orElseThrow(() -> new BusinessException(ErrorInfo.MEMBER_NOT_FOUND));
     }
 
-    @Transactional(readOnly = true)
     public MemberCreateParam findOne(Long id) {
         return memberRepository.findById(id)
                 .map(memberConverter::convertMemberToSaveDto)
                 .orElseThrow(() -> new BusinessException(ErrorInfo.MEMBER_NOT_FOUND));
     }
 
-    @Transactional(readOnly = true)
     public Page<MemberCreateParam> findAll(Pageable pageable) {
         return memberRepository.findAll(pageable).map(memberConverter::convertMemberToSaveDto);
     }
@@ -56,16 +55,12 @@ public class MemberService {
         memberRepository.delete(foundMember);
     }
 
-    public EmailCheckParam checkMemberEmail(String email) {
-        EmailCheckParam emailCheckParam = new EmailCheckParam();
-        emailCheckParam.setDuplication(memberRepository.existsByEmail(email));
-        return emailCheckParam;
+    public EmailCheckResult checkMemberEmail(String email) {
+        return memberConverter.convertIsExistedEmailToEmailCheckResult(memberRepository.existsByEmail(email));
     }
 
-    public NicknameCheckParam checkMemberNickname(String nickname) {
-        NicknameCheckParam nicknameCheckParam = new NicknameCheckParam();
-        nicknameCheckParam.setDuplication(memberRepository.existsByNickName(nickname));
-        return nicknameCheckParam;
+    public NicknameCheckResult checkMemberNickname(String nickname) {
+        return memberConverter.convertIsExistedNicknameToNicknameCheckResult(memberRepository.existsByNickName(nickname));
     }
 
     public boolean authenticateMember(Long memberId, String email, String password) {
