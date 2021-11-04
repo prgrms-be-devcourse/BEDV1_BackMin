@@ -39,7 +39,17 @@ public class StoreService {
     public PageResult<StoreAtListResult> readPagingStoresByCategoryId(Long categoryId, Pageable pageRequest) {
         Page<Store> storePage = storeRepository.findPagingStoresByCategoryId(categoryId, pageRequest);
 
-        return getPageDtoWithStoreInfoAtList(storePage);
+        return createPageDtoWithStoreInfoAtList(storeRepository.findPagingStoresByCategoryId(categoryId, pageRequest));
+    }
+
+    private PageResult<StoreAtListResult> createPageDtoWithStoreInfoAtList(Page<Store> searchedStorePage) {
+        PageResult<StoreAtListResult> pageResult = new PageResult<>();
+        pageResult.setList(get(searchedStorePage));
+        pageResult.setHasNext(searchedStorePage.hasNext());
+        pageResult.setPageSize(searchedStorePage.getSize());
+        pageResult.setPageNumber(searchedStorePage.getNumber());
+        pageResult.setTotalCount(searchedStorePage.getTotalElements());
+        return pageResult;
     }
 
     public DetailStoreReadResult readDetailStore(Long storeId) {
@@ -53,8 +63,8 @@ public class StoreService {
                 .collect(Collectors.toList());
 
         List<MenuAtStoreDetailResult> menuInfos = foundStore.getMenus().stream()
-                .map(this::getConvertedMenuInfoAtStoreDetail
-                ).collect(Collectors.toList());
+                .map(this::getConvertedMenuInfoAtStoreDetail)
+                .collect(Collectors.toList());
 
         DetailStoreReadResult detailStoreReadResult = new DetailStoreReadResult();
         detailStoreReadResult.setStore(storeInfo);
@@ -67,11 +77,11 @@ public class StoreService {
     public PageResult<StoreAtListResult> searchStoresByName(String storeName, Pageable pageRequest) {
         Page<Store> searchedStorePage = storeRepository.findStoresByNameContaining(storeName, pageRequest);
 
-        return getPageDtoWithStoreInfoAtList(searchedStorePage);
+        return createPageDtoWithStoreInfoAtList(storeRepository.findStoresByNameContaining(storeName, pageRequest));
     }
 
-    private PageResult<StoreAtListResult> getPageDtoWithStoreInfoAtList(Page<Store> searchedStorePage) {
-        List<StoreAtListResult> searchedStoreAtListResults = searchedStorePage.getContent().stream()
+    private List<StoreAtListResult> get(Page<Store> searchedStorePage) {
+        return searchedStorePage.getContent().stream()
                 .map(store -> storeConverter.convertToStoreInfoAtList(
                         store,
                         menuRepository.findBestMenusByStore(store.getId()).stream()
@@ -81,15 +91,6 @@ public class StoreService {
                         reviewRepository.getReviewTotalCountByStore(store.getId())
                 ))
                 .collect(Collectors.toList());
-
-        PageResult<StoreAtListResult> pageResult = new PageResult<>();
-        pageResult.setList(searchedStoreAtListResults);
-        pageResult.setHasNext(searchedStorePage.hasNext());
-        pageResult.setPageSize(searchedStorePage.getSize());
-        pageResult.setPageNumber(searchedStorePage.getNumber());
-        pageResult.setTotalCount(searchedStorePage.getTotalElements());
-
-        return pageResult;
     }
 
     private MenuAtStoreDetailResult getConvertedMenuInfoAtStoreDetail(Menu menu) {
