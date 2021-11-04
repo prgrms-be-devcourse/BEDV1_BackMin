@@ -27,7 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.transaction.annotation.Transactional;
 
-class ReviewControllerTestTest extends BaseControllerTest {
+class ReviewControllerTest extends BaseControllerTest {
 
     @Test
     @DisplayName("리뷰 등록 API 테스트")
@@ -35,7 +35,7 @@ class ReviewControllerTestTest extends BaseControllerTest {
     void create_Review() throws Exception {
         Member member = Member.builder()
                 .nickName("hello")
-                .phoneNumber("111")
+                .phoneNumber("010-1234-5671")
                 .address("주소")
                 .email("email12@email.com")
                 .password("password")
@@ -95,11 +95,12 @@ class ReviewControllerTestTest extends BaseControllerTest {
 
     @Test
     @DisplayName("가게 리뷰 조회 API 테스트")
+    @Transactional
     void findStoreReviews() throws Exception {
         Member member = Member.builder()
                 .nickName("나부자")
-                .phoneNumber("112")
-                .address("서울시 송파구 올림픽로 300 롯데월드ㅌ워 101층")
+                .phoneNumber("010-1111-1112")
+                .address("서울시 송파구 올림픽로 300 롯데월드타워 101층")
                 .email("thisisemail@email.com")
                 .password("passwordispassword")
                 .build();
@@ -202,6 +203,7 @@ class ReviewControllerTestTest extends BaseControllerTest {
                                 fieldWithPath("serverDatetime").type(JsonFieldType.STRING).description("응답시간")
                         )));
     }
+
 
     private Category saveCategory() {
         return categoryRepository.save(Category.builder().name("떡볶이").build());

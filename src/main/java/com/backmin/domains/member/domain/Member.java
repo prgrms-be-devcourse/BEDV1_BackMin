@@ -31,7 +31,6 @@ public class Member extends BaseEntity {
     private Long id;
 
     @Column(name = "email", length = 50, nullable = false)
-    @Pattern(regexp = "([\\w\\.\\-_]+)?\\w+@[\\w-_]+(\\.\\w+){1,}", message = "입력된 이메일 형식이 올바르지 않습니다.")
     private String email;
 
     @Column(name = "password", length = 50, nullable = false)

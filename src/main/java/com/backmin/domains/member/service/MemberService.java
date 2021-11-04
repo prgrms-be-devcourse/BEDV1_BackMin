@@ -9,6 +9,7 @@ import com.backmin.domains.member.dto.request.EmailCheckParam;
 import com.backmin.domains.member.dto.request.MemberCreateParam;
 import com.backmin.domains.member.dto.request.MemberUpdateParam;
 import com.backmin.domains.member.dto.request.NicknameCheckParam;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,12 @@ public class MemberService {
         }
         if (checkMemberNickname(memberCreateParam.getNickName()).isDuplication()) {
             throw new BusinessException(ErrorInfo.DUPLICATE_NICKNAME);
+        }
+        if (!emailPatternCheck(memberCreateParam.getEmail())) {
+            throw new BusinessException(ErrorInfo.INVALID_EMAIL_ADDRESS);
+        }
+        if (!phoneNumberPatterCheck(memberCreateParam.getPhoneNumber())) {
+            throw new BusinessException(ErrorInfo.INVALID_PHONE_NUMBER);
         }
         memberRepository.save(Member.of(memberCreateParam.getEmail(), memberCreateParam.getPassword(),
                 memberCreateParam.getPhoneNumber(), memberCreateParam.getNickName(), memberCreateParam.getAddress()));
@@ -76,4 +83,11 @@ public class MemberService {
         return member.getEmail().equals(email) && member.getPassword().equals(password);
     }
 
+    public boolean emailPatternCheck(String email) {
+        return Pattern.matches("^([\\w\\.\\-_]+)?\\w+@[\\w-_]+(\\.\\w+){1,}$", email);
+    }
+
+    public boolean phoneNumberPatterCheck(String phoneNumber) {
+        return Pattern.matches("^0.{0}\\d{1,2}-\\d{3,4}-\\d{4}$", phoneNumber);
+    }
 }
