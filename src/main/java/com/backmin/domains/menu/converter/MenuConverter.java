@@ -21,7 +21,6 @@ public class MenuConverter {
         menuAtStoreListResult.setPopular(menu.isPopular());
         menuAtStoreListResult.setPrice(menu.getPrice());
         menuAtStoreListResult.setMenuOptions(menuOptionAtStoreListResults);
-
         return menuAtStoreListResult;
     }
 
@@ -35,7 +34,6 @@ public class MenuConverter {
         menuAtStoreDetailResult.setPopular(menu.isPopular());
         menuAtStoreDetailResult.setPrice(menu.getPrice());
         menuAtStoreDetailResult.setMenuOptions(menuOptionAtStoreDetailResults);
-
         return menuAtStoreDetailResult;
     }
 
