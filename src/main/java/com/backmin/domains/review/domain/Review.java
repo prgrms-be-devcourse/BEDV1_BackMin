@@ -59,7 +59,6 @@ public class Review extends BaseEntity {
         review.changeStore(store);
         review.changeMember(member);
         review.changeOrder(order);
-
         return review;
     }
 

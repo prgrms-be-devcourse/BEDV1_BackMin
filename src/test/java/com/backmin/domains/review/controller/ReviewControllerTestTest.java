@@ -16,7 +16,7 @@ import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.order.domain.Order;
 import com.backmin.domains.order.domain.Payment;
 import com.backmin.domains.review.domain.Review;
-import com.backmin.domains.review.domain.dto.request.ReviewCreateParam;
+import com.backmin.domains.review.dto.request.ReviewCreateParam;
 import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.Store;
 import java.util.List;
