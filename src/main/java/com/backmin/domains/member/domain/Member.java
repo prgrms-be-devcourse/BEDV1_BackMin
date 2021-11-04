@@ -47,13 +47,7 @@ public class Member extends BaseEntity {
     private String address;
 
     @Builder
-    public Member(Long id,
-            String email,
-            String password,
-            String phoneNumber,
-            String nickName,
-            String address
-    ) {
+    public Member(Long id, String email, String password, String phoneNumber, String nickName, String address) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -62,13 +56,7 @@ public class Member extends BaseEntity {
         this.address = address;
     }
 
-    public static Member of(
-            String email,
-            String password,
-            String phoneNumber,
-            String nickName,
-            String address
-    ) {
+    public static Member of(String email, String password, String phoneNumber, String nickName, String address) {
         return Member.builder()
                 .email(email)
                 .password(password)
@@ -78,15 +66,28 @@ public class Member extends BaseEntity {
                 .build();
     }
 
+    /**
+     * todo: validation 을 더 체크할 것
+     */
     public void updateInfo(String nickName, String phoneNumber, String address) {
+        validationNickName(nickName);
+        validationPhoneNumber(phoneNumber);
+        validationAddress(address);
+    }
+
+    private void validationNickName(String nickName) {
         if (Objects.nonNull(nickName)) {
             this.nickName = nickName;
         }
+    }
 
+    private void validationPhoneNumber(String phoneNumber) {
         if (Objects.nonNull(phoneNumber)) {
             this.phoneNumber = phoneNumber;
         }
+    }
 
+    private void validationAddress(String address) {
         if (Objects.nonNull(address)) {
             this.address = address;
         }

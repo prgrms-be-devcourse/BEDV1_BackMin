@@ -1,5 +1,6 @@
 package com.backmin.domains.member.dto.request;
 
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class MemberUpdateParam {
 
+    @NotNull
     private Long id;
 
     private String phoneNumber;
@@ -18,4 +20,5 @@ public class MemberUpdateParam {
     private String email;
 
     private String password;
+
 }
