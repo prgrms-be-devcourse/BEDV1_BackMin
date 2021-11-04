@@ -16,85 +16,92 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.backmin.domains.BaseControllerTest;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
-import com.backmin.domains.menu.domain.MenuOptionRepository;
-import com.backmin.domains.menu.domain.MenuRepository;
 import com.backmin.domains.store.domain.Category;
-import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
-import com.backmin.domains.store.domain.StoreRepository;
-import java.util.List;
-import org.junit.jupiter.api.AfterEach;
+import java.util.ArrayList;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 // todo : 이미지가 추가되면 RestDocs에 ImageUrl 필드가 NULL인것 변경해야한다.
 @DisplayName("StoreController 테스트")
 class StoreControllerTest extends BaseControllerTest {
 
+    Category category;
+    Store store1;
+    Store store2;
+    Menu menu1;
+    Menu menu2;
+    MenuOption option1;
+    MenuOption option2;
+    MenuOption option3;
+    MenuOption option4;
+
+    @BeforeEach
+    void setUp() {
+
+        category = categoryRepository.save(
+                Category.builder()
+                        .name("한식")
+                        .build()
+        );
+
+        menu1 = menuRepository.save(Menu.of("엽기떡볶이", true, false, true, 17000, "겁나 맛있는 떡볶이입니다.", new ArrayList<>()));
+        menu2 = menuRepository.save(Menu.of("치즈떡볶이", true, false, true, 18000, "겁나 맛있는 치즈 떡볶이입니다.", new ArrayList<>()));
+
+        option1 = menuOptionRepository.save(MenuOption.of("치즈추가", 500));
+        option2 = menuOptionRepository.save(MenuOption.of("사리추가", 600));
+        option3 = menuOptionRepository.save(MenuOption.of("감자추가", 700));
+        option4 = menuOptionRepository.save(MenuOption.of("고구마추가", 800));
+        menu1.addMenuOption(option1);
+        menu1.addMenuOption(option2);
+        menu2.addMenuOption(option3);
+        menu2.addMenuOption(option4);
+        menuRepository.save(menu1);
+        menuRepository.save(menu2);
+
+        store1 = storeRepository.save(
+                Store.of(
+                        "동대문 엽기 떡볶이",
+                        "070364532746",
+                        "엽떡집입니다.",
+                        1000,
+                        30,
+                        60,
+                        2000,
+                        true,
+                        true,
+                        category,
+                        new ArrayList<>()
+                )
+        );
+        store2 = storeRepository.save(
+                Store.of(
+                        "참이맛 감자탕",
+                        "070364532746",
+                        "뼈해장국 맛집입니다.",
+                        1000,
+                        30,
+                        60,
+                        2000,
+                        true,
+                        true,
+                        category,
+                        new ArrayList<>()
+                )
+        );
+        store1.addMenu(menu1);
+        store2.addMenu(menu2);
+        store1 = storeRepository.save(store1);
+        store2 = storeRepository.save(store2);
+    }
+
     @Test
     @DisplayName("카테고리 별 가게 목록 조회 테스트")
     void test_list() throws Exception {
-        // given
-        Category category1 = Category.builder()
-                .name("한식")
-                .build();
-        categoryRepository.save(category1);
-
-        MenuOption option1 = MenuOption.of("치즈추가", 500);
-        MenuOption option2 = MenuOption.of("사리추가", 600);
-        MenuOption option3 = MenuOption.of("감자추가", 700);
-        MenuOption option4 = MenuOption.of("고구마추가", 800);
-        List<MenuOption> menuOptions1 = List.of(option1, option2);
-        List<MenuOption> menuOptions2 = List.of(option3, option4);
-        menuOptionRepository.saveAll(menuOptions1);
-        menuOptionRepository.saveAll(menuOptions2);
-
-        Menu menu1 = Menu.of("엽기떡볶이", true, false, true, 17000, "겁나 맛있는 떡볶이입니다.", menuOptions1);
-        Menu menu2 = Menu.of("치즈떡볶이", true, false, true, 18000, "겁나 맛있는 치즈 떡볶이입니다.", menuOptions2);
-        List<Menu> menus = List.of(menu1, menu2);
-        menuRepository.saveAll(menus);
-
-        Store store1 = Store.of(
-                "동대문 엽기 떡볶이",
-                "070364532746",
-                "엽떡집입니다.",
-                1000,
-                30,
-                60,
-                2000,
-                true,
-                true,
-                category1,
-                menus
-        );
-
-        Store store2 = Store.of(
-                "참이맛 감자탕",
-                "070364532746",
-                "뼈해장국 맛집입니다.",
-                1000,
-                30,
-                60,
-                2000,
-                true,
-                true,
-                category1,
-                menus
-        );
-
-        List<Store> stores = List.of(store1, store2);
-        storeRepository.saveAll(stores);
-
-        // when // then
-        mockMvc.perform(get("/api/v1/bm/categories/{categoryId}/stores", 1L)
+        mockMvc.perform(get("/api/v1/bm/categories/{categoryId}/stores", category.getId())
                 .param("page", String.valueOf(0))
                 .param("size", String.valueOf(10))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -153,43 +160,7 @@ class StoreControllerTest extends BaseControllerTest {
     @Test
     @DisplayName("가게 상세조회 테스트")
     void test_detail() throws Exception {
-
-        // given
-        Category category1 = Category.builder()
-                .name("한식")
-                .build();
-        categoryRepository.save(category1);
-
-        MenuOption option1 = MenuOption.of("치즈추가", 500);
-        MenuOption option2 = MenuOption.of("사리추가", 600);
-        MenuOption option3 = MenuOption.of("감자추가", 700);
-        MenuOption option4 = MenuOption.of("고구마추가", 800);
-        List<MenuOption> menuOptions1 = List.of(option1, option2);
-        List<MenuOption> menuOptions2 = List.of(option3, option4);
-        menuOptionRepository.saveAll(menuOptions1);
-        menuOptionRepository.saveAll(menuOptions2);
-
-        Menu menu1 = Menu.of("엽기떡볶이", true, false, true, 17000, "겁나 맛있는 떡볶이입니다.", menuOptions1);
-        Menu menu2 = Menu.of("치즈떡볶이", true, false, true, 18000, "겁나 맛있는 치즈 떡볶이입니다.", menuOptions2);
-        List<Menu> menus = List.of(menu1, menu2);
-        menuRepository.saveAll(menus);
-
-        Store store1 = Store.of(
-                "동대문 엽기 떡볶이",
-                "070364532746",
-                "엽떡집입니다.",
-                1000,
-                30,
-                60,
-                2000,
-                true,
-                true,
-                category1,
-                menus
-        );
-        Store savedStore = storeRepository.save(store1);
-
-        mockMvc.perform(get("/api/v1/bm/stores/{storeId}", savedStore.getId())
+        mockMvc.perform(get("/api/v1/bm/stores/{storeId}", store1.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("success").value(true))
@@ -246,43 +217,6 @@ class StoreControllerTest extends BaseControllerTest {
     @Test
     @DisplayName("가게 이름으로 검색 테스트")
     void test_search() throws Exception {
-
-        // given
-        Category category1 = Category.builder()
-                .name("한식")
-                .build();
-        categoryRepository.save(category1);
-
-        MenuOption option1 = MenuOption.of("치즈추가", 500);
-        MenuOption option2 = MenuOption.of("사리추가", 600);
-        MenuOption option3 = MenuOption.of("감자추가", 700);
-        MenuOption option4 = MenuOption.of("고구마추가", 800);
-        List<MenuOption> menuOptions1 = List.of(option1, option2);
-        List<MenuOption> menuOptions2 = List.of(option3, option4);
-        menuOptionRepository.saveAll(menuOptions1);
-        menuOptionRepository.saveAll(menuOptions2);
-
-        Menu menu1 = Menu.of("엽기떡볶이", true, false, true, 17000, "겁나 맛있는 떡볶이입니다.", menuOptions1);
-        Menu menu2 = Menu.of("치즈떡볶이", true, false, true, 18000, "겁나 맛있는 치즈 떡볶이입니다.", menuOptions2);
-        List<Menu> menus = List.of(menu1, menu2);
-        menuRepository.saveAll(menus);
-
-        Store store1 = Store.of(
-                "동대문 엽기 떡볶이",
-                "070364532746",
-                "엽떡집입니다.",
-                1000,
-                30,
-                60,
-                2000,
-                true,
-                true,
-                category1,
-                menus
-        );
-        storeRepository.save(store1);
-
-        // when // then
         mockMvc.perform(get("/api/v1/bm/stores")
                 .param("keyword", "동대문")
                 .param("page", String.valueOf(0))
@@ -339,7 +273,6 @@ class StoreControllerTest extends BaseControllerTest {
                                 fieldWithPath("data.list[].bestMenus[].menuOptions[].optionName").type(JsonFieldType.STRING).description("메뉴옵션명"),
                                 fieldWithPath("data.list[].bestMenus[].menuOptions[].optionPrice").type(JsonFieldType.NUMBER).description("메뉴옵션가격")
                         )));
-
     }
 
 }
