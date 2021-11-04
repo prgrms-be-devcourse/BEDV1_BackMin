@@ -14,6 +14,7 @@ import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@Transactional
 @DisplayName("ReviewRepository 테스트")
 class ReviewRepositoryTest {
 
@@ -39,6 +39,15 @@ class ReviewRepositoryTest {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @AfterEach
+    void tearDown() {
+        reviewRepository.deleteAll();
+        orderRepository.deleteAll();
+        storeRepository.deleteAll();
+        memberRepository.deleteAll();
+        categoryRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("가게별 총 리뷰 개수 조회 테스트")

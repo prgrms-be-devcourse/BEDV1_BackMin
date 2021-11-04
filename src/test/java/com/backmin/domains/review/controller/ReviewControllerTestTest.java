@@ -1,6 +1,5 @@
 package com.backmin.domains.review.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -12,100 +11,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import com.backmin.domains.BaseControllerTest;
 import com.backmin.domains.member.domain.Member;
-import com.backmin.domains.member.domain.MemberRepository;
 import com.backmin.domains.order.domain.Order;
-import com.backmin.domains.order.domain.OrderRepository;
 import com.backmin.domains.order.domain.Payment;
-import com.backmin.domains.review.converter.ReviewConverter;
 import com.backmin.domains.review.domain.Review;
-import com.backmin.domains.review.domain.ReviewRepository;
 import com.backmin.domains.review.domain.dto.request.ReviewCreateParam;
-import com.backmin.domains.review.service.ReviewService;
 import com.backmin.domains.store.domain.Category;
-import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
-import com.backmin.domains.store.domain.StoreRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.stream.IntStream;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Slf4j
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-class ReviewControllerTest {
-
-    @Autowired
-    MemberRepository memberRepository;
-
-    @Autowired
-    StoreRepository storeRepository;
-
-    @Autowired
-    OrderRepository orderRepository;
-
-    @Autowired
-    CategoryRepository categoryRepository;
-
-    @Autowired
-    ReviewRepository reviewRepository;
-
-    @Autowired
-    ReviewController reviewController;
-
-    @Autowired
-    ReviewConverter reviewConverter;
-
-    @Autowired
-    ReviewService reviewService;
-
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @Autowired
-    MockMvc mockMvc;
-
-    private Store givenStore() {
-        Store store = Store.builder()
-                .name("동대문 엽기 떡볶이")
-                .deliveryTip(1000)
-                .phoneNumber("010-1111-2222")
-                .minOrderPrice(10000)
-                .minDeliveryTime(60)
-                .maxDeliveryTime(120)
-                .storeIntro("매콤 매콤 떡볶이!")
-                .deliveryTip(3000)
-                .category(saveCategory())
-                .build();
-        return storeRepository.save(store);
-    }
-
-    private Member givenMember() {
-        Member member = Member.builder()
-                .id(1L)
-                .email("customer@gmail.com")
-                .nickName("이구역개발왕")
-                .password("1234")
-                .phoneNumber("010-1234-5678")
-                .address("서울 송파구 올림픽로 300 롯데월드타워 101층")
-                .build();
-        return memberRepository.save(member);
-    }
+class ReviewControllerTestTest extends BaseControllerTest {
 
     @Test
     @DisplayName("리뷰 등록 API 테스트")
@@ -276,39 +198,6 @@ class ReviewControllerTest {
                                 fieldWithPath("data.list[].reviewId").type(JsonFieldType.NUMBER).description("list[].reviewId"),
                                 fieldWithPath("data.list[].storeId").type(JsonFieldType.NUMBER).description("list[].storeId"),
                                 fieldWithPath("data.list[].score").type(JsonFieldType.NUMBER).description("list[].score"),
-                                fieldWithPath("data.list[].memberId").type(JsonFieldType.NUMBER).description("list[].memberId"),
-                                fieldWithPath("data.list[].nickName").type(JsonFieldType.STRING).description("list[].nickName"),
-                                fieldWithPath("data.list[].orderId").type(JsonFieldType.NUMBER).description("list[].orderId"),
-                                fieldWithPath("data.list[].content").type(JsonFieldType.STRING).description("list[].content"),
-                                fieldWithPath("data.list[].createdAt").type(JsonFieldType.STRING).description("list[].createdAt"),
-                                fieldWithPath("data.list[].updatedAt").type(JsonFieldType.STRING).description("list[].updatedAt"),
-                                fieldWithPath("data.list[].reviewId").type(JsonFieldType.NUMBER).description("list[].reviewId"),
-                                fieldWithPath("data.list[].storeId").type(JsonFieldType.NUMBER).description("list[].storeId"),
-                                fieldWithPath("data.list[].score").type(JsonFieldType.NUMBER).description("list[].score"),
-                                fieldWithPath("data.list[].memberId").type(JsonFieldType.NUMBER).description("list[].memberId"),
-                                fieldWithPath("data.list[].nickName").type(JsonFieldType.STRING).description("list[].nickName"),
-                                fieldWithPath("data.list[].orderId").type(JsonFieldType.NUMBER).description("list[].orderId"),
-                                fieldWithPath("data.list[].content").type(JsonFieldType.STRING).description("list[].content"),
-                                fieldWithPath("data.list[].createdAt").type(JsonFieldType.STRING).description("list[].createdAt"),
-                                fieldWithPath("data.list[].updatedAt").type(JsonFieldType.STRING).description("list[].updatedAt"),
-                                fieldWithPath("data.list[].reviewId").type(JsonFieldType.NUMBER).description("list[].reviewId"),
-                                fieldWithPath("data.list[].storeId").type(JsonFieldType.NUMBER).description("list[].storeId"),
-                                fieldWithPath("data.list[].score").type(JsonFieldType.NUMBER).description("list[].score"),
-                                fieldWithPath("data.list[].memberId").type(JsonFieldType.NUMBER).description("list[].memberId"),
-                                fieldWithPath("data.list[].nickName").type(JsonFieldType.STRING).description("list[].nickName"),
-                                fieldWithPath("data.list[].orderId").type(JsonFieldType.NUMBER).description("list[].orderId"),
-                                fieldWithPath("data.list[].content").type(JsonFieldType.STRING).description("list[].content"),
-                                fieldWithPath("data.list[].createdAt").type(JsonFieldType.STRING).description("list[].createdAt"),
-                                fieldWithPath("data.list[].updatedAt").type(JsonFieldType.STRING).description("list[].updatedAt"),
-                                fieldWithPath("data.list[].reviewId").type(JsonFieldType.NUMBER).description("list[].reviewId"),
-                                fieldWithPath("data.list[].storeId").type(JsonFieldType.NUMBER).description("list[].storeId"),
-                                fieldWithPath("data.list[].score").type(JsonFieldType.NUMBER).description("list[].score"),
-                                fieldWithPath("data.list[].memberId").type(JsonFieldType.NUMBER).description("list[].memberId"),
-                                fieldWithPath("data.list[].nickName").type(JsonFieldType.STRING).description("list[].nickName"),
-                                fieldWithPath("data.list[].orderId").type(JsonFieldType.NUMBER).description("list[].orderId"),
-                                fieldWithPath("data.list[].content").type(JsonFieldType.STRING).description("list[].content"),
-                                fieldWithPath("data.list[].createdAt").type(JsonFieldType.STRING).description("list[].createdAt"),
-                                fieldWithPath("data.list[].updatedAt").type(JsonFieldType.STRING).description("list[].updatedAt"),
                                 fieldWithPath("data.hasNext").type(JsonFieldType.BOOLEAN).description("hasNext"),
                                 fieldWithPath("serverDatetime").type(JsonFieldType.STRING).description("응답시간")
                         )));

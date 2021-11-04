@@ -10,6 +10,7 @@ import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,13 @@ class MenuRepositoryTest {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @AfterEach
+    void tearDown() {
+        menuRepository.deleteAll();
+        storeRepository.deleteAll();
+        categoryRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("가게 별 대표메뉴 조회 테스트")

@@ -2,7 +2,6 @@ package com.backmin.domains.member.controller;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -11,48 +10,22 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-import com.backmin.domains.member.converter.MemberConverter;
+import com.backmin.domains.BaseControllerTest;
 import com.backmin.domains.member.domain.Member;
-import com.backmin.domains.member.domain.MemberRepository;
 import com.backmin.domains.member.dto.request.MemberCreateParam;
 import com.backmin.domains.member.dto.request.MemberUpdateParam;
-import com.backmin.domains.member.service.MemberService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.MockMvc;
 
-@Slf4j
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-@TestInstance(Lifecycle.PER_CLASS)
-class MemberControllerTest {
+class MemberControllerTest extends BaseControllerTest {
 
-    @Autowired
-    MemberRepository memberRepository;
-
-    @Autowired
-    MemberService memberService;
-
-    @Autowired
-    MemberConverter memberConverter;
-
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @Autowired
-    MockMvc mockMvc;
+    @AfterEach
+    void tearDown() {
+        memberRepository.deleteAll();
+    }
 
     @BeforeAll
     void setUp() {

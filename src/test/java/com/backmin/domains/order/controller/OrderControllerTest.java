@@ -5,7 +5,9 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -14,69 +16,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.backmin.domains.BaseControllerTest;
 import com.backmin.domains.member.domain.Member;
-import com.backmin.domains.member.domain.MemberRepository;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
-import com.backmin.domains.menu.domain.MenuOptionRepository;
-import com.backmin.domains.menu.domain.MenuRepository;
 import com.backmin.domains.menu.dto.request.MenuOptionReadParam;
 import com.backmin.domains.menu.dto.request.MenuReadParam;
 import com.backmin.domains.order.domain.Order;
-import com.backmin.domains.order.domain.OrderRepository;
 import com.backmin.domains.order.domain.OrderStatus;
 import com.backmin.domains.order.domain.Payment;
 import com.backmin.domains.order.dto.request.CreateOrderParam;
 import com.backmin.domains.order.dto.request.UpdateOrderStatusParam;
 import com.backmin.domains.store.domain.Category;
-import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
-import com.backmin.domains.store.domain.StoreRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-class OrderControllerTest {
-
-    @Autowired
-    MemberRepository memberRepository;
-
-    @Autowired
-    StoreRepository storeRepository;
-
-    @Autowired
-    CategoryRepository categoryRepository;
-
-    @Autowired
-    MenuRepository menuRepository;
-
-    @Autowired
-    MenuOptionRepository menuOptionRepository;
-
-    @Autowired
-    MockMvc mockMvc;
-
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @Autowired
-    OrderRepository orderRepository;
+class OrderControllerTest extends BaseControllerTest {
 
     Store store;
     Member member;
@@ -95,17 +57,8 @@ class OrderControllerTest {
         this.store.addMenu(menu);
     }
 
-    @AfterEach
-    void tearDown() {
-        orderRepository.deleteAll();
-        storeRepository.deleteAll();
-        memberRepository.deleteAll();
-        categoryRepository.deleteAll();
-    }
-
     @Test
     @DisplayName("주문 저장 API 테스트")
-    @Transactional
     void createOrder() throws Exception {
         CreateOrderParam createOrderParam = createRequest(store, member, menu, menuOption);
 

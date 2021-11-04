@@ -1,6 +1,7 @@
 package com.backmin.domains.store.domain;
 
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,11 @@ class CategoryRepositoryTest {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @AfterEach
+    void tearDown() {
+        categoryRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("카테고리 목록 조회 테스트")

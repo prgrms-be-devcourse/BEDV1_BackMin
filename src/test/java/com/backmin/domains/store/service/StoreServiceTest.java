@@ -9,6 +9,7 @@ import com.backmin.domains.common.dto.PageResult;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
 import com.backmin.domains.menu.domain.MenuOptionRepository;
+import com.backmin.domains.menu.domain.MenuRepository;
 import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
@@ -18,6 +19,7 @@ import com.backmin.domains.store.dto.response.StoreAtListResult;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@Transactional
 class StoreServiceTest {
 
     @Autowired
@@ -39,7 +40,17 @@ class StoreServiceTest {
     private MenuOptionRepository menuOptionRepository;
 
     @Autowired
+    private MenuRepository menuRepository;
+
+    @Autowired
     private StoreService storeService;
+
+    @AfterEach
+    void tearDown() {
+        menuOptionRepository.deleteAll();
+        storeRepository.deleteAll();
+        categoryRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("카테고리별 가게목록 조회 테스트")

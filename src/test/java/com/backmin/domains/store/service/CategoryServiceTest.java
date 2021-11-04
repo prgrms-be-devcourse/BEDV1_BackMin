@@ -8,6 +8,7 @@ import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.dto.response.CategoryAtListResult;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@Transactional
 @DisplayName("CategoryService 테스트")
 class CategoryServiceTest {
 
@@ -24,6 +24,11 @@ class CategoryServiceTest {
 
     @Autowired
     private CategoryService categoryService;
+
+    @AfterEach
+    void tearDown() {
+        categoryRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("카테고리 목록 조회 테스트")

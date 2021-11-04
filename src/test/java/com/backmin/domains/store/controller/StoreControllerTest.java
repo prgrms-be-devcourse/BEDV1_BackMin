@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.backmin.domains.BaseControllerTest;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
 import com.backmin.domains.menu.domain.MenuOptionRepository;
@@ -22,6 +23,7 @@ import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,27 +36,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 // todo : 이미지가 추가되면 RestDocs에 ImageUrl 필드가 NULL인것 변경해야한다.
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-@Transactional
 @DisplayName("StoreController 테스트")
-class StoreControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private StoreRepository storeRepository;
-
-    @Autowired
-    private MenuRepository menuRepository;
-
-    @Autowired
-    private MenuOptionRepository menuOptionRepository;
+class StoreControllerTest extends BaseControllerTest {
 
     @Test
     @DisplayName("카테고리 별 가게 목록 조회 테스트")
