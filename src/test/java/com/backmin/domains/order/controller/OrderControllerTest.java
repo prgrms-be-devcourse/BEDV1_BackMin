@@ -53,13 +53,16 @@ class OrderControllerTest extends BaseControllerTest {
         this.store = givenSavedStore(owner);
         this.menu = givenSavedMenu();
         this.menuOption = givenSavedMenuOption();
-        this.menu.addMenuOption(menuOption);
-        this.store.addMenu(menu);
     }
 
     @Test
     @DisplayName("주문 저장 API 테스트")
     void createOrder() throws Exception {
+        menu.addMenuOption(menuOption);
+        menuRepository.save(menu);
+        store.addMenu(menu);
+        storeRepository.save(store);
+
         CreateOrderParam createOrderParam = createRequest(store, member, menu, menuOption);
 
         mockMvc.perform(post("/api/v1/bm/orders")
@@ -232,16 +235,16 @@ class OrderControllerTest extends BaseControllerTest {
     }
 
     private Menu givenSavedMenu() {
-        return menuRepository.save(Menu.builder()
+        Menu menu = Menu.builder()
                 .name("떡볶이")
                 .price(12000)
                 .description("기본 떡볶이")
-                .build());
+                .build();
+        return menuRepository.save(menu);
     }
 
     private MenuOption givenSavedMenuOption() {
         return menuOptionRepository.save(MenuOption.builder()
-                .id(111L)
                 .name("당면추가")
                 .price(1000)
                 .build());

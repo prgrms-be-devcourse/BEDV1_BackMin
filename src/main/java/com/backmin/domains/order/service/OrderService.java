@@ -62,15 +62,16 @@ public class OrderService {
 
     private void addOrderMenuToOrder(CreateOrderParam request, Order order, List<Menu> menus) {
         for (MenuReadParam menuReadParam : request.getMenuReadParams()) {
-            Menu menu = searchMenu(menus, menuReadParam);
+            Menu menu = searchMenu(menus, menuReadParam.getId());
             OrderMenu orderMenu = OrderMenu.of(menu, menu.getPrice(), menuReadParam.getQuantity());
             addOrderMenuOptionToOrderMenu(menuReadParam, menu, orderMenu);
             order.addOrderMenu(orderMenu);
         }
     }
 
-    private Menu searchMenu(List<Menu> menus, MenuReadParam menuDto) {
-        return menus.stream().filter(menu -> menu.getId().equals(menuDto.getId()))
+    private Menu searchMenu(List<Menu> menus, Long menuRequestId) {
+        return menus.stream()
+                .filter(menu -> menu.getId().equals(menuRequestId))
                 .findAny()
                 .orElseThrow(() -> new BusinessException(ErrorInfo.MENU_NOT_FOUND));
     }
