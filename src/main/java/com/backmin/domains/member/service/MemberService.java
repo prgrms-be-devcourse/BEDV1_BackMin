@@ -1,6 +1,7 @@
 package com.backmin.domains.member.service;
 
 import com.backmin.config.exception.BusinessException;
+import com.backmin.config.util.AssertThrow;
 import com.backmin.domains.common.enums.ErrorInfo;
 import com.backmin.domains.member.converter.MemberConverter;
 import com.backmin.domains.member.domain.Member;
@@ -24,12 +25,8 @@ public class MemberService {
 
     @Transactional
     public void save(MemberCreateParam memberCreateParam) {
-        if (checkMemberEmail(memberCreateParam.getEmail()).isDuplication()) {
-            throw new BusinessException(ErrorInfo.DUPLICATE_EMAIL);
-        }
-        if (checkMemberNickname(memberCreateParam.getNickName()).isDuplication()) {
-            throw new BusinessException(ErrorInfo.DUPLICATE_NICKNAME);
-        }
+        AssertThrow.isTrue(memberRepository.existsByEmail(memberCreateParam.getEmail()), ErrorInfo.DUPLICATE_EMAIL);
+        AssertThrow.isTrue(memberRepository.existsByEmail(memberCreateParam.getNickName()), ErrorInfo.DUPLICATE_NICKNAME);
         memberRepository.save(Member.of(memberCreateParam.getEmail(), memberCreateParam.getPassword(),
                 memberCreateParam.getPhoneNumber(), memberCreateParam.getNickName(), memberCreateParam.getAddress()));
     }

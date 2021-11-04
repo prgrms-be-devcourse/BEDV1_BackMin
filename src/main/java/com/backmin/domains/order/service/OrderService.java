@@ -1,6 +1,7 @@
 package com.backmin.domains.order.service;
 
 import com.backmin.config.exception.BusinessException;
+import com.backmin.config.util.AssertThrow;
 import com.backmin.domains.common.dto.PageResult;
 import com.backmin.domains.common.enums.ErrorInfo;
 import com.backmin.domains.member.domain.Member;
@@ -41,23 +42,16 @@ public class OrderService {
         Store store = findStore(request.getStoreId());
         Order order = Order.of(request.getAddress(), request.getRequirement(), request.getPayment(), member, store.getDeliveryTip());
         addOrderMenuToOrder(request, order, store.getMenus());
-        /**
-         * todo: util 클래스로 만들어 캡슐화 할 것
-         */
-        if (order.getTotalPrice() < store.getMinOrderPrice()) {
-            throw new RuntimeException("최소 주문 금액을 넘어야합니다.");
-        }
+        AssertThrow.isTrue(order.getTotalPrice() < store.getMinOrderPrice(), ErrorInfo.ORDER_MIN_PRICE);
         orderRepository.save(order);
     }
 
     private Member findMember(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessException(ErrorInfo.MEMBER_NOT_FOUND));
+        return memberRepository.findById(memberId).orElseThrow(() -> new BusinessException(ErrorInfo.MEMBER_NOT_FOUND));
     }
 
     private Store findStore(Long storeId) {
-        return storeRepository.findById(storeId)
-                .orElseThrow(() -> new BusinessException(ErrorInfo.STORE_NOT_FOUND));
+        return storeRepository.findById(storeId).orElseThrow(() -> new BusinessException(ErrorInfo.STORE_NOT_FOUND));
     }
 
     private void addOrderMenuToOrder(CreateOrderParam request, Order order, List<Menu> menus) {
@@ -85,7 +79,8 @@ public class OrderService {
     }
 
     private MenuOption searchMenuOption(List<MenuOption> menuOptions, Long menuOptionId) {
-        return menuOptions.stream().filter(menuOption -> menuOption.getId().equals(menuOptionId))
+        return menuOptions.stream()
+                .filter(menuOption -> menuOption.getId().equals(menuOptionId))
                 .findAny()
                 .orElseThrow(() -> new BusinessException(ErrorInfo.MENU_OPTION_NOT_FOUND));
     }
@@ -106,9 +101,7 @@ public class OrderService {
             if (orderStatus == OrderStatus.CANCELED) {
                 order.changeOrderStatus(orderStatus);
             }
-            if (orderStatus == OrderStatus.DELIVERED) {
-                throw new BusinessException(ErrorInfo.ORDER_STATUS_AUTHORITY);
-            }
+            AssertThrow.isTrue(orderStatus == OrderStatus.DELIVERED, ErrorInfo.ORDER_STATUS_AUTHORITY);
         }
     }
 
