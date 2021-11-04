@@ -69,7 +69,7 @@ public class Store extends BaseEntity {
     private Category category;
 
     @OneToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Builder
@@ -182,6 +182,39 @@ public class Store extends BaseEntity {
                 .category(category)
                 .build();
         menus.stream().forEach(menu -> store.addMenu(menu));
+        return store;
+    }
+
+    static public Store of(
+            String name,
+            String phoneNumber,
+            String storeIntro,
+            int minOrderPrice,
+            int minDeliveryTime,
+            int maxDeliveryTime,
+            int deliveryTip,
+            boolean isService,
+            boolean isPackage,
+            Category category,
+            Member member,
+            List<Menu> menus
+    ) {
+        Store store = Store.builder()
+                .name(name)
+                .phoneNumber(phoneNumber)
+                .minOrderPrice(minOrderPrice)
+                .minDeliveryTime(minDeliveryTime)
+                .maxDeliveryTime(maxDeliveryTime)
+                .storeIntro(storeIntro)
+                .isService(isService)
+                .isPackage(isPackage)
+                .deliveryTip(deliveryTip)
+                .category(category)
+                .member(member)
+                .build();
+
+        menus.stream().forEach(menu -> store.addMenu(menu));
+
         return store;
     }
 
