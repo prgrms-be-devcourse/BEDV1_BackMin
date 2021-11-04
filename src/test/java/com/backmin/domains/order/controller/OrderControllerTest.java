@@ -32,6 +32,7 @@ import com.backmin.domains.order.dto.request.UpdateOrderStatusParam;
 import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.Store;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
@@ -107,7 +108,7 @@ class OrderControllerTest extends BaseControllerTest {
         store.addMenu(savedMenu);
         storeRepository.save(store);
 
-        CreateOrderParam createOrderParam = createRequest(store, member, savedMenu, menuOption);
+        CreateOrderParam createOrderParam = createInvalidParam(savedMenu);
 
         mockMvc.perform(post("/api/v1/bm/orders")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -320,5 +321,26 @@ class OrderControllerTest extends BaseControllerTest {
                 .password("123456789a!")
                 .build();
         return memberRepository.save(owner);
+    }
+
+    private CreateOrderParam createInvalidParam(Menu savedMenu) {
+        CreateOrderParam createOrderParam = new CreateOrderParam();
+
+        MenuReadParam menuReadParam = new MenuReadParam();
+        menuReadParam.setId(savedMenu.getId());
+        menuReadParam.setQuantity(2);
+        menuReadParam.setMenuOptionIds(Collections.emptyList());
+
+        List<MenuReadParam> menuReadParams = new ArrayList<>();
+        menuReadParams.add(menuReadParam);
+
+        createOrderParam.setAddress("서울시 건대");
+        createOrderParam.setMemberId(member.getId());
+        createOrderParam.setRequirement("요구사항");
+        createOrderParam.setPayment(Payment.KAKAO_PAY);
+        createOrderParam.setPassword("123456789a!");
+        createOrderParam.setStoreId(store.getId());
+        createOrderParam.setMenuReadParams(menuReadParams);
+        return createOrderParam;
     }
 }
