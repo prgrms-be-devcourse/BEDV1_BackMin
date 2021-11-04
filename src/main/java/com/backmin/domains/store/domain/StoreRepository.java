@@ -12,8 +12,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     Page<Store> findPagingStoresByCategoryId(Long categoryId, Pageable pageable);
 
-    @Query("select distinct s from Store s "
-           + "join fetch s.menus m ")
+    @EntityGraph(attributePaths = {"menus"})
     Optional<Store> findStoreById(Long storeId);
 
     @EntityGraph(attributePaths = {"menus"})
