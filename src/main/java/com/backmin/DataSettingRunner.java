@@ -1,5 +1,6 @@
 package com.backmin;
 
+import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.member.domain.MemberRepository;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
@@ -27,6 +28,9 @@ public class DataSettingRunner implements ApplicationRunner {
 
     @Autowired
     private MenuRepository menuRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -134,14 +138,29 @@ public class DataSettingRunner implements ApplicationRunner {
         menuRepository.saveAll(menus7);
         menuRepository.saveAll(menus8);
 
-        Store store1 = Store.of("명가김밥","02123123", "각 분야의 전문 요리사들이 주문 접수오 동시에 조리를 시작합니다.", 5000, 29, 44, 3500, true, true, category1, menus1);
-        Store store2 = Store.of("착한전복","031100011","삼계탕 주문시 국물을 요청하시면 함께 보내드리도록 하겠습니다.",14900, 30, 45, 2000, true, true, category1, menus2);
-        Store store3 = Store.of("연안식당","123415153", "꼬막 1등 브랜드, 육계장 1등 브랜드",9000, 39, 54,  2900, true, true, category1, menus3);
-        Store store4 = Store.of("배달 삼겹살","12351234", "저도 하루한끼 삼겹살을 먹습니다.",9000, 29, 44,  3800, true, true, category1, menus4);
-        Store store5 = Store.of("60계치킨","125324", "환영합니다 60계 치킨입니다.",16000, 42, 57,  2000, true, true, category2, menus5);
-        Store store6 = Store.of("BHC 행복점","35352111", "",15000, 39, 54,  3800, true, true, category2, menus6);
-        Store store7 = Store.of("BBQ 사랑점","141231", "BBQ 사랑점 오픈 이벤트 진행중",11000, 50, 65,  3800, true, true, category2, menus7);
-        Store store8 = Store.of("죠스떡볶이","53451","배달 주문 시 모바일 쿠폰 사용 안됩니다.", 17500, 39, 54,  0, true, true, category3, menus8);
+        Member owner1 = Member.of("owner1@gmail.com",
+                "12345",
+                "010-1112-2222",
+                "야이야이야",
+                "인천광역시"
+        );
+        Member owner2 = Member.of("owner2@gmail.com",
+                "12345",
+                "010-1112-2222",
+                "흑우는검소해",
+                "서울특별시"
+        );
+        List<Member> owners = List.of(owner1, owner2);
+        memberRepository.saveAll(owners);
+
+        Store store1 = Store.of("명가김밥","02123123", "각 분야의 전문 요리사들이 주문 접수오 동시에 조리를 시작합니다.", 5000, 29, 44, 3500, true, true, category1, owner1, menus1);
+        Store store2 = Store.of("착한전복","031100011","삼계탕 주문시 국물을 요청하시면 함께 보내드리도록 하겠습니다.",14900, 30, 45, 2000, true, true, category1, owner1, menus2);
+        Store store3 = Store.of("연안식당","123415153", "꼬막 1등 브랜드, 육계장 1등 브랜드",9000, 39, 54,  2900, true, true, category1, owner1, menus3);
+        Store store4 = Store.of("배달 삼겹살","12351234", "저도 하루한끼 삼겹살을 먹습니다.",9000, 29, 44,  3800, true, true, category1, owner2, menus4);
+        Store store5 = Store.of("60계치킨","125324", "환영합니다 60계 치킨입니다.",16000, 42, 57,  2000, true, true, category2, owner2, menus5);
+        Store store6 = Store.of("BHC 행복점","35352111", "",15000, 39, 54,  3800, true, true, category2, owner2, menus6);
+        Store store7 = Store.of("BBQ 사랑점","141231", "BBQ 사랑점 오픈 이벤트 진행중",11000, 50, 65,  3800, true, true, category2, owner2, menus7);
+        Store store8 = Store.of("죠스떡볶이","53451","배달 주문 시 모바일 쿠폰 사용 안됩니다.", 17500, 39, 54,  0, true, true, category3, owner2, menus8);
 //        Store store9 = Store.of("동대문 엽기떡볶이","9000", "부득이하게 배달료를 인상하게 되었습니다.",9000, 47, 62,  1500, true, true, category3, menus9);
         List<Store> stores = List.of(store1, store2, store3, store4, store5, store6, store7, store8);
         storeRepository.saveAll(stores);

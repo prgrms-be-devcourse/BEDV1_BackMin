@@ -27,7 +27,7 @@ public class MemberService {
     @Transactional
     public void save(MemberCreateParam memberCreateParam) {
         AssertThrow.isTrue(memberRepository.existsByEmail(memberCreateParam.getEmail()), ErrorInfo.DUPLICATE_EMAIL);
-        AssertThrow.isTrue(memberRepository.existsByEmail(memberCreateParam.getNickName()), ErrorInfo.DUPLICATE_NICKNAME);
+        AssertThrow.isTrue(memberRepository.existsByNickName(memberCreateParam.getNickName()), ErrorInfo.DUPLICATE_NICKNAME);
         memberRepository.save(Member.of(memberCreateParam.getEmail(), memberCreateParam.getPassword(),
                 memberCreateParam.getPhoneNumber(), memberCreateParam.getNickName(), memberCreateParam.getAddress()));
     }
