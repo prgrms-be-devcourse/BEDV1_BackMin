@@ -1,6 +1,7 @@
 package com.backmin.domains.order.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -17,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.backmin.domains.BaseControllerTest;
+import com.backmin.domains.common.enums.ErrorInfo;
 import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
@@ -96,6 +98,23 @@ class OrderControllerTest extends BaseControllerTest {
         assertThat(order.getStatus()).isEqualTo(OrderStatus.ACCEPTED);
         assertThat(order.getPayMent()).isEqualTo(Payment.KAKAO_PAY);
         assertThat(order.getTotalPrice()).isEqualTo(29000);
+    }
+
+    @Test
+    @DisplayName("주문 요청시 최소 주문 금액을 넘지 않은 경우 예외 발생")
+    void fail_createOrder_min_order_price() throws Exception {
+        Menu savedMenu = menuRepository.save(Menu.of("콜라", true, true, true, 1500, "코카 콜라"));
+        store.addMenu(savedMenu);
+        storeRepository.save(store);
+
+        CreateOrderParam createOrderParam = createRequest(store, member, savedMenu, menuOption);
+
+        mockMvc.perform(post("/api/v1/bm/orders")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(createOrderParam)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("data.code", containsString(ErrorInfo.ORDER_MIN_PRICE.getCode())));
     }
 
     @Test

@@ -22,8 +22,7 @@ import java.util.Objects;
 public class Menu extends BaseEntity {
 
     @Id
-    /** todo 어노테이션 수정할 것*/
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "menu_id", nullable = false)
     private Long id;
 
@@ -73,6 +72,25 @@ public class Menu extends BaseEntity {
         this.description = description;
         this.orderMenus = new ArrayList<>();
         this.menuOptions = new ArrayList<>();
+    }
+
+    public static Menu of(
+            String name,
+            boolean isBest,
+            boolean isSoldOut,
+            boolean isPopular,
+            int price,
+            String description
+    ) {
+        Menu menu = Menu.builder()
+                .name(name)
+                .isBest(isBest)
+                .isSoldOut(isSoldOut)
+                .isPopular(isPopular)
+                .price(price)
+                .description(description)
+                .build();
+        return menu;
     }
 
     public static Menu of(
