@@ -48,7 +48,7 @@ public class Menu extends BaseEntity {
     @OneToMany(mappedBy = "menu")
     private List<OrderMenu> orderMenus = new ArrayList<>();
 
-    @OneToMany(mappedBy = "menu", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MenuOption> menuOptions = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
