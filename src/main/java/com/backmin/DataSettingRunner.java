@@ -6,10 +6,6 @@ import com.backmin.domains.menu.domain.MenuOption;
 import com.backmin.domains.menu.domain.MenuOptionRepository;
 import com.backmin.domains.menu.domain.MenuRepository;
 import com.backmin.domains.order.domain.OrderRepository;
-import com.backmin.domains.review.controller.ReviewController;
-import com.backmin.domains.review.converter.ReviewConverter;
-import com.backmin.domains.review.domain.ReviewRepository;
-import com.backmin.domains.review.service.ReviewService;
 import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
@@ -27,26 +23,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class DataSettingRunner implements ApplicationRunner {
 
     @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
     private StoreRepository storeRepository;
 
     @Autowired
     private MenuRepository menuRepository;
 
     @Autowired
-    private MenuOptionRepository menuOptionRepository;
-
-    @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
     private CategoryRepository categoryRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-
         Category category1 = Category.of("한식");
         Category category2 = Category.of("치킨");
         Category category3 = Category.of("분식");
