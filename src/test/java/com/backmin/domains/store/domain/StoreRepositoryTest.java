@@ -6,6 +6,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
 
+import com.backmin.domains.member.domain.Member;
+import com.backmin.domains.member.domain.MemberRepository;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
 import java.util.ArrayList;
@@ -33,10 +35,14 @@ class StoreRepositoryTest {
     @Autowired
     private StoreRepository storeRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     @AfterEach
     void tearDown() {
-        storeRepository.deleteAll();
         categoryRepository.deleteAll();
+        memberRepository.deleteAll();
+        storeRepository.deleteAll();
     }
 
     @Test
@@ -50,6 +56,14 @@ class StoreRepositoryTest {
                 .build();
         categoryRepository.save(category1);
 
+        Member owner1 = Member.of("owner111@gmail.com",
+                "12345",
+                "010-1112-2222",
+                "야이야이야",
+                "인천광역시"
+        );
+        Member savedOwner = memberRepository.save(owner1);
+
         Store store1 = Store.of(
                 "동대문 엽기 떡볶이",
                 "070364532746",
@@ -61,6 +75,7 @@ class StoreRepositoryTest {
                 true,
                 true,
                 category1,
+                savedOwner,
                 new ArrayList<>() // menus
         );
 
@@ -75,6 +90,7 @@ class StoreRepositoryTest {
                 true,
                 true,
                 category1,
+                savedOwner,
                 new ArrayList<>() // menus
         );
 
@@ -89,6 +105,7 @@ class StoreRepositoryTest {
                 true,
                 true,
                 category1,
+                savedOwner,
                 new ArrayList<>() // menus
         );
 
@@ -103,6 +120,7 @@ class StoreRepositoryTest {
                 true,
                 true,
                 category1,
+                savedOwner,
                 new ArrayList<>() // menus
         );
 
@@ -141,6 +159,14 @@ class StoreRepositoryTest {
         Menu menu2 = Menu.of("치즈떡볶이", true, false, true, 18000, "겁나 맛있는 치즈 떡볶이입니다.", menuOptions2);
         List<Menu> menus = List.of(menu1, menu2);
 
+        Member owner1 = Member.of("owner111@gmail.com",
+                "12345",
+                "010-1112-2222",
+                "야이야이야",
+                "인천광역시"
+        );
+        Member savedOwner = memberRepository.save(owner1);
+
         Store store1 = Store.of(
                 "동대문 엽기 떡볶이",
                 "070364532746",
@@ -152,6 +178,7 @@ class StoreRepositoryTest {
                 true,
                 true,
                 category1,
+                savedOwner,
                 menus
         );
         storeRepository.save(store1);
@@ -180,6 +207,14 @@ class StoreRepositoryTest {
                 .build();
         categoryRepository.save(category1);
 
+        Member owner1 = Member.of("owner111@gmail.com",
+                "12345",
+                "010-1112-2222",
+                "야이야이야",
+                "인천광역시"
+        );
+        Member savedOwner = memberRepository.save(owner1);
+
         Store store1 = Store.of(
                 "동대문 엽기 떡볶이",
                 "070364532746",
@@ -191,6 +226,7 @@ class StoreRepositoryTest {
                 true,
                 true,
                 category1,
+                savedOwner,
                 Collections.emptyList()
         );
 
@@ -205,6 +241,7 @@ class StoreRepositoryTest {
                 true,
                 true,
                 category1,
+                savedOwner,
                 Collections.emptyList()
         );
         List<Store> stores = List.of(store1, store2);

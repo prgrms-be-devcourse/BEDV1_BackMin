@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import com.backmin.config.exception.BusinessException;
 import com.backmin.domains.BaseControllerTest;
 import com.backmin.domains.common.dto.PageResult;
+import com.backmin.domains.member.domain.Member;
 import com.backmin.domains.menu.domain.Menu;
 import com.backmin.domains.menu.domain.MenuOption;
 import com.backmin.domains.store.domain.Category;
@@ -62,6 +63,14 @@ class StoreServiceTest extends BaseControllerTest {
         menu2.addMenuOption(option3);
         menu2.addMenuOption(option4);
 
+        Member owner1 = Member.of("owner111@gmail.com",
+                "12345",
+                "010-1112-2222",
+                "야이야이야",
+                "인천광역시"
+        );
+        Member savedOwner = memberRepository.save(owner1);
+
         store1 = storeRepository.save(
                 Store.of(
                         "동대문 엽기 떡볶이",
@@ -74,6 +83,7 @@ class StoreServiceTest extends BaseControllerTest {
                         true,
                         true,
                         this.category,
+                        savedOwner,
                         new ArrayList<>()
                 )
         );
@@ -89,6 +99,7 @@ class StoreServiceTest extends BaseControllerTest {
                         true,
                         true,
                         this.category,
+                        savedOwner,
                         new ArrayList<>()
                 )
         );
