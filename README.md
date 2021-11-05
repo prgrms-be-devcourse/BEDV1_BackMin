@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?type=Waving&color=auto&height=250&section=header&text=BackMin%20&fontSize=90&animation=blinking&fontAlignY=35&desc=백둥이%20민족%20(현호와%20형제들)&descAlignY=51&descAlign=62)
+![header](https://capsule-render.vercel.app/api?type=Waving&color=auto&height=250&section=header&text=BackMin%20&fontSize=90&animation=blink&fontAlignY=35&desc=백둥이%20민족(현호와%20형제들)&descAlignY=51&descAlign=62)
 
 # BackMin
 __Woo-ah! 함을 뒤이을 Hyeon-ho! 함의 등장!__
