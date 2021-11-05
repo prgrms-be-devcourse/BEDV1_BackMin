@@ -11,7 +11,7 @@ __Woo-ah! 함을 뒤이을 Hyeon-ho! 함의 등장!__
 <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat-square&logo=SpringBoot&logoColor=ffffff&logoWidth=20"/>&nbsp;&nbsp;
 <img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=Gradle&logoColor=ffffff&logoWidth=25"/>&nbsp;&nbsp;
 <img src="https://img.shields.io/badge/Lombok-CC071E?style=flat-square"/>&nbsp;&nbsp;
-<img src="https://img.shields.io/badge/Mockito-609540?style=flat-square"/>&nbsp;&nbsp;
+<img src="https://img.shields.io/badge/Junit-609540?style=flat-square"/>&nbsp;&nbsp;
 <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=ffffff&logoWidth=20"/>
 </div>
 <div align="center">
@@ -25,7 +25,7 @@ __Woo-ah! 함을 뒤이을 Hyeon-ho! 함의 등장!__
     * Spring Boot
     * Gradle
     * Lombok
-    * Mockito
+    * Junit
 * IDE : Intellij
 * DataBase : H2 database
 * SCM : Git Hub
