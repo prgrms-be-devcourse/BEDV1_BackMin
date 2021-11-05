@@ -59,6 +59,14 @@ class ReviewRepositoryTest {
                 .build();
         Category savedCategory = categoryRepository.save(category1);
 
+        Member owner1 = Member.of("owner111@gmail.com",
+                "12345",
+                "010-1112-2222",
+                "야이야이야",
+                "인천광역시"
+        );
+        Member savedOwner = memberRepository.save(owner1);
+
         Store store1 = Store.of(
                 "동대문 엽기 떡볶이",
                 "070364532746",
@@ -70,6 +78,7 @@ class ReviewRepositoryTest {
                 true,
                 true,
                 savedCategory,
+                savedOwner,
                 new ArrayList<>() // menus
         );
         Store savedStore = storeRepository.save(store1);
@@ -132,6 +141,14 @@ class ReviewRepositoryTest {
                 .build();
         Category savedCategory = categoryRepository.save(category1);
 
+        Member owner1 = Member.of("owner111@gmail.com",
+                "12345",
+                "010-1112-2222",
+                "야이야이야",
+                "인천광역시"
+        );
+        Member savedOwner = memberRepository.save(owner1);
+
         Store store1 = Store.of(
                 "동대문 엽기 떡볶이",
                 "070364532746",
@@ -142,7 +159,8 @@ class ReviewRepositoryTest {
                 2000,
                 true,
                 true,
-                savedCategory
+                savedCategory,
+                savedOwner
         );
         Store savedStore = storeRepository.save(store1);
 

@@ -4,6 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
 
+import com.backmin.domains.member.domain.Member;
+import com.backmin.domains.member.domain.MemberRepository;
 import com.backmin.domains.store.domain.Category;
 import com.backmin.domains.store.domain.CategoryRepository;
 import com.backmin.domains.store.domain.Store;
@@ -29,11 +31,15 @@ class MenuRepositoryTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     @AfterEach
     void tearDown() {
         menuRepository.deleteAll();
         storeRepository.deleteAll();
         categoryRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     @Test
@@ -52,6 +58,14 @@ class MenuRepositoryTest {
         Category category1 = Category.of("한식");
         categoryRepository.save(category1);
 
+        Member owner1 = Member.of("owner111@gmail.com",
+                "12345",
+                "010-1112-2222",
+                "야이야이야",
+                "인천광역시"
+        );
+        Member savedOwner = memberRepository.save(owner1);
+
         Store store1 = Store.of(
                 "동대문 엽기 떡볶이",
                 "070364532746",
@@ -63,6 +77,7 @@ class MenuRepositoryTest {
                 true,
                 true,
                 category1,
+                savedOwner,
                 menus
         );
         storeRepository.save(store1);

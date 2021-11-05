@@ -16,6 +16,7 @@ import com.backmin.domains.member.dto.request.MemberCreateParam;
 import com.backmin.domains.member.dto.request.MemberUpdateParam;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -27,7 +28,7 @@ class MemberControllerTest extends BaseControllerTest {
         memberRepository.deleteAll();
     }
 
-    @BeforeAll
+    @BeforeEach
     void setUp() {
         Member member = Member.of("testemail01@gmail.com",
                 "testpassword",
@@ -82,9 +83,8 @@ class MemberControllerTest extends BaseControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(memberUpdateParam)))
                 .andDo(print())
-                .andDo(document("member-save",
+                .andDo(document("member-update",
                         requestFields(
-                                fieldWithPath("id").type(JsonFieldType.NULL).description("id"),
                                 fieldWithPath("phoneNumber").type(JsonFieldType.NULL).description("phoneNumber"),
                                 fieldWithPath("nickName").type(JsonFieldType.NULL).description("nickName"),
                                 fieldWithPath("email").type(JsonFieldType.STRING).description("email"),
