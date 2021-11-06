@@ -12,6 +12,7 @@ import com.backmin.domains.order.dto.request.UpdateOrderStatusParam;
 import com.backmin.domains.order.service.OrderService;
 import com.backmin.domains.store.domain.Store;
 import com.backmin.domains.store.domain.StoreRepository;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -31,13 +32,13 @@ public class OrderController {
     private final MemberService memberService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResult createOrder(@RequestBody CreateOrderParam createOrderParam) {
+    public ApiResult createOrder(@RequestBody @Valid CreateOrderParam createOrderParam) {
         orderService.saveOrder(createOrderParam);
         return ApiResult.builder().success(true).build();
     }
 
     @PostMapping(path = "/{orderId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResult updateOrderStatus(@PathVariable Long orderId, @RequestBody UpdateOrderStatusParam request) {
+    public ApiResult updateOrderStatus(@PathVariable Long orderId, @RequestBody @Valid UpdateOrderStatusParam request) {
         boolean isAuthentication = memberService.authenticateMember(request.getMemberId(), request.getEmail(), request.getPassword());
         if (isAuthentication) {
             orderService.editOrderStatus(orderId, request.getMemberId(), request.getOrderStatus());
